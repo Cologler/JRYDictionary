@@ -8,12 +8,123 @@
                  Title="jry dictionary"
                  MinHeight="400"
                  MinWidth="650"
+                 Height="400"
+                 Width="650"
                  GlowBrush="{StaticResource AccentColorBrush}"
                  WindowStartupLocation="CenterScreen"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-                 Height="350"
-                 Width="525"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:behaviors="clr-namespace:Jasily.Desktop.Windows.Interactivity.Behaviors;assembly=Jasily.Desktop"
                  d:DataContext="{d:DesignInstance local:MainViewModel}">
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout x:Name="EditorFlyout"
+                        Position="Bottom"
+                        Theme="Adapt"
+                        DataContext="{Binding Editing}"
+                        Height="350"
+                        CloseButtonVisibility="Hidden"
+                        TitleVisibility="Hidden">
+                <mah:Flyout.HeaderTemplate>
+                    <!-- Empty header (no close button nor title) -->
+                    <DataTemplate />
+                </mah:Flyout.HeaderTemplate>
+                <Grid>
+                    <Border BorderBrush="{StaticResource AccentColorBrush}"
+                            BorderThickness="0,1,0,0">
+                        <Grid Margin="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Text="{Binding MajorWord.Text}"
+                                       FontSize="20"
+                                       Margin="0,0,0,10"/>
+                            
+                            <ListView Grid.Row="1"
+                                      ItemsSource="{Binding Words}"
+                                      BorderThickness="0">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:NonSelectBehavior />
+                                </i:Interaction.Behaviors>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid  Margin="4,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <ComboBox Grid.Column="0"
+                                                      Text="{Binding Group, UpdateSourceTrigger=PropertyChanged}"
+                                                      IsEditable="True"
+                                                      FontFamily="Microsoft YaHei" />
+
+                                            <TextBox Grid.Column="1"
+                                                     Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                     Margin="4,0"
+                                                     FontFamily="Microsoft YaHei" />
+
+                                            <ComboBox Grid.Column="2"
+                                                      Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
+                                                      IsEditable="True"
+                                                      Margin="4,0,0,0"
+                                                      FontFamily="Microsoft YaHei" />
+
+                                            <Button Grid.Column="3"
+                                                    Margin="4,0,0,0"
+                                                    Click="EditorToNameButton_OnClick"
+                                                    Visibility="{Binding CanBeMajor, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
+                                                    IsEnabled="{Binding CanBeMajor}">
+                                                <TextBlock Text="top" />
+                                            </Button>
+
+                                            <Button Grid.Column="4"
+                                                    Margin="4,0,0,0"
+                                                    Padding="8,0"
+                                                    Visibility="{Binding CanRemove, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
+                                                    IsEnabled="{Binding CanRemove}"
+                                                    Click="EditorRemoveWordButton_OnClick">
+                                                <Grid>
+                                                    <TextBlock Text="&#x2573;"
+                                                               Height="18"
+                                                               FontFamily="Segoe UI Symbol" />
+                                                </Grid>
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            
+                            <Grid Grid.Row="2"
+                                  HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <Button Content="ok"
+                                        Click="EditorCommitButton_OnClick"
+                                        Width="70" />
+
+                                <Button Grid.Column="1"
+                                        Content="cancel"
+                                        Click="EditorCancelButton_OnClick"
+                                        Margin="4,0,0,0"
+                                        Width="70" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -22,16 +133,19 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Margin="4">
+            <Grid Grid.Row="0"
+                  Margin="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="130" />
                 </Grid.ColumnDefinitions>
                 
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding SearchModes.View}"
+                          SelectedItem="{Binding SearchModes.Selected}"
+                          SelectionChanged="SearchModeSelector_OnSelectionChanged"
                           Margin="4,0,0,0"
                           FontFamily="Microsoft YaHei" />
             </Grid>
@@ -39,28 +153,45 @@
             <DataGrid Grid.Row="1"
                       Margin="4,0,4,4"
                       ItemsSource="{Binding Words}"
-                      AutoGenerateColumns="False">
+                      AutoGenerateColumns="False"
+                      CanUserResizeRows="False"
+                      CanUserDeleteRows="True"
+                      ContextMenuOpening="WordsDataGrid_OnContextMenuOpening">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="copy" />
+                        <MenuItem Header="edit"
+                                  Click="EditMenuItem_OnClick"/>
+                        <MenuItem Header="remove" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="thing"
-                                        Binding="{Binding Thing}"
+                                        Binding="{Binding Thing.MajorWord.Word}"
                                         Width="150"
-                                        FontFamily="Microsoft YaHei" />
-                    <DataGridTextColumn Header="word"
-                                        Binding="{Binding Word}"
-                                        Width="150"
-                                        FontFamily="Microsoft YaHei" />
-                    <DataGridTemplateColumn Header="actions"
-                                            CanUserSort="False" >
+                                        FontFamily="Microsoft YaHei"
+                                        IsReadOnly="True"/>
+                    <DataGridTemplateColumn Header="word"
+                                            Width="150">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
-                                <Grid Background="Transparent" >
-                                    <TextBlock Text="&#xE16F;"
-                                               FontFamily="Segoe UI Symbol"
-                                               HorizontalAlignment="Stretch">
-                                    </TextBlock>
+                                <Grid>
+                                    <TextBlock Text="{Binding Word}"
+                                               Height="24"
+                                               Padding="6,4,6,0"
+                                               FontFamily="Microsoft YaHei"
+                                               VerticalAlignment="Center" />
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate DataType="local:WordViewModel">
+                                <TextBox Text="{Binding Word}"
+                                         FontFamily="Microsoft YaHei"
+                                         Padding="0"
+                                         MinHeight="0" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
@@ -95,7 +226,6 @@
                         Click="CommitButton_OnClick"/>
 
             </Grid>
-
         </Grid>
     </Grid>
 </mah:MetroWindow>

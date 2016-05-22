@@ -5,19 +5,13 @@ namespace JryDictionary
 {
     public class WordViewModel : JasilyViewModel<Word>
     {
-        private readonly ThingViewModel thing;
-
         public WordViewModel(ThingViewModel thing, Word source)
             : base(source)
         {
-            this.thing = thing;
+            this.Thing = thing;
         }
 
-        public string Thing
-        {
-            get { return this.thing.Words[0].Word; }
-            set { this.thing.Words[0].Word = value; }
-        }
+        public ThingViewModel Thing { get; }
 
         public string Word
         {
@@ -31,7 +25,7 @@ namespace JryDictionary
                 else
                 {
                     this.Source.Text = value.Trim();
-                    this.thing.Update();
+                    this.Thing.Update();
                 }
                 this.NotifyPropertyChanged(nameof(this.Word));
             }

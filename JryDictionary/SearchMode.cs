@@ -2,10 +2,7 @@
 {
     public enum SearchMode
     {
-        Normal,
-
         WholeWord,
-
-        Regex
+        Normal,
     }
 }

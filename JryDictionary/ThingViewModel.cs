@@ -22,7 +22,8 @@ namespace JryDictionary
         public async void Update()
         {
             await ((App)Application.Current).ThingCollection.ReplaceOneAsync(
-                FilterDefinition<Thing>.Empty, this);
+                new FilterDefinitionBuilder<Thing>().Eq(z => z.Id, this.Source.Id),
+                this.Source);
         }
     }
 }

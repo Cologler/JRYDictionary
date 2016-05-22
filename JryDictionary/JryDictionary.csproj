@@ -80,7 +80,9 @@
     </ApplicationDefinition>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="SearchMode.cs" />
+    <Compile Include="ThingEditorViewModel.cs" />
     <Compile Include="ThingViewModel.cs" />
+    <Compile Include="WordEditorViewModel.cs" />
     <Compile Include="WordViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
