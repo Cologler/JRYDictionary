@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -74,10 +78,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainViewModel.cs" />
+    <Compile Include="SearchMode.cs" />
+    <Compile Include="ThingViewModel.cs" />
+    <Compile Include="WordViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="..\DbConnectionModel\MongoDbConnectionModel.cs">
+      <Link>Models\MongoDbConnectionModel.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -88,6 +99,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Flags.cs" />
+    <Compile Include="Models\SettingEntity.cs" />
+    <Compile Include="Models\Thing.cs" />
+    <Compile Include="Models\Word.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -116,6 +131,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Jasily\Jasily.Core.Desktop\Jasily.Core.Desktop.csproj">
+      <Project>{e90943e3-39c3-4649-9fe7-17096cbcd95e}</Project>
+      <Name>Jasily.Core.Desktop</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily.Core.Linq\Jasily.Core.Linq.csproj">
       <Project>{801800ea-fe7c-40ad-838d-f2a887de03de}</Project>
       <Name>Jasily.Core.Linq</Name>
@@ -123,6 +142,10 @@
     <ProjectReference Include="..\Jasily\Jasily.Core\Jasily.Core.csproj">
       <Project>{8442e8e7-d515-4481-8a36-71711b1fbf79}</Project>
       <Name>Jasily.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Jasily\Jasily.Desktop\Jasily.Desktop.csproj">
+      <Project>{613d8f93-1cc9-4c5d-a67a-290175fc4878}</Project>
+      <Name>Jasily.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\Jasily\Jasily\Jasily.csproj">
       <Project>{6adb6547-070b-4518-a2d1-e3bc349730bc}</Project>

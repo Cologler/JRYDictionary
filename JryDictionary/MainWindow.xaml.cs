@@ -1,28 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace JryDictionary
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            this.DataContext = Singleton.Instance<MainViewModel>();
+        }
+
+        #region Overrides of Window
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Window.SourceInitialized"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        protected override async void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            await Singleton.Instance<MainViewModel>().LoadAsync();
+        }
+
+        #endregion
+
+        private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await Singleton.Instance<MainViewModel>().CommitAddAsnyc();
         }
     }
 }

@@ -1,3 +1,6 @@
 [submodule "Jasily"]
 	path = Jasily
 	url = git@github.com:Cologler/jasily.cologler.git
+[submodule "DbConnectionModel"]
+	path = DbConnectionModel
+	url = https://gist.github.com/183813b9cdb89c5d1eaaa1ffb2b5e119.git
