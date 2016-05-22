@@ -1,0 +1,3 @@
+[submodule "Jasily"]
+	path = Jasily
+	url = git@github.com:Cologler/jasily.cologler.git
