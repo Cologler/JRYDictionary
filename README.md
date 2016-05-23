@@ -44,3 +44,10 @@ replace `D:\Software\MyS\common\conn_mongo.json` to your text file path which cr
 ### 3. enjoy it
 
 run `JryDictionary.exe`. 
+
+## download
+
+you can download release binary files in:
+
+* [github release](https://github.com/Cologler/JRYDictionary/releases)
+* [Amazon Cloud Drive](http://amzn.to/1s3GeGb)
