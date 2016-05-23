@@ -138,6 +138,8 @@ namespace JryDictionary
             Debug.Assert(word.Thing.MajorWord != word);
             this.Words.Remove(word);
             word.Thing.Words.Remove(word);
+            word.Thing.Source.Words.Remove(word.Source);
+            word.Thing.Update();
         }
 
         public void BuildPinYin(WordViewModel word)
