@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace JryDictionary
 {
     public class MainViewModel : JasilyViewModel
     {
-        private string searchText = "ä“š£¤Î¥ì¥®¥ª¥¹";
+        private string searchText;
         private string newThing;
         private string newWord;
         private ThingEditorViewModel editing;
@@ -65,7 +66,9 @@ namespace JryDictionary
                 switch (this.SearchModes.Selected.Value.Value)
                 {
                     case SearchMode.Normal:
-                        filter = builder.Regex(PropertySelector<Thing>.Start().SelectMany(z => z.Words).Select(z => z.Text).ToString(), Regex.Escape(value));
+                        filter = builder.Regex(
+                            PropertySelector<Thing>.Start().SelectMany(z => z.Words).Select(z => z.Text).ToString(),
+                            new Regex(Regex.Escape(value), RegexOptions.IgnoreCase));
                         break;
 
                     case SearchMode.WholeWord:
@@ -106,18 +109,17 @@ namespace JryDictionary
             set { this.SetPropertyRef(ref this.newWord, value); }
         }
 
-        public async Task CommitAddAsnyc()
+        public async Task CommitAddThingAsnyc()
         {
-            return;
+            var value = this.NewThing;
+            this.NewThing = string.Empty;
+            if (string.IsNullOrWhiteSpace(value)) return;
+            value = value.Trim();
             var thing = new Thing();
             thing.Id = Guid.NewGuid().ToString().ToUpper();
             thing.Words.Add(new Word
             {
-                Text = "ä“š£¤Î¥ì¥®¥ª¥¹"
-            });
-            thing.Words.Add(new Word
-            {
-                Text = "¸Ö¿Ç¶¼ÊÐÀ×¼ªÅ·Ë¹"
+                Text = value
             });
             var col = this.GetThingsSet();
             await col.InsertOneAsync(thing);
@@ -127,6 +129,13 @@ namespace JryDictionary
         {
             get { return this.editing; }
             set { this.SetPropertyRef(ref this.editing, value); }
+        }
+
+        public void Remove(WordViewModel word)
+        {
+            Debug.Assert(word.Thing.MajorWord != word);
+            this.Words.Remove(word);
+            word.Thing.Words.Remove(word);
         }
     }
 }

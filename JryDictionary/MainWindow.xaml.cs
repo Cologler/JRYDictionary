@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using JryDictionary.Models;
 
 namespace JryDictionary
 {
@@ -33,10 +35,8 @@ namespace JryDictionary
 
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await Singleton.Instance<MainViewModel>().CommitAddAsnyc();
+            await Singleton.Instance<MainViewModel>().CommitAddThingAsnyc();
         }
-
-        private WordViewModel contextMenuWordViewModel;
 
         private void WordsDataGrid_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -47,7 +47,7 @@ namespace JryDictionary
             }
             else
             {
-                this.contextMenuWordViewModel = word;
+                this.WordsDataGridContextMenu.DataContext = word;
             }
         }
 
@@ -58,7 +58,8 @@ namespace JryDictionary
 
         private void EditMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Singleton.Instance<MainViewModel>().Editing = new ThingEditorViewModel(this.contextMenuWordViewModel.Thing);
+            var word = (WordViewModel) this.WordsDataGridContextMenu.DataContext;
+            Singleton.Instance<MainViewModel>().Editing = new ThingEditorViewModel(word.Thing);
             this.EditorFlyout.IsOpen = true;
         }
 
@@ -98,6 +99,40 @@ namespace JryDictionary
             {
                 Singleton.Instance<MainViewModel>().Editing.SetMajor(word);
             }
+        }
+
+        private void RemoveMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            if (word.Thing.MajorWord != word)
+            {
+                Singleton.Instance<MainViewModel>().Remove(word);
+            }
+            else
+            {
+                
+            }
+        }
+
+        private async void CopyMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            var time = 0;
+            while (time < 5)
+            {
+                try
+                {
+                    Clipboard.SetText(word.Word);
+                    return;
+                }
+                catch
+                {
+                    // ignored
+                }
+                time++;
+                await Task.Delay(50);
+            }
+            Debug.WriteLine("copy failed.");
         }
     }
 }

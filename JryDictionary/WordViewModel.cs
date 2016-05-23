@@ -30,5 +30,9 @@ namespace JryDictionary
                 this.NotifyPropertyChanged(nameof(this.Word));
             }
         }
+
+        public bool IsMajor => this.Thing.MajorWord == this;
+
+        public bool CanRemove => !this.IsMajor;
     }
 }
