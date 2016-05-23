@@ -72,10 +72,10 @@ namespace JryDictionary
                 {
                     // test can combine ?
                     Debug.Assert(exists.Text == word.Text);
-
                 }
                 else
                 {
+                    dict.Add(word.Text, word);
                     obj.Words.Add(word);
                 }
             }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Windows;
 using Jasily.ComponentModel;
@@ -29,8 +30,18 @@ namespace JryDictionary
         {
             base.OnStartup(e);
 
-            var model = new FileInfo(Settings.Default.MongoDbConnectionSettingFile)
-                .JsonFileToObject<MongoDbConnectionModel>();
+            if (string.IsNullOrWhiteSpace(Settings.Default.MongoDbConnectionSettingFile))
+            {
+                WriteLog("mongodb connection setting empty.");
+                return;
+            }
+            var file = new FileInfo(Settings.Default.MongoDbConnectionSettingFile);
+            if (!file.Exists)
+            {
+                WriteLog("mongodb connection file not exists.");
+                return;
+            }
+            var model = file.JsonFileToObject<MongoDbConnectionModel>();
             var builder = new MongoUrlBuilder
             {
                 Server = MongoServerAddress.Parse(model.LoginAddress),
@@ -51,5 +62,11 @@ namespace JryDictionary
         }
 
         #endregion
+
+        public static void WriteLog(string line)
+        {
+            if (line == null) return;
+            File.AppendAllText("dict.log", $"{DateTime.Now.ToString("u")} {line}");
+        }
     }
 }

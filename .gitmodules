@@ -4,3 +4,6 @@
 [submodule "DbConnectionModel"]
 	path = DbConnectionModel
 	url = https://gist.github.com/183813b9cdb89c5d1eaaa1ffb2b5e119.git
+[submodule "Jasily.Chinese"]
+	path = Jasily.Chinese
+	url = git@github.com:Cologler/chinese.jasily.cologler.git

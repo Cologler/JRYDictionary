@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Jasily;
+using Jasily.Chinese.PinYin;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using JryDictionary.Models;
@@ -20,6 +21,7 @@ namespace JryDictionary
         private string newThing;
         private string newWord;
         private ThingEditorViewModel editing;
+        private PinYinManager pinYinManager;
 
         public MainViewModel()
         {
@@ -136,6 +138,31 @@ namespace JryDictionary
             Debug.Assert(word.Thing.MajorWord != word);
             this.Words.Remove(word);
             word.Thing.Words.Remove(word);
+        }
+
+        public void BuildPinYin(WordViewModel word)
+        {
+            if (this.pinYinManager == null) this.pinYinManager = PinYinManager.CreateInstance();
+
+            var chars = word.Source.Text.ToCharArray();
+            for (var i = 0; i < chars.Length; i++)
+            {
+                Pinyin ret;
+                if (this.pinYinManager.TryGetFirstPinYin(chars[i], out ret))
+                {
+                    chars[i] = ret.PinYin[0];
+                }
+            }
+            var pinyin = new Word
+            {
+                Text = new string(chars),
+                Language = "PinYin"
+            };
+            word.Thing.Source.Words.Add(pinyin);
+            word.Thing.Update();
+            var pinyinModel = new WordViewModel(word.Thing, pinyin);
+            word.Thing.Words.Add(pinyinModel);
+            this.Words.Insert(this.Words.IndexOf(word), pinyinModel);
         }
     }
 }

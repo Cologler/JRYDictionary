@@ -134,5 +134,11 @@ namespace JryDictionary
             }
             Debug.WriteLine("copy failed.");
         }
+
+        private void BuildPinYinMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            Singleton.Instance<MainViewModel>().BuildPinYin(word);
+        }
     }
 }
