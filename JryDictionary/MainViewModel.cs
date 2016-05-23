@@ -164,7 +164,7 @@ namespace JryDictionary
             word.Thing.Update();
             var pinyinModel = new WordViewModel(word.Thing, pinyin);
             word.Thing.Words.Add(pinyinModel);
-            this.Words.Insert(this.Words.IndexOf(word), pinyinModel);
+            this.Words.Insert(this.Words.IndexOf(word) + 1, pinyinModel);
         }
     }
 }
