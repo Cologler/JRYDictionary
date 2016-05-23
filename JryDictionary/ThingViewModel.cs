@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using Jasily.ComponentModel;
 using JetBrains.Annotations;
 using JryDictionary.Models;
@@ -21,11 +20,6 @@ namespace JryDictionary
 
         public WordViewModel MajorWord => this.Words[0];
 
-        public async void Update()
-        {
-            await ((App)Application.Current).ThingCollection.ReplaceOneAsync(
-                new FilterDefinitionBuilder<Thing>().Eq(z => z.Id, this.Source.Id),
-                this.Source);
-        }
+        public async void Update() => await App.Current.ThingSetAccessor.UpdateAsync(this.Source);
     }
 }

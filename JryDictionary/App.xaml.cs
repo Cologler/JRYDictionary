@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Windows;
-using Jasily.ComponentModel;
 using Jasily.Data.Db.MongoDb;
-using JryDictionary.Models;
+using JryDictionary.DbAccessors;
 using JryDictionary.Properties;
 using MongoDB.Driver;
 
@@ -18,7 +18,15 @@ namespace JryDictionary
         private MongoClient mongoClient;
         private IMongoDatabase mongoDatabase;
 
-        public IMongoCollection<Thing> ThingCollection { get; private set; }
+        public new static App Current { get; private set; }
+
+        public App()
+        {
+            Debug.Assert(Current == null);
+            Current = this;
+        }
+
+        public ThingSetAccessor ThingSetAccessor { get; private set; }
 
         #region Overrides of Application
 
@@ -51,14 +59,8 @@ namespace JryDictionary
             };
             this.mongoClient = new MongoClient(builder.ToMongoUrl());
             this.mongoDatabase = this.mongoClient.GetDatabase("JryDictionary");
-            this.ThingCollection = this.mongoDatabase.GetCollection<Thing>("Thing");
-            var index = new IndexKeysDefinitionBuilder<Thing>().Ascending(
-                PropertySelector<Thing>.Start(z => z).SelectMany(z => z.Words).Select(z => z.Text).ToString());
-            this.ThingCollection.Indexes.CreateOne(index, new CreateIndexOptions
-            {
-                Version = 1,
-                Background = true
-            });
+            this.ThingSetAccessor = new ThingSetAccessor(this.mongoDatabase);
+            this.ThingSetAccessor.Initialize();
         }
 
         #endregion

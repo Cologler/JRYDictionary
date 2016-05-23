@@ -3,11 +3,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Jasily.ComponentModel.Editable;
 using Jasily.Diagnostics;
 using JryDictionary.Models;
-using MongoDB.Driver;
 
 namespace JryDictionary
 {
@@ -83,12 +81,10 @@ namespace JryDictionary
 
         #endregion
 
-        public async Task CommitAsync()
+        public Task CommitAsync()
         {
             this.WriteToObject(this.source);
-            await ((App)Application.Current).ThingCollection.ReplaceOneAsync(
-                new FilterDefinitionBuilder<Thing>().Eq(z => z.Id, this.source.Id),
-                this.source);
+            return App.Current.ThingSetAccessor.UpdateAsync(this.source);
         }
 
         public void Remove(WordEditorViewModel word)

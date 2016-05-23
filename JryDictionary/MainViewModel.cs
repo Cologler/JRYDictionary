@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
 using Jasily;
 using Jasily.Chinese.PinYin;
 using Jasily.ComponentModel;
@@ -51,7 +50,7 @@ namespace JryDictionary
             }
         }
 
-        private IMongoCollection<Thing> GetThingsSet() => ((App)Application.Current).ThingCollection;
+        private IMongoCollection<Thing> GetThingsSet() => App.Current.ThingSetAccessor.Collection;
 
         public async Task LoadAsync()
         {
