@@ -126,9 +126,8 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="thing"
-                                        Binding="{Binding Thing.Source.Category}"
-                                        Width="80"
+                    <DataGridTextColumn Header="category"
+                                        Binding="{Binding Thing.Category}"
                                         FontFamily="Microsoft YaHei"
                                         IsReadOnly="True" />
                     <DataGridTextColumn Header="thing"

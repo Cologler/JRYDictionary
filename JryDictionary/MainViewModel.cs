@@ -90,8 +90,10 @@ namespace JryDictionary
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                string category = null;
                 if (this.SearchCategorys.Selected != string.Empty)
                 {
+                    category = this.SearchCategorys.Selected;
                     filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.SearchCategorys.Selected));
                 }
                 var col = this.GetThingsSet();
@@ -102,7 +104,8 @@ namespace JryDictionary
                 if (items.Count == 101)
                 {
                 }
-                this.Things.Reset(items.Take(20).Select(z => new ThingViewModel(z)));
+                this.Things.Reset(items.Take(20)
+                    .Select(z => new ThingViewModel(z, category ?? string.Join(", ", z.Categorys ?? Empty<string>.Enumerable))));
                 this.Words.Reset(this.Things.SelectMany(z => z.Words));
             }
         }

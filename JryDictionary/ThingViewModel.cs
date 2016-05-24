@@ -9,9 +9,10 @@ namespace JryDictionary
 {
     public class ThingViewModel : JasilyViewModel<Thing>
     {
-        public ThingViewModel(Thing source)
+        public ThingViewModel(Thing source, string category)
             : base(source)
         {
+            this.Category = category;
             this.Words = source.Words.Select(z => new WordViewModel(this, z)).ToList();
         }
 
@@ -21,5 +22,7 @@ namespace JryDictionary
         public WordViewModel MajorWord => this.Words[0];
 
         public async void Update() => await App.Current.ThingSetAccessor.UpdateAsync(this.Source);
+
+        public string Category { get; }
     }
 }
