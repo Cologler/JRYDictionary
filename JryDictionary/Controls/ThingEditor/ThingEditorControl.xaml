@@ -59,19 +59,23 @@
 
                         <Button Grid.Column="3"
                                 Margin="4,0,0,0"
-                                Padding="8,0"
+                                Padding="0"
                                 Height="28"
                                 Width="28"
                                 VerticalAlignment="Top"
-                                VerticalContentAlignment="Center"
-                                HorizontalContentAlignment="Center"
                                 Visibility="{Binding CanRemove, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
                                 IsEnabled="{Binding CanRemove}"
                                 Click="RemoveWordButton_OnClick">
-                            <Grid>
-                                <TextBlock Text="&#x2573;"
-                                           Width="26"
-                                           Height="24"
+                            <Grid RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform />
+                                        <SkewTransform />
+                                        <RotateTransform Angle="45" />
+                                        <TranslateTransform />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+                                <TextBlock Text="&#x2795;"
                                            FontFamily="Segoe UI Symbol" />
                             </Grid>
                         </Button>
@@ -86,7 +90,7 @@
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
+
             <ListView ItemsSource="{Binding Categorys}"
                       BorderThickness="0">
                 <i:Interaction.Behaviors>
@@ -126,7 +130,7 @@
                       Height="28"
                       FontFamily="Microsoft YaHei"
                       VerticalAlignment="Top" />
-            
+
             <Button Grid.Column="2"
                     Margin="4,0,0,0"
                     Padding="0"
@@ -141,6 +145,6 @@
             </Button>
 
         </Grid>
-        
+
     </Grid>
 </UserControl>
