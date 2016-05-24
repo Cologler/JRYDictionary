@@ -23,7 +23,7 @@
                         Position="Bottom"
                         Theme="Adapt"
                         DataContext="{Binding Editing}"
-                        Height="350"
+                        Height="{Binding ElementName=RootPanel, Path=ActualHeight}"
                         CloseButtonVisibility="Hidden"
                         TitleVisibility="Hidden">
                 <mah:Flyout.HeaderTemplate>
@@ -68,7 +68,7 @@
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
 
-    <Grid>
+    <Grid x:Name="RootPanel">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
