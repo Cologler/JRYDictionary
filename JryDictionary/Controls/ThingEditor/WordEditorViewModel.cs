@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Jasily.ComponentModel.Editable;
 using JryDictionary.Models;
 
-namespace JryDictionary
+namespace JryDictionary.Controls.ThingEditor
 {
     public sealed class WordEditorViewModel : JasilyEditableViewModel<Word>, IDisposable
     {

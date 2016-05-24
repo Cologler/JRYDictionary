@@ -7,7 +7,7 @@ using Jasily.ComponentModel.Editable;
 using Jasily.Diagnostics;
 using JryDictionary.Models;
 
-namespace JryDictionary
+namespace JryDictionary.Controls.ThingEditor
 {
     public sealed class ThingEditorViewModel : JasilyEditableViewModel<Thing>
     {
@@ -37,6 +37,7 @@ namespace JryDictionary
             this.Words.Reset(obj.Words.Select(z => new WordEditorViewModel(z)));
             this.SetMajor(this.Words[0]);
             this.AddNewViewModel();
+            this.Categorys.Add(obj.Category);
         }
 
         public void AddNewViewModel()
@@ -117,5 +118,7 @@ namespace JryDictionary
         public string Category { get; set; }
 
         public ObservableCollection<string> ExistsCategorys { get; } = new ObservableCollection<string>();
+
+        public ObservableCollection<string> Categorys { get; } = new ObservableCollection<string>();
     }
 }

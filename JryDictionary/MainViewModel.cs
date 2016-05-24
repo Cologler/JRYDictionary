@@ -9,6 +9,7 @@ using Jasily;
 using Jasily.Chinese.PinYin;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
+using JryDictionary.Controls.ThingEditor;
 using JryDictionary.Models;
 using MongoDB.Driver;
 

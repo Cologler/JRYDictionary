@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="JryDictionary.MainWindow"
+﻿<mah:MetroWindow xmlns:ThingEditor="clr-namespace:JryDictionary.Controls.ThingEditor"  x:Class="JryDictionary.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -35,83 +35,15 @@
                             BorderThickness="0,1,0,0">
                         <Grid Margin="4">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-
-                            <Grid Margin="0,0,0,10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-
-                                <ComboBox Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
-                                          ItemsSource="{Binding ExistsCategorys}"
-                                          IsEditable="True"
-                                          Margin="4,0,0,0"
-                                          FontFamily="Microsoft YaHei" />
-
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding MajorWord.Text}"
-                                           FontSize="18"
-                                           Margin="4,0,0,0" />
+                            
+                            <Grid>
+                                <ThingEditor:ThingEditorControl />
                             </Grid>
 
-                            <ListView Grid.Row="1"
-                                      ItemsSource="{Binding Words}"
-                                      BorderThickness="0">
-                                <i:Interaction.Behaviors>
-                                    <behaviors:NonSelectBehavior />
-                                </i:Interaction.Behaviors>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid  Margin="4,2">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition Width="100" />
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBox Grid.Column="0"
-                                                     Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                                                     Margin="4,0"
-                                                     FontFamily="Microsoft YaHei" />
-
-                                            <ComboBox Grid.Column="1"
-                                                      Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
-                                                      ItemsSource="{Binding ElementName=EditorFlyout, Path=DataContext.ExistsLanguages}"
-                                                      IsEditable="True"
-                                                      Margin="4,0,0,0"
-                                                      FontFamily="Microsoft YaHei" />
-
-                                            <Button Grid.Column="2"
-                                                    Margin="4,0,0,0"
-                                                    Click="EditorToNameButton_OnClick"
-                                                    Visibility="{Binding CanBeMajor, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
-                                                    IsEnabled="{Binding CanBeMajor}">
-                                                <TextBlock Text="top" />
-                                            </Button>
-
-                                            <Button Grid.Column="3"
-                                                    Margin="4,0,0,0"
-                                                    Padding="8,0"
-                                                    Visibility="{Binding CanRemove, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
-                                                    IsEnabled="{Binding CanRemove}"
-                                                    Click="EditorRemoveWordButton_OnClick">
-                                                <Grid>
-                                                    <TextBlock Text="&#x2573;"
-                                                               Height="18"
-                                                               FontFamily="Segoe UI Symbol" />
-                                                </Grid>
-                                            </Button>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-
-                            <Grid Grid.Row="2"
+                            <Grid Grid.Row="1"
                                   HorizontalAlignment="Right">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />

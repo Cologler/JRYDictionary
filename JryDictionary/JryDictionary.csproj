@@ -78,15 +78,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ThingEditor\ThingEditorControl.xaml.cs">
+      <DependentUpon>ThingEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DbAccessors\SettingContainer.cs" />
     <Compile Include="DbAccessors\SettingSetAccessor.cs" />
     <Compile Include="DbAccessors\ThingSetAccessor.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="SearchMode.cs" />
-    <Compile Include="ThingEditorViewModel.cs" />
+    <Compile Include="Controls\ThingEditor\ThingEditorViewModel.cs" />
     <Compile Include="ThingViewModel.cs" />
-    <Compile Include="WordEditorViewModel.cs" />
+    <Compile Include="Controls\ThingEditor\WordEditorViewModel.cs" />
     <Compile Include="WordViewModel.cs" />
+    <Page Include="Controls\ThingEditor\ThingEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

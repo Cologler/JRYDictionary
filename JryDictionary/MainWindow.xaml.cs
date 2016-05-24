@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using JryDictionary.Controls.ThingEditor;
 
 namespace JryDictionary
 {
@@ -78,30 +79,6 @@ namespace JryDictionary
         {
             Singleton.Instance<MainViewModel>().Editing = null;
             this.EditorFlyout.IsOpen = false;
-        }
-
-        private void EditorRemoveWordButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var word = (WordEditorViewModel)((FrameworkElement)sender).DataContext;
-            Debug.Assert(word != null);
-            if (Singleton.Instance<MainViewModel>().Editing.MajorWord == word)
-            {
-
-            }
-            else
-            {
-                Singleton.Instance<MainViewModel>().Editing.Remove(word);
-            }
-        }
-
-        private void EditorToNameButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var word = (WordEditorViewModel)((FrameworkElement)sender).DataContext;
-            Debug.Assert(word != null);
-            if (Singleton.Instance<MainViewModel>().Editing.MajorWord != word)
-            {
-                Singleton.Instance<MainViewModel>().Editing.SetMajor(word);
-            }
         }
 
         private void RemoveMenuItem_OnClick(object sender, RoutedEventArgs e)
