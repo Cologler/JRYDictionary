@@ -106,9 +106,16 @@ namespace JryDictionary
 
         public async Task InitializeAsync()
         {
-            this.Languages.AddRange(await App.Current.ThingSetAccessor.GroupAsync());
+            this.ExistsLanguages.AddRange(await App.Current.ThingSetAccessor.GroupLanguagesAsync());
+            this.ExistsCategorys.AddRange(await App.Current.ThingSetAccessor.GroupCategorysAsync());
         }
 
-        public ObservableCollection<string> Languages { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string> ExistsLanguages { get; } = new ObservableCollection<string>();
+
+        [EditableField]
+        [WriteToObjectIfNotNullOrWhiteSpace]
+        public string Category { get; set; }
+
+        public ObservableCollection<string> ExistsCategorys { get; } = new ObservableCollection<string>();
     }
 }

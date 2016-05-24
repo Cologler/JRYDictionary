@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryDictionary.Models
 {
@@ -15,5 +16,9 @@ namespace JryDictionary.Models
 
         [NotNull]
         public List<Word> Words { get; set; }
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public string Category { get; set; }
     }
 }

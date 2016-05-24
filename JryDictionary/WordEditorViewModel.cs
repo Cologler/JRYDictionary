@@ -11,7 +11,6 @@ namespace JryDictionary
         private bool isNew;
         private string text;
         private string language;
-        private string group;
         public event TypedEventHandler<WordEditorViewModel> ContentChanged;
 
         public WordEditorViewModel(Word source)
@@ -23,21 +22,6 @@ namespace JryDictionary
         public WordEditorViewModel()
         {
             this.isNew = true;
-        }
-
-        [EditableField]
-        public string Group
-        {
-            get { return this.group; }
-            set
-            {
-                value = value.IsNullOrWhiteSpace() ? null : value.Trim();
-
-                if (this.SetPropertyRef(ref this.group, value))
-                {
-                    this.ContentChanged?.Invoke(this);
-                }
-            }
         }
 
         [EditableField]

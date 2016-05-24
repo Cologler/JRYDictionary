@@ -52,6 +52,16 @@ namespace JryDictionary
 
         private IMongoCollection<Thing> GetThingsSet() => App.Current.ThingSetAccessor.Collection;
 
+        public async Task InitializeAsync()
+        {
+            var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
+            this.SearchCategorys.Collection.Reset(categorys);
+            if (this.SearchCategorys.Selected == null) this.SearchCategorys.Selected = string.Empty;
+            App.Current.ThingSetAccessor.SavedNewCategory += this.ThingSetAccessor_SavedNewCategory;
+        }
+
+        private void ThingSetAccessor_SavedNewCategory(object sender, string e) => this.SearchCategorys.Collection.Add(e);
+
         public async Task LoadAsync()
         {
             var value = this.searchText;
@@ -79,6 +89,10 @@ namespace JryDictionary
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                if (this.SearchCategorys.Selected != string.Empty)
+                {
+                    filter = builder.And(filter, builder.Eq(z => z.Category, this.SearchCategorys.Selected));
+                }
                 var col = this.GetThingsSet();
                 var items = await (await col.FindAsync(filter, new FindOptions<Thing, Thing>
                 {
@@ -98,6 +112,8 @@ namespace JryDictionary
 
         public JasilyCollectionView<Boxing<NameValuePair<SearchMode>>> SearchModes { get; }
             = new JasilyCollectionView<Boxing<NameValuePair<SearchMode>>>();
+
+        public JasilyCollectionView<string> SearchCategorys { get; } = new JasilyCollectionView<string>();
 
         public string NewThing
         {

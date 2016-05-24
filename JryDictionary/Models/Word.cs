@@ -7,10 +7,6 @@ namespace JryDictionary.Models
     {
         [CanBeNull]
         [BsonIgnoreIfDefault]
-        public string Group { get; set; }
-
-        [CanBeNull]
-        [BsonIgnoreIfDefault]
         public string Language { get; set; }
 
         [NotNull]

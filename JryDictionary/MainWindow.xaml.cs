@@ -27,7 +27,9 @@ namespace JryDictionary
         {
             base.OnSourceInitialized(e);
 
-            await Singleton.Instance<MainViewModel>().LoadAsync();
+            var vm = Singleton.Instance<MainViewModel>();
+            await vm.InitializeAsync();
+            await vm.LoadAsync();
         }
 
         #endregion

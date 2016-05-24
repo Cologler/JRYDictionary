@@ -16,6 +16,7 @@
                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                  xmlns:behaviors="clr-namespace:Jasily.Desktop.Windows.Interactivity.Behaviors;assembly=Jasily.Desktop"
                  d:DataContext="{d:DesignInstance local:MainViewModel}">
+
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
             <mah:Flyout x:Name="EditorFlyout"
@@ -38,11 +39,25 @@
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            
-                            <TextBlock Text="{Binding MajorWord.Text}"
-                                       FontSize="20"
-                                       Margin="0,0,0,10"/>
-                            
+
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <ComboBox Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
+                                          ItemsSource="{Binding ExistsCategorys}"
+                                          IsEditable="True"
+                                          Margin="4,0,0,0"
+                                          FontFamily="Microsoft YaHei" />
+
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding MajorWord.Text}"
+                                           FontSize="18"
+                                           Margin="4,0,0,0" />
+                            </Grid>
+
                             <ListView Grid.Row="1"
                                       ItemsSource="{Binding Words}"
                                       BorderThickness="0">
@@ -53,31 +68,25 @@
                                     <DataTemplate>
                                         <Grid  Margin="4,2">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="100"/>
                                                 <ColumnDefinition />
-                                                <ColumnDefinition Width="100"/>
-                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <ComboBox Grid.Column="0"
-                                                      Text="{Binding Group, UpdateSourceTrigger=PropertyChanged}"
-                                                      IsEditable="True"
-                                                      FontFamily="Microsoft YaHei" />
-
-                                            <TextBox Grid.Column="1"
+                                            <TextBox Grid.Column="0"
                                                      Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                                                      Margin="4,0"
                                                      FontFamily="Microsoft YaHei" />
 
-                                            <ComboBox Grid.Column="2"
+                                            <ComboBox Grid.Column="1"
                                                       Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
-                                                      ItemsSource="{Binding ElementName=EditorFlyout, Path=DataContext.Languages}"
+                                                      ItemsSource="{Binding ElementName=EditorFlyout, Path=DataContext.ExistsLanguages}"
                                                       IsEditable="True"
                                                       Margin="4,0,0,0"
                                                       FontFamily="Microsoft YaHei" />
 
-                                            <Button Grid.Column="3"
+                                            <Button Grid.Column="2"
                                                     Margin="4,0,0,0"
                                                     Click="EditorToNameButton_OnClick"
                                                     Visibility="{Binding CanBeMajor, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
@@ -85,7 +94,7 @@
                                                 <TextBlock Text="top" />
                                             </Button>
 
-                                            <Button Grid.Column="4"
+                                            <Button Grid.Column="3"
                                                     Margin="4,0,0,0"
                                                     Padding="8,0"
                                                     Visibility="{Binding CanRemove, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
@@ -101,14 +110,14 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            
+
                             <Grid Grid.Row="2"
                                   HorizontalAlignment="Right">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <Button Content="ok"
                                         Click="EditorCommitButton_OnClick"
                                         Width="70" />
@@ -139,13 +148,21 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="130" />
+                    <ColumnDefinition Width="130" />
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
 
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding SearchModes.View}"
                           SelectedItem="{Binding SearchModes.Selected}"
+                          SelectionChanged="SearchModeSelector_OnSelectionChanged"
+                          Margin="4,0,0,0"
+                          FontFamily="Microsoft YaHei" />
+
+                <ComboBox Grid.Column="2"
+                          ItemsSource="{Binding SearchCategorys.View}"
+                          SelectedItem="{Binding SearchCategorys.Selected}"
                           SelectionChanged="SearchModeSelector_OnSelectionChanged"
                           Margin="4,0,0,0"
                           FontFamily="Microsoft YaHei" />
@@ -177,12 +194,17 @@
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="thing"
+                                        Binding="{Binding Thing.Source.Category}"
+                                        Width="80"
+                                        FontFamily="Microsoft YaHei"
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Header="thing"
                                         Binding="{Binding Thing.MajorWord.Word}"
                                         Width="150"
                                         FontFamily="Microsoft YaHei"
-                                        IsReadOnly="True"/>
+                                        IsReadOnly="True" />
                     <DataGridTemplateColumn Header="word"
-                                            Width="200">
+                                            Width="220">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
                                 <Grid>
@@ -210,12 +232,12 @@
                                         IsReadOnly="True" />
                 </DataGrid.Columns>
             </DataGrid>
-            
+
             <Grid Grid.Row="2"
                   Margin="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBox Grid.Column="0"
@@ -226,9 +248,10 @@
                 <Button Grid.Column="1"
                         Content="new thing"
                         Margin="4,0,0,0"
-                        Click="CommitButton_OnClick"/>
+                        Click="CommitButton_OnClick" />
 
             </Grid>
         </Grid>
     </Grid>
 </mah:MetroWindow>
+
