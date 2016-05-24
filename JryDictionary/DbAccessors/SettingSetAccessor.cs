@@ -10,10 +10,15 @@ namespace JryDictionary.DbAccessors
     {
         private const string CollectionName = "Settings";
         private readonly IMongoDatabase database;
+        private readonly UpdateOptions updateOptions;
 
         public SettingSetAccessor(IMongoDatabase db)
         {
             this.database = db;
+            this.updateOptions = new UpdateOptions
+            {
+                IsUpsert = true
+            };
         }
 
         private static FilterDefinition<T> GetFilter<T>(T simple) where T : SettingEntity
@@ -30,7 +35,8 @@ namespace JryDictionary.DbAccessors
         public Task SetSettingAsync<T>(T value) where T : SettingEntity, new()
         {
             Debug.Assert(value != null);
-            return this.database.GetCollection<T>(CollectionName).ReplaceOneAsync(GetFilter(value), value);
+            return this.database.GetCollection<T>(CollectionName)
+                .ReplaceOneAsync(GetFilter(value), value, this.updateOptions);
         }
     }
 }

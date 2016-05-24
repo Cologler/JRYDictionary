@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Jasily.ComponentModel;
 using JryDictionary.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace JryDictionary.DbAccessors
 {
     public class ThingSetAccessor
     {
+        private HashSet<string> languages;
+
         public ThingSetAccessor(IMongoDatabase db)
         {
             this.Collection = db.GetCollection<Thing>("Thing");
@@ -22,22 +25,15 @@ namespace JryDictionary.DbAccessors
             Debug.Assert(thing.Id != null);
 
             thing.Words = thing.Words.Skip(1).OrderBy(z => z.Language).Insert(0, thing.Words[0]).ToList();
-            var languages = thing.Words.Where(z => z != null).Select(z => z.Language).Distinct().ToArray();
+            var languages = thing.Words.Where(z => z.Language != null).Select(z => z.Language).Distinct().ToArray();
             if (languages.Length > 0)
             {
-                var flags = await App.Current.FlagsSetting.ValueAsync();
-                if (flags.Groups == null)
+                if (this.languages == null)
                 {
-                    flags.Groups = languages.ToList();
+                    await this.GroupAsync();
                 }
-                else
-                {
-                    var sets = new HashSet<string>();
-                    sets.AddRange(flags.Groups);
-                    sets.AddRange(languages);
-                    flags.Groups = sets.ToList();
-                }
-                await App.Current.FlagsSetting.UpdateAsync();
+                Debug.Assert(this.languages != null);
+                this.languages.AddRange(languages);
             }
             await this.Collection.ReplaceOneAsync(
                 new FilterDefinitionBuilder<Thing>().Eq(z => z.Id, thing.Id),
@@ -56,6 +52,33 @@ namespace JryDictionary.DbAccessors
                 Version = 1,
                 Background = true
             });
+        }
+
+        public async Task<string[]> GroupAsync()
+        {
+            if (this.languages == null)
+            {
+                PipelineDefinition<Thing, GroupResult> pipeline = new[]
+                {
+                    new BsonDocument
+                    {
+                        { "$unwind", "$Words" }
+                    },
+                    new BsonDocument
+                    {
+                        { "$group", new BsonDocument("_id", "$Words.Language") }
+                    }
+                };
+                var ret = await (await this.Collection.AggregateAsync(pipeline)).ToListAsync();
+                this.languages = new HashSet<string>(ret.Select(z => z.Id).Where(z => z != null));
+            }
+
+            return this.languages.ToArray();
+        }
+
+        private class GroupResult
+        {
+            public string Id { get; set; }
         }
     }
 }

@@ -104,7 +104,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Flags.cs" />
     <Compile Include="Models\SettingEntity.cs" />
     <Compile Include="Models\Thing.cs" />
     <Compile Include="Models\Word.cs" />

@@ -31,8 +31,6 @@ namespace JryDictionary
 
         public SettingSetAccessor SettingSetAccessor { get; private set; }
 
-        public SettingContainer<Flags> FlagsSetting { get; private set; }
-
         #region Overrides of Application
 
         /// <summary>
@@ -67,7 +65,6 @@ namespace JryDictionary
             this.ThingSetAccessor = new ThingSetAccessor(this.mongoDatabase);
             this.SettingSetAccessor = new SettingSetAccessor(this.mongoDatabase);
             this.ThingSetAccessor.Initialize();
-            this.FlagsSetting = new SettingContainer<Flags>(this.SettingSetAccessor);
         }
 
         #endregion
