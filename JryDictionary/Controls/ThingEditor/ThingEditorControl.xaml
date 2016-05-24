@@ -10,7 +10,7 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:ThingEditorViewModel}">
-    <Grid>
+    <Grid x:Name="Root">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -44,7 +44,7 @@
 
                         <ComboBox Grid.Column="1"
                                   Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding ElementName=EditorFlyout, Path=DataContext.ExistsLanguages}"
+                                  ItemsSource="{Binding ElementName=Root, Path=DataContext.ExistsLanguages}"
                                   IsEditable="True"
                                   Margin="4,0,0,0"
                                   FontFamily="Microsoft YaHei" />
