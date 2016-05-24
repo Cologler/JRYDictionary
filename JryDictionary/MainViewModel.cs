@@ -146,6 +146,7 @@ namespace JryDictionary
         {
             if (this.pinYinManager == null) this.pinYinManager = PinYinManager.CreateInstance();
 
+            var containPinyin = false;
             var chars = word.Source.Text.ToCharArray();
             for (var i = 0; i < chars.Length; i++)
             {
@@ -153,8 +154,10 @@ namespace JryDictionary
                 if (this.pinYinManager.TryGetFirstPinYin(chars[i], out ret))
                 {
                     chars[i] = ret.PinYin[0];
+                    containPinyin = true;
                 }
             }
+            if (!containPinyin) return;
             var pinyin = new Word
             {
                 Text = new string(chars),
