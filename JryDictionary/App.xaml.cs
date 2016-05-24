@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Json;
 using System.Windows;
 using Jasily.Data.Db.MongoDb;
 using JryDictionary.DbAccessors;
+using JryDictionary.Models;
 using JryDictionary.Properties;
 using MongoDB.Driver;
 
@@ -27,6 +28,10 @@ namespace JryDictionary
         }
 
         public ThingSetAccessor ThingSetAccessor { get; private set; }
+
+        public SettingSetAccessor SettingSetAccessor { get; private set; }
+
+        public SettingContainer<Flags> FlagsSetting { get; private set; }
 
         #region Overrides of Application
 
@@ -60,7 +65,9 @@ namespace JryDictionary
             this.mongoClient = new MongoClient(builder.ToMongoUrl());
             this.mongoDatabase = this.mongoClient.GetDatabase("JryDictionary");
             this.ThingSetAccessor = new ThingSetAccessor(this.mongoDatabase);
+            this.SettingSetAccessor = new SettingSetAccessor(this.mongoDatabase);
             this.ThingSetAccessor.Initialize();
+            this.FlagsSetting = new SettingContainer<Flags>(this.SettingSetAccessor);
         }
 
         #endregion

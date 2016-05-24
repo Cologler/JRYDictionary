@@ -103,5 +103,16 @@ namespace JryDictionary
             this.MajorWord = word;
             this.MajorWord.IsMajar = true;
         }
+
+        public async Task InitializeAsync()
+        {
+            var flags = await App.Current.FlagsSetting.ValueAsync();
+            if (flags.Groups != null)
+            {
+                this.Languages.AddRange(flags.Groups);
+            }
+        }
+
+        public ObservableCollection<string> Languages { get; } = new ObservableCollection<string>();
     }
 }

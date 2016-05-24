@@ -72,6 +72,7 @@
 
                                             <ComboBox Grid.Column="2"
                                                       Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
+                                                      ItemsSource="{Binding ElementName=EditorFlyout, Path=DataContext.Languages}"
                                                       IsEditable="True"
                                                       Margin="4,0,0,0"
                                                       FontFamily="Microsoft YaHei" />

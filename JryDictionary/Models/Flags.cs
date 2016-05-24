@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace JryDictionary.Models
 {
@@ -8,13 +8,12 @@ namespace JryDictionary.Models
         public Flags()
         {
             this.Id = "Flags";
-            this.Groups = new List<string>();
         }
 
-        [NotNull]
+        [BsonIgnoreIfDefault]
         public List<string> Groups { get; set; }
 
-        [NotNull]
+        [BsonIgnoreIfDefault]
         public List<string> Languages { get; set; }
     }
 }

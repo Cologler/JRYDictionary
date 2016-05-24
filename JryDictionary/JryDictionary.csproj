@@ -78,6 +78,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DbAccessors\SettingContainer.cs" />
+    <Compile Include="DbAccessors\SettingSetAccessor.cs" />
     <Compile Include="DbAccessors\ThingSetAccessor.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="SearchMode.cs" />

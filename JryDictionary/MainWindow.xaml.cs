@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using JryDictionary.Models;
 
 namespace JryDictionary
 {
@@ -56,11 +55,13 @@ namespace JryDictionary
             await Singleton.Instance<MainViewModel>().LoadAsync();
         }
 
-        private void EditMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private async void EditMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var word = (WordViewModel) this.WordsDataGridContextMenu.DataContext;
-            Singleton.Instance<MainViewModel>().Editing = new ThingEditorViewModel(word.Thing);
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            var editor = new ThingEditorViewModel(word.Thing);
+            Singleton.Instance<MainViewModel>().Editing = editor;
             this.EditorFlyout.IsOpen = true;
+            await editor.InitializeAsync();
         }
 
         private async void EditorCommitButton_OnClick(object sender, RoutedEventArgs e)
@@ -110,7 +111,7 @@ namespace JryDictionary
             }
             else
             {
-                
+
             }
         }
 

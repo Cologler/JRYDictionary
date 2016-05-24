@@ -96,7 +96,8 @@ namespace JryDictionary
 
         public ObservableCollection<WordViewModel> Words { get; } = new ObservableCollection<WordViewModel>();
 
-        public JasilyCollectionView<Boxing<NameValuePair<SearchMode>>> SearchModes { get; } = new JasilyCollectionView<Boxing<NameValuePair<SearchMode>>>();
+        public JasilyCollectionView<Boxing<NameValuePair<SearchMode>>> SearchModes { get; }
+            = new JasilyCollectionView<Boxing<NameValuePair<SearchMode>>>();
 
         public string NewThing
         {
