@@ -30,9 +30,12 @@ namespace JryDictionary.DbAccessors
             thing.Words = thing.Words.Skip(1).OrderBy(z => z.Language).Insert(0, thing.Words[0]).ToList();
 
             // category
-            if (thing.Category != null)
+            if (thing.Categorys != null)
             {
-                if (this.categorys.Add(thing.Category)) this.SavedNewCategory?.Invoke(this, thing.Category);
+                foreach (var category in thing.Categorys)
+                {
+                    if (this.categorys.Add(category)) this.SavedNewCategory?.Invoke(this, category);
+                }
             }
 
             // language
@@ -93,10 +96,13 @@ namespace JryDictionary.DbAccessors
             if (this.categorys == null)
             {
                 PipelineDefinition<Thing, GroupResult> pipeline = new[]
-                {
+                {new BsonDocument
+                    {
+                        { "$unwind", "$Categorys" }
+                    },
                     new BsonDocument
                     {
-                        { "$group", new BsonDocument("_id", "$Category") }
+                        { "$group", new BsonDocument("_id", "$Categorys") }
                     }
                 };
                 var ret = await (await this.Collection.AggregateAsync(pipeline)).ToListAsync();

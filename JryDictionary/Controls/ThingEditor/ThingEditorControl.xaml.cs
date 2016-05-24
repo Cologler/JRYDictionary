@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,7 +14,7 @@ namespace JryDictionary.Controls.ThingEditor
             this.InitializeComponent();
         }
 
-        public ThingEditorViewModel CurrentViewModel => (ThingEditorViewModel) this.DataContext;
+        public ThingEditorViewModel CurrentViewModel => (ThingEditorViewModel)this.DataContext;
 
         private void ToMajorButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -45,7 +44,14 @@ namespace JryDictionary.Controls.ThingEditor
 
         private void RemoveCategoryMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var vm = this.CurrentViewModel;
+            vm.Categorys.Remove(((FrameworkElement)sender).DataContext as string);
+        }
+
+        private void AddCategoryButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = this.CurrentViewModel;
+            vm.AddCategory(vm.CategoryInput);
         }
     }
 }

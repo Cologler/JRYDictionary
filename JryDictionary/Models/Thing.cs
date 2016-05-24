@@ -19,6 +19,7 @@ namespace JryDictionary.Models
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
-        public string Category { get; set; }
+        [ItemCanBeNull]
+        public List<string> Categorys { get; set; }
     }
 }

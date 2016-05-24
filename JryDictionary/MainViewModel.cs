@@ -92,7 +92,7 @@ namespace JryDictionary
                 }
                 if (this.SearchCategorys.Selected != string.Empty)
                 {
-                    filter = builder.And(filter, builder.Eq(z => z.Category, this.SearchCategorys.Selected));
+                    filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.SearchCategorys.Selected));
                 }
                 var col = this.GetThingsSet();
                 var items = await (await col.FindAsync(filter, new FindOptions<Thing, Thing>

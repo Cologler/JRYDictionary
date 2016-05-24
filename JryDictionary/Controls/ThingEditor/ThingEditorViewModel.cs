@@ -37,7 +37,9 @@ namespace JryDictionary.Controls.ThingEditor
             this.Words.Reset(obj.Words.Select(z => new WordEditorViewModel(z)));
             this.SetMajor(this.Words[0]);
             this.AddNewViewModel();
-            this.Categorys.Add(obj.Category);
+
+            // category
+            if (obj.Categorys != null) this.Categorys.AddRange(obj.Categorys);
         }
 
         public void AddNewViewModel()
@@ -78,6 +80,9 @@ namespace JryDictionary.Controls.ThingEditor
                     obj.Words.Add(word);
                 }
             }
+
+            // category
+            obj.Categorys = this.Categorys.Count > 0 ? this.Categorys.ToList() : null;
         }
 
         #endregion
@@ -113,12 +118,18 @@ namespace JryDictionary.Controls.ThingEditor
 
         public ObservableCollection<string> ExistsLanguages { get; } = new ObservableCollection<string>();
 
-        [EditableField]
-        [WriteToObjectIfNotNullOrWhiteSpace]
-        public string Category { get; set; }
+        public string CategoryInput { get; set; }
 
         public ObservableCollection<string> ExistsCategorys { get; } = new ObservableCollection<string>();
 
         public ObservableCollection<string> Categorys { get; } = new ObservableCollection<string>();
+
+        public void AddCategory(string category)
+        {
+            if (string.IsNullOrWhiteSpace(category)) return;
+            category = category.Trim();
+            if (this.Categorys.Contains(category)) return;
+            this.Categorys.Add(category);
+        }
     }
 }
