@@ -22,10 +22,10 @@ and easy to create pin yin (by 1 click) for me.
 
 ``` json
 {
-    "LoginAddress": "127.0.0.1:50710",
-    "LoginDatabaseName": "admin",
-    "LoginUserName": "conanvista",
-    "LoginUserPassword": "LVpMQhAt31hli8Uiq2Ir"
+    "LoginAddress": "your login ip and port ",
+    "LoginDatabaseName": "your login db name",
+    "LoginUserName": "your user name",
+    "LoginUserPassword": "your password"
 }
 ```
 
