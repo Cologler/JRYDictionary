@@ -52,8 +52,6 @@ namespace JryDictionary
             }
         }
 
-        private IMongoCollection<Thing> GetThingsSet() => App.Current.ThingSetAccessor.Collection;
-
         public async Task InitializeAsync()
         {
             this.Builders.Add(new AbbreviationWordBuilder());
@@ -100,15 +98,11 @@ namespace JryDictionary
                     category = this.SearchCategorys.Selected;
                     filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.SearchCategorys.Selected));
                 }
-                var col = this.GetThingsSet();
-                var items = await (await col.FindAsync(filter, new FindOptions<Thing, Thing>
-                {
-                    Limit = 21
-                })).ToListAsync();
-                if (items.Count == 101)
+                var queryResult = await App.Current.ThingSetAccessor.FindAsync(filter, 20);
+                if (queryResult.HasNext)
                 {
                 }
-                this.Things.Reset(items.Take(20)
+                this.Things.Reset(queryResult.Items
                     .Select(z => new ThingViewModel(z, category ?? string.Join(", ", z.Categorys ?? Empty<string>.Enumerable))));
                 this.Words.Reset(this.Things.SelectMany(z => z.Words));
             }
@@ -149,8 +143,8 @@ namespace JryDictionary
             {
                 Text = value
             });
-            var col = this.GetThingsSet();
-            await col.InsertOneAsync(thing);
+            await App.Current.ThingSetAccessor.UpdateAsync(thing);
+            await this.LoadAsync();
         }
 
         public ThingEditorViewModel Editing

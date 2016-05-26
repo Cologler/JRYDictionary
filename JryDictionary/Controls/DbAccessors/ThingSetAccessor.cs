@@ -8,7 +8,7 @@ using JryDictionary.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace JryDictionary.DbAccessors
+namespace JryDictionary.Controls.DbAccessors
 {
     public class ThingSetAccessor
     {
@@ -21,7 +21,7 @@ namespace JryDictionary.DbAccessors
             this.Collection = db.GetCollection<Thing>("Thing");
         }
 
-        public IMongoCollection<Thing> Collection { get; }
+        private IMongoCollection<Thing> Collection { get; }
 
         private async Task PreCommitAsync(Thing thing)
         {
@@ -60,6 +60,19 @@ namespace JryDictionary.DbAccessors
             await this.Collection.ReplaceOneAsync(
                 new FilterDefinitionBuilder<Thing>().Eq(z => z.Id, thing.Id),
                 thing, new UpdateOptions { IsUpsert = true });
+        }
+
+        public async Task<QueryResult<Thing>> FindAsync(FilterDefinition<Thing> filter, int count)
+        {
+            Debug.Assert(filter != null);
+            Debug.Assert(count > 0);
+
+            var items = await (await this.Collection.FindAsync(filter, new FindOptions<Thing, Thing>
+            {
+                Limit = count + 1
+            })).ToListAsync();
+
+            return items.Count == count + 1 ? new QueryResult<Thing>(true, items.Take(count)) : new QueryResult<Thing>(false, items);
         }
 
         public void Initialize()

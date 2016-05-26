@@ -81,6 +81,7 @@
     <Compile Include="Builders\AbbreviationWordBuilder.cs" />
     <Compile Include="Builders\IWordBuilder.cs" />
     <Compile Include="Builders\PinYinWordBuilder.cs" />
+    <Compile Include="Controls\DbAccessors\QueryResult.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorControl.xaml.cs">
       <DependentUpon>ThingEditorControl.xaml</DependentUpon>
     </Compile>

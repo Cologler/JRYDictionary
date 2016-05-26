@@ -37,9 +37,7 @@ namespace JryDictionary
         #endregion
 
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            await Singleton.Instance<MainViewModel>().CommitAddThingAsnyc();
-        }
+            => await Singleton.Instance<MainViewModel>().CommitAddThingAsnyc();
 
         private void WordsDataGrid_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
