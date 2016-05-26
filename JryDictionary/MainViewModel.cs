@@ -52,8 +52,13 @@ namespace JryDictionary
 
         public async Task InitializeAsync()
         {
-            this.Builders.Add(new AbbreviationWordBuilder());
-            this.Builders.Add(new PinYinWordBuilder());
+            var builderInterface = typeof(IWordBuilder);
+            foreach (var type in this.GetType().Assembly.DefinedTypes
+                .Where(z => z.IsSealed)
+                .Where(z => builderInterface.IsAssignableFrom(z)))
+            {
+                this.Builders.Add((IWordBuilder)Activator.CreateInstance(type));
+            }
 
             var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
             this.SearchCategorys.Collection.Reset(categorys);
