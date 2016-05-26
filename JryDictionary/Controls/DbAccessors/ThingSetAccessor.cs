@@ -23,11 +23,14 @@ namespace JryDictionary.DbAccessors
 
         public IMongoCollection<Thing> Collection { get; }
 
-        public async Task UpdateAsync(Thing thing)
+        private async Task PreCommitAsync(Thing thing)
         {
             Debug.Assert(thing.Id != null);
 
-            thing.Words = thing.Words.Skip(1).OrderBy(z => z.Language).Insert(0, thing.Words[0]).ToList();
+            thing.Words = thing.Words.Skip(1)
+                .OrderBy(z => z.Language)
+                .ThenBy(z => z.Text)
+                .Insert(0, thing.Words[0]).ToList();
 
             // category
             if (thing.Categorys != null)
@@ -49,10 +52,14 @@ namespace JryDictionary.DbAccessors
                 Debug.Assert(this.languages != null);
                 this.languages.AddRange(languages);
             }
+        }
 
+        public async Task UpdateAsync(Thing thing)
+        {
+            await this.PreCommitAsync(thing);
             await this.Collection.ReplaceOneAsync(
                 new FilterDefinitionBuilder<Thing>().Eq(z => z.Id, thing.Id),
-                thing);
+                thing, new UpdateOptions { IsUpsert = true });
         }
 
         public void Initialize()
