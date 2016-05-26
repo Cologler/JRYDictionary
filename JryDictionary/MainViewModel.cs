@@ -9,6 +9,7 @@ using Jasily;
 using Jasily.Chinese.PinYin;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
+using JryDictionary.Builders;
 using JryDictionary.Controls.ThingEditor;
 using JryDictionary.Models;
 using MongoDB.Driver;
@@ -55,6 +56,9 @@ namespace JryDictionary
 
         public async Task InitializeAsync()
         {
+            this.Builders.Add(new AbbreviationWordBuilder());
+            this.Builders.Add(new PinYinWordBuilder());
+
             var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
             this.SearchCategorys.Collection.Reset(categorys);
             if (this.SearchCategorys.Selected == null) this.SearchCategorys.Selected = string.Empty;
@@ -119,6 +123,8 @@ namespace JryDictionary
 
         public JasilyCollectionView<string> SearchCategorys { get; } = new JasilyCollectionView<string>();
 
+        public ObservableCollection<IWordBuilder> Builders { get; } = new ObservableCollection<IWordBuilder>();
+
         public string NewThing
         {
             get { return this.newThing; }
@@ -162,30 +168,16 @@ namespace JryDictionary
             word.Thing.Update();
         }
 
-        public void BuildPinYin(WordViewModel word)
+        public void Build(WordViewModel word, IWordBuilder builder)
         {
-            if (this.pinYinManager == null) this.pinYinManager = PinYinManager.CreateInstance();
+            Debug.Assert(word != null);
+            Debug.Assert(builder != null);
 
-            var containPinyin = false;
-            var chars = word.Source.Text.ToCharArray();
-            for (var i = 0; i < chars.Length; i++)
-            {
-                Pinyin ret;
-                if (this.pinYinManager.TryGetFirstPinYin(chars[i], out ret))
-                {
-                    chars[i] = ret.PinYin[0];
-                    containPinyin = true;
-                }
-            }
-            if (!containPinyin) return;
-            var pinyin = new Word
-            {
-                Text = new string(chars),
-                Language = "PinYin"
-            };
-            word.Thing.Source.Words.Add(pinyin);
+            var retWord = builder.Build(word.Thing, word);
+            if (retWord == null) return;
+            word.Thing.Source.Words.Add(retWord);
             word.Thing.Update();
-            var pinyinModel = new WordViewModel(word.Thing, pinyin);
+            var pinyinModel = new WordViewModel(word.Thing, retWord);
             word.Thing.Words.Add(pinyinModel);
             this.Words.Insert(this.Words.IndexOf(word) + 1, pinyinModel);
         }

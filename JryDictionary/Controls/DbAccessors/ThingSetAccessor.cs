@@ -96,7 +96,8 @@ namespace JryDictionary.DbAccessors
             if (this.categorys == null)
             {
                 PipelineDefinition<Thing, GroupResult> pipeline = new[]
-                {new BsonDocument
+                {
+                    new BsonDocument
                     {
                         { "$unwind", "$Categorys" }
                     },

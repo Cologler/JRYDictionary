@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using JryDictionary.Builders;
 using JryDictionary.Controls.ThingEditor;
 
 namespace JryDictionary
@@ -14,8 +15,8 @@ namespace JryDictionary
     {
         public MainWindow()
         {
-            this.InitializeComponent();
             this.DataContext = Singleton.Instance<MainViewModel>();
+            this.InitializeComponent();
         }
 
         #region Overrides of Window
@@ -115,10 +116,11 @@ namespace JryDictionary
             Debug.WriteLine("copy failed.");
         }
 
-        private void BuildPinYinMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void BuildMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
-            Singleton.Instance<MainViewModel>().BuildPinYin(word);
+            var builder = (IWordBuilder)((FrameworkElement)e.OriginalSource).DataContext;
+            Singleton.Instance<MainViewModel>().Build(word, builder);
         }
     }
 }

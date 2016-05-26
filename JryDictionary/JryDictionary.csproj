@@ -78,12 +78,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Builders\AbbreviationWordBuilder.cs" />
+    <Compile Include="Builders\IWordBuilder.cs" />
+    <Compile Include="Builders\PinYinWordBuilder.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorControl.xaml.cs">
       <DependentUpon>ThingEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DbAccessors\SettingContainer.cs" />
-    <Compile Include="DbAccessors\SettingSetAccessor.cs" />
-    <Compile Include="DbAccessors\ThingSetAccessor.cs" />
+    <Compile Include="Controls\DbAccessors\SettingContainer.cs" />
+    <Compile Include="Controls\DbAccessors\SettingSetAccessor.cs" />
+    <Compile Include="Controls\DbAccessors\ThingSetAccessor.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="SearchMode.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorViewModel.cs" />

@@ -116,9 +116,10 @@
                                   Click="CopyMenuItem_OnClick" />
                         <MenuItem Header="edit"
                                   Click="EditMenuItem_OnClick" />
-                        <MenuItem Header="build">
-                            <MenuItem Header="pinyin"
-                                      Click="BuildPinYinMenuItem_OnClick" />
+                        <MenuItem Header="build"
+                                  Click="BuildMenuItem_OnClick"
+                                  ItemsSource="{Binding PlacementTarget.(FrameworkElement.DataContext).Builders, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                  DisplayMemberPath="Name">
                         </MenuItem>
                         <MenuItem Header="remove"
                                   Visibility="{Binding CanRemove, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=02}"
