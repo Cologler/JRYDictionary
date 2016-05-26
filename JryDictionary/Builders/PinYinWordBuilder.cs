@@ -1,9 +1,11 @@
-﻿using Jasily.Chinese.PinYin;
+﻿using System.Collections.Generic;
+using Jasily;
+using Jasily.Chinese.PinYin;
 using JryDictionary.Models;
 
 namespace JryDictionary.Builders
 {
-    public sealed class PinYinWordBuilder : IWordBuilder
+    public sealed class PinYinWordBuilder : IWordBuilder, IOrderable
     {
         private PinYinManager pinYinManager;
 
@@ -11,7 +13,7 @@ namespace JryDictionary.Builders
 
         public string Name => "PinYin";
 
-        public Word Build(Thing thing, Word word)
+        public IEnumerable<Word> Build(Thing thing, Word word)
         {
             if (this.pinYinManager == null) this.pinYinManager = PinYinManager.CreateInstance();
 
@@ -26,13 +28,21 @@ namespace JryDictionary.Builders
                     containPinyin = true;
                 }
             }
-            if (!containPinyin) return null;
-            return new Word
+            if (containPinyin)
             {
-                Text = new string(chars),
-                Language = this.Name
-            };
+                yield return new Word
+                {
+                    Text = new string(chars),
+                    Language = this.Name
+                };
+            }
         }
+
+        #endregion
+
+        #region Implementation of IOrderable
+
+        public int GetOrderCode() => 10;
 
         #endregion
     }

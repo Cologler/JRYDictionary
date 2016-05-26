@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 using JryDictionary.Models;
 
 namespace JryDictionary.Builders
@@ -7,13 +7,6 @@ namespace JryDictionary.Builders
     {
         string Name { get; }
 
-        /// <summary>
-        /// return null if build failed.
-        /// </summary>
-        /// <param name="thing"></param>
-        /// <param name="word"></param>
-        /// <returns></returns>
-        [CanBeNull]
-        Word Build(Thing thing, Word word);
+        IEnumerable<Word> Build(Thing thing, Word word);
     }
 }

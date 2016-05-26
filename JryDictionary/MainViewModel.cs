@@ -53,12 +53,11 @@ namespace JryDictionary
         public async Task InitializeAsync()
         {
             var builderInterface = typeof(IWordBuilder);
-            foreach (var type in this.GetType().Assembly.DefinedTypes
+            this.Builders.AddRange(this.GetType().Assembly.DefinedTypes
                 .Where(z => z.IsSealed)
-                .Where(z => builderInterface.IsAssignableFrom(z)))
-            {
-                this.Builders.Add((IWordBuilder)Activator.CreateInstance(type));
-            }
+                .Where(z => builderInterface.IsAssignableFrom(z))
+                .Select(z => (IWordBuilder)Activator.CreateInstance(z))
+                .OrderBy(z => z.AsOrderable().GetOrderCode()));
 
             var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
             this.SearchCategorys.Collection.Reset(categorys);
@@ -171,13 +170,14 @@ namespace JryDictionary
             Debug.Assert(word != null);
             Debug.Assert(builder != null);
 
-            var retWord = builder.Build(word.Thing, word);
-            if (retWord == null) return;
-            word.Thing.Source.Words.Add(retWord);
+            foreach (var retWord in builder.Build(word.Thing, word))
+            {
+                word.Thing.Source.Words.Add(retWord);
+                var pinyinModel = new WordViewModel(word.Thing, retWord);
+                word.Thing.Words.Add(pinyinModel);
+                this.Words.Insert(this.Words.IndexOf(word) + 1, pinyinModel);
+            }
             word.Thing.Update();
-            var pinyinModel = new WordViewModel(word.Thing, retWord);
-            word.Thing.Words.Add(pinyinModel);
-            this.Words.Insert(this.Words.IndexOf(word) + 1, pinyinModel);
         }
     }
 }
