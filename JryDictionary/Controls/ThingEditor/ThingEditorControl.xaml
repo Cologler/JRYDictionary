@@ -40,17 +40,21 @@
                         <TextBox Grid.Column="0"
                                  Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                                  Margin="4,0"
-                                 FontFamily="Microsoft YaHei" />
+                                 FontFamily="Microsoft YaHei"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap" />
 
                         <ComboBox Grid.Column="1"
                                   Text="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
                                   ItemsSource="{Binding ElementName=Root, Path=DataContext.ExistsLanguages}"
                                   IsEditable="True"
                                   Margin="4,0,0,0"
-                                  FontFamily="Microsoft YaHei" />
+                                  FontFamily="Microsoft YaHei"
+                                  VerticalAlignment="Top" />
 
                         <Button Grid.Column="2"
                                 Margin="4,0,0,0"
+                                VerticalAlignment="Top"
                                 Click="ToMajorButton_OnClick"
                                 Visibility="{Binding CanBeMajor, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=01}"
                                 IsEnabled="{Binding CanBeMajor}">

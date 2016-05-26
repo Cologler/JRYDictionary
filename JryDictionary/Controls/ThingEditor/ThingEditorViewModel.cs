@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -34,12 +35,16 @@ namespace JryDictionary.Controls.ThingEditor
         public override void ReadFromObject(Thing obj)
         {
             base.ReadFromObject(obj);
-            this.Words.Reset(obj.Words.Select(z => new WordEditorViewModel(z)));
+
+            // word
+            this.Words.Reset(obj.Words.Select(z => new WordEditorViewModel(z) { Text = z.Text }));
             this.SetMajor(this.Words[0]);
-            this.AddNewViewModel();
 
             // category
             if (obj.Categorys != null) this.Categorys.AddRange(obj.Categorys);
+
+            // next word
+            this.AddNewViewModel();
         }
 
         public void AddNewViewModel()
@@ -59,25 +64,40 @@ namespace JryDictionary.Controls.ThingEditor
         public override void WriteToObject(Thing obj)
         {
             base.WriteToObject(obj);
+
+            // word
+            // -- test
             Debug.Assert(this.MajorWord.IsMajar = true);
             JasilyDebug.AssertForEach(this.Words.Where(z => z != this.MajorWord), z => !z.IsMajar);
+            // -- write
             obj.Words.Clear();
             var dict = new Dictionary<string, Word>();
             var major = this.MajorWord.Flush();
+            major.Text = this.MajorWord.Text;
+            Debug.Assert(!string.IsNullOrWhiteSpace(major.Text));
             obj.Words.Add(major);
             dict.Add(major.Text, major);
-            foreach (var word in this.Words.Where(z => z != this.MajorWord && !z.IsNew).Select(z => z.Flush()))
+            foreach (var line in this.Words
+                .Where(z => z != this.MajorWord && !z.IsNew && !string.IsNullOrWhiteSpace(z.Text))
+                .Select(z => new { S = z, V = z.Text.AsLines().Select(x => x.Trim()).Where(x => x.Length > 0).ToArray() }))
             {
-                var exists = dict.GetValueOrDefault(word.Text);
-                if (exists != null)
+                foreach (var v in line.V)
                 {
-                    // test can combine ?
-                    Debug.Assert(exists.Text == word.Text);
-                }
-                else
-                {
-                    dict.Add(word.Text, word);
-                    obj.Words.Add(word);
+                    var word = line.S.Flush();
+                    word.Text = v;
+                    Debug.Assert(word.Text != null);
+
+                    var exists = dict.GetValueOrDefault(word.Text);
+                    if (exists != null)
+                    {
+                        // test can combine ?
+                        Debug.Assert(exists.Text == word.Text);
+                    }
+                    else
+                    {
+                        dict.Add(word.Text, word);
+                        obj.Words.Add(word);
+                    }
                 }
             }
 

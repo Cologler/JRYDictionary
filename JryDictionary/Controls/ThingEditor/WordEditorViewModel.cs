@@ -39,14 +39,19 @@ namespace JryDictionary.Controls.ThingEditor
             }
         }
 
-        [EditableField]
+        /// <summary>
+        /// use \r\n to convert to mulit-word.
+        /// </summary>
         public string Text
         {
             get { return this.text; }
             set
             {
-                value = value.IsNullOrWhiteSpace() ? null : value.Trim();
-                if (value == null) return;
+                if (this.IsMajar)
+                {
+                    if (string.IsNullOrWhiteSpace(value)) return;
+                    value = value.Trim(); // no mulit line.
+                }
 
                 if (this.SetPropertyRef(ref this.text, value))
                 {
@@ -55,6 +60,10 @@ namespace JryDictionary.Controls.ThingEditor
             }
         }
 
+        /// <summary>
+        /// return new word clone from this (without text).
+        /// </summary>
+        /// <returns></returns>
         public Word Flush()
         {
             var obj = new Word();
