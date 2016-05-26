@@ -122,6 +122,7 @@ namespace JryDictionary.Controls.ThingEditor
         public void SetMajor(WordEditorViewModel word)
         {
             Debug.Assert(word != this.MajorWord);
+            if (string.IsNullOrWhiteSpace(word.Text) || word.Text.AsLines().Length > 1) return;
             if (this.MajorWord != null)
             {
                 this.MajorWord.IsMajar = false;
