@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace JryDictionary.Controls.DbAccessors
+namespace JryDictionary.DbAccessors
 {
     public class QueryResult<T>
     {

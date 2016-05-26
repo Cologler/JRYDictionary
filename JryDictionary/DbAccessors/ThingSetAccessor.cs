@@ -8,7 +8,7 @@ using JryDictionary.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace JryDictionary.Controls.DbAccessors
+namespace JryDictionary.DbAccessors
 {
     public class ThingSetAccessor
     {
