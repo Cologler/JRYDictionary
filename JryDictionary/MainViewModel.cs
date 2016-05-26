@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Jasily;
-using Jasily.Chinese.PinYin;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
 using JryDictionary.Builders;
@@ -22,7 +21,6 @@ namespace JryDictionary
         private string newThing;
         private string newWord;
         private ThingEditorViewModel editing;
-        private PinYinManager pinYinManager;
 
         public MainViewModel()
         {
@@ -117,6 +115,7 @@ namespace JryDictionary
 
         public JasilyCollectionView<string> SearchCategorys { get; } = new JasilyCollectionView<string>();
 
+        // ReSharper disable once CollectionNeverQueried.Global
         public ObservableCollection<IWordBuilder> Builders { get; } = new ObservableCollection<IWordBuilder>();
 
         public string NewThing
