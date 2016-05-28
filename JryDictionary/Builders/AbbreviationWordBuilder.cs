@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using Jasily;
 using JryDictionary.Models;
 
 namespace JryDictionary.Builders
 {
+    [Export(typeof(IWordBuilder))]
     public sealed class AbbreviationWordBuilder : IWordBuilder, IOrderable
     {
         #region Implementation of IWordBuilder

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using Jasily;
 using Jasily.Chinese.PinYin;
 using JryDictionary.Models;
 
 namespace JryDictionary.Builders
 {
+    [Export(typeof(IWordBuilder))]
     public sealed class PinYinWordBuilder : IWordBuilder, IOrderable
     {
         private PinYinManager pinYinManager;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -21,6 +22,8 @@ namespace JryDictionary
         private string newThing;
         private string newWord;
         private ThingEditorViewModel editing;
+        [ImportMany]
+        public IEnumerable<IWordBuilder> builders;
 
         public MainViewModel()
         {
@@ -52,12 +55,9 @@ namespace JryDictionary
 
         public async Task InitializeAsync()
         {
-            var builderInterface = typeof(IWordBuilder);
-            this.Builders.AddRange(this.GetType().Assembly.DefinedTypes
-                .Where(z => z.IsSealed)
-                .Where(z => builderInterface.IsAssignableFrom(z))
-                .Select(z => (IWordBuilder)Activator.CreateInstance(z))
-                .OrderBy(z => z.AsOrderable().GetOrderCode()));
+            App.Current.CompositionContainer.ComposeParts(this);
+            Debug.Assert(this.builders != null);
+            this.Builders.AddRange(this.builders.OrderBy(z => z.AsOrderable().GetOrderCode()));
 
             var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
             this.SearchCategorys.Collection.Reset(categorys);

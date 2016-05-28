@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
@@ -30,6 +31,8 @@ namespace JryDictionary
 
         public SettingSetAccessor SettingSetAccessor { get; private set; }
 
+        public CompositionContainer CompositionContainer { get; private set; }
+
         #region Overrides of Application
 
         /// <summary>
@@ -39,6 +42,10 @@ namespace JryDictionary
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            var catalog = new AggregateCatalog();
+            catalog.Catalogs.Add(new AssemblyCatalog(this.GetType().Assembly));
+            this.CompositionContainer = new CompositionContainer(catalog);
 
             if (string.IsNullOrWhiteSpace(Settings.Default.MongoDbConnectionSettingFile))
             {
