@@ -103,6 +103,7 @@
     <Compile Include="Builders\IWordBuilder.cs" />
     <Compile Include="Builders\LowerWordBuilder.cs" />
     <Compile Include="Builders\PinYinWordBuilder.cs" />
+    <Compile Include="Builders\RomajiWordBuilder.cs" />
     <Compile Include="Builders\UpperWordBuilder.cs" />
     <Compile Include="DbAccessors\QueryResult.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorControl.xaml.cs">
