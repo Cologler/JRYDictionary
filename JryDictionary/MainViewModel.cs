@@ -20,10 +20,14 @@ namespace JryDictionary
     {
         private string searchText;
         private string newThing;
-        private string newWord;
         private ThingEditorViewModel editing;
+        private bool searched;
+        private bool hasNext;
+
+#pragma warning disable 649
         [ImportMany]
-        public IEnumerable<IWordBuilder> builders;
+        private IEnumerable<IWordBuilder> builders;
+#pragma warning restore 649
 
         public MainViewModel()
         {
@@ -72,11 +76,13 @@ namespace JryDictionary
             var value = this.searchText;
             if (string.IsNullOrWhiteSpace(value))
             {
+                this.searched = false;
                 this.Things.Clear();
                 this.Words.Clear();
             }
             else
             {
+                this.searched = true;
                 var builder = new FilterDefinitionBuilder<Thing>();
                 FilterDefinition<Thing> filter;
                 switch (this.SearchModes.Selected.Value.Value)
@@ -101,13 +107,12 @@ namespace JryDictionary
                     filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.SearchCategorys.Selected));
                 }
                 var queryResult = await App.Current.ThingSetAccessor.FindAsync(filter, 20);
-                if (queryResult.HasNext)
-                {
-                }
+                this.hasNext = queryResult.HasNext;
                 this.Things.Reset(queryResult.Items
                     .Select(z => new ThingViewModel(z, category ?? string.Join(", ", z.Categorys ?? Empty<string>.Enumerable))));
                 this.Words.Reset(this.Things.SelectMany(z => z.Words));
             }
+            this.RefreshProperties();
         }
 
         public ObservableCollection<ThingViewModel> Things { get; } = new ObservableCollection<ThingViewModel>();
@@ -126,12 +131,6 @@ namespace JryDictionary
         {
             get { return this.newThing; }
             set { this.SetPropertyRef(ref this.newThing, value); }
-        }
-
-        public string NewWord
-        {
-            get { return this.newWord; }
-            set { this.SetPropertyRef(ref this.newWord, value); }
         }
 
         public async Task CommitAddThingAsnyc()
@@ -179,5 +178,8 @@ namespace JryDictionary
             }
             word.Thing.Update();
         }
+
+        [NotifyPropertyChanged]
+        public string WindowTitle => this.searched ? $"jry dictionary ({this.Things.Count}{(this.hasNext ? "+" : "")})" : "jry dictionary";
     }
 }

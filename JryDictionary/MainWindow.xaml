@@ -5,7 +5,7 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:local="clr-namespace:JryDictionary"
                  mc:Ignorable="d"
-                 Title="jry dictionary"
+                 Title="{Binding WindowTitle}"
                  MinHeight="400"
                  MinWidth="650"
                  Height="400"
