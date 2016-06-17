@@ -10,11 +10,21 @@ maybe some day support share the library? :)
 
 ## how look like
 
-![](https://i.imgur.com/LjAi41P.png)
+here is main windos:
 
-and easy to create pin yin (by 1 click) for me.
+![](https://i.imgur.com/7uQKkG9.png)
 
-![](https://i.imgur.com/S8jieGs.png)
+easy to create pin yin/romaji/abbr and more.
+
+![](https://i.imgur.com/tlnEyCD.png)
+
+contain a viewer for easy to read.
+
+![](https://i.imgur.com/uiD8yBr.png)
+
+and a simple editor to edit data.
+
+![](https://i.imgur.com/UZyXRzP.png)
 
 ## how to use
 
