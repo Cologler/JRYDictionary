@@ -12,12 +12,10 @@ namespace JryDictionary.Controls.ThingEditor
 {
     public sealed class ThingEditorViewModel : JasilyEditableViewModel<Thing>
     {
-        private readonly Thing source;
         private WordEditorViewModel majorWord;
 
         public ThingEditorViewModel(Thing source)
         {
-            this.source = source;
             Debug.Assert(source != null);
             this.ReadFromObject(source);
         }
@@ -109,8 +107,8 @@ namespace JryDictionary.Controls.ThingEditor
 
         public Task CommitAsync()
         {
-            this.WriteToObject(this.source);
-            return App.Current.ThingSetAccessor.UpdateAsync(this.source);
+            this.WriteToObject(this.ReadCached);
+            return App.Current.ThingSetAccessor.UpdateAsync(this.ReadCached);
         }
 
         public void Remove(WordEditorViewModel word)
