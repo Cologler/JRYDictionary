@@ -18,8 +18,9 @@ namespace JryDictionary
     public abstract class MainViewModel : JasilyViewModel
     {
         private string searchText;
-        private string newThing;
         private ThingEditorViewModel editing;
+        private string footerHeader;
+        private string footerContent;
 
         protected MainViewModel()
         {
@@ -45,7 +46,7 @@ namespace JryDictionary
             }
         }
 
-        public async void BeginDelaySearch()
+        private async void BeginDelaySearch()
         {
             var text = this.SearchText ?? string.Empty;
             await Task.Delay(400);
@@ -74,7 +75,7 @@ namespace JryDictionary
             {
                 this.Searched = false;
                 this.Things.Clear();
-                this.Words.Clear();
+                this.Words.Collection.Clear();
             }
             else
             {
@@ -106,14 +107,14 @@ namespace JryDictionary
                 this.HasNext = queryResult.HasNext;
                 this.Things.Reset(queryResult.Items
                     .Select(z => new ThingViewModel(z, category ?? string.Join(", ", z.Categorys ?? Empty<string>.Enumerable))));
-                this.Words.Reset(this.Things.SelectMany(z => z.Words));
+                this.Words.Collection.Reset(this.Things.SelectMany(z => z.Words));
             }
             this.RefreshProperties();
         }
 
         public ObservableCollection<ThingViewModel> Things { get; } = new ObservableCollection<ThingViewModel>();
 
-        public ObservableCollection<WordViewModel> Words { get; } = new ObservableCollection<WordViewModel>();
+        public JasilyCollectionView<WordViewModel> Words { get; } = new JasilyCollectionView<WordViewModel>();
 
         public JasilyCollectionView<Boxing<NameValuePair<SearchMode>>> SearchModes { get; }
             = new JasilyCollectionView<Boxing<NameValuePair<SearchMode>>>();
@@ -123,16 +124,10 @@ namespace JryDictionary
         // ReSharper disable once CollectionNeverQueried.Global
         public ObservableCollection<IWordBuilder> Builders { get; } = new ObservableCollection<IWordBuilder>();
 
-        public string NewThing
-        {
-            get { return this.newThing; }
-            set { this.SetPropertyRef(ref this.newThing, value); }
-        }
-
         public async Task CommitAddThingAsnyc()
         {
-            var value = this.NewThing;
-            this.NewThing = string.Empty;
+            var value = this.FooterContent;
+            this.FooterContent = string.Empty;
             if (string.IsNullOrWhiteSpace(value)) return;
             value = value.Trim();
             var thing = new Thing();
@@ -154,7 +149,7 @@ namespace JryDictionary
         public void Remove(WordViewModel word)
         {
             Debug.Assert(word.Thing.MajorWord != word);
-            this.Words.Remove(word);
+            this.Words.Collection.Remove(word);
             word.Thing.Words.Remove(word);
             word.Thing.Source.Words.Remove(word.Source);
             word.Thing.Update();
@@ -170,12 +165,34 @@ namespace JryDictionary
                 word.Thing.Source.Words.Add(retWord);
                 var pinyinModel = new WordViewModel(word.Thing, retWord);
                 word.Thing.Words.Add(pinyinModel);
-                this.Words.Insert(this.Words.IndexOf(word) + 1, pinyinModel);
+                this.Words.Collection.Insert(this.Words.Collection.IndexOf(word) + 1, pinyinModel);
             }
             word.Thing.Update();
         }
 
+        #region header
+
         [NotifyPropertyChanged]
         public abstract string WindowTitle { get; }
+
+        #endregion
+
+        #region footer
+
+        public string FooterHeader
+        {
+            get { return this.footerHeader; }
+            protected set { this.SetPropertyRef(ref this.footerHeader, value); }
+        }
+
+        public string FooterContent
+        {
+            get { return this.footerContent; }
+            set { this.SetPropertyRef(ref this.footerContent, value); }
+        }
+
+        public abstract Task CommitFooterInputAsnyc();
+
+        #endregion
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JryDictionary.Models;
@@ -12,6 +13,7 @@ namespace JryDictionary
         public SelectorMainViewModel(string thingId)
         {
             this.targetThingId = thingId;
+            this.FooterHeader = "field name".ToUpper();
         }
 
         [CanBeNull]
@@ -21,8 +23,6 @@ namespace JryDictionary
             private set { this.SetPropertyRef(ref this.targetThing, value); }
         }
 
-        #region Overrides of MainViewModel
-
         public override MainViewModelType ViewModelType => MainViewModelType.Selector;
 
         public override async Task InitializeAsync()
@@ -31,10 +31,35 @@ namespace JryDictionary
 
             this.TargetThing = await App.Current.ThingSetAccessor.FindOneAsync(this.targetThingId);
             if (this.TargetThing == null) return;
+
+            this.RefreshProperties();
         }
 
-        public override string WindowTitle => this.TargetThing != null ? $"select for ¡¸{this.TargetThing.Words[0].Text}¡¹" : "missing select target";
+        public override string WindowTitle
+            => this.TargetThing != null
+            ? $"select field for ¡¸{this.TargetThing.Words[0].Text}¡¹"
+            : "missing select target";
 
-        #endregion
+        public override async Task CommitFooterInputAsnyc()
+        {
+            var value = this.FooterContent;
+            this.FooterContent = string.Empty;
+            if (string.IsNullOrWhiteSpace(value)) return;
+
+            var selected = this.Words.Selected?.Thing.Source;
+            if (selected == null) return;
+
+            var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.targetThingId);
+            if (thing == null) return;
+
+            if (thing.Fields == null) thing.Fields = new List<Field>();
+            var field = new Field
+            {
+                Name = value,
+                TargetId = selected.Id
+            };
+            thing.Fields.Add(field);
+            await App.Current.ThingSetAccessor.UpdateAsync(thing);
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace JryDictionary
         #endregion
 
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
-            => await this.ViewModel.CommitAddThingAsnyc();
+            => await this.ViewModel.CommitFooterInputAsnyc();
 
         private void WordsDataGrid_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -126,6 +126,16 @@ namespace JryDictionary
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             var builder = (IWordBuilder)((FrameworkElement)e.OriginalSource).DataContext;
             this.ViewModel.Build(word, builder);
+        }
+
+        private void CreateMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            var selector = new MainWindow(new SelectorMainViewModel(word.Thing.Source.Id))
+            {
+                Owner = this
+            };
+            selector.ShowDialog();
         }
     }
 }

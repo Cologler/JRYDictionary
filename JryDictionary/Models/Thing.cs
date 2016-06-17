@@ -19,7 +19,12 @@ namespace JryDictionary.Models
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
-        [ItemCanBeNull]
+        [ItemNotNull]
         public List<string> Categorys { get; set; }
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        [ItemNotNull]
+        public List<Field> Fields { get; set; }
     }
 }

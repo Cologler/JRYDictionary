@@ -114,6 +114,7 @@
     <Compile Include="DbAccessors\ThingSetAccessor.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainViewModelType.cs" />
+    <Compile Include="Models\Field.cs" />
     <Compile Include="ModuleManager.cs" />
     <Compile Include="SearchMode.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorViewModel.cs" />

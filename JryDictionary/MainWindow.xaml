@@ -104,7 +104,8 @@
             <DataGrid x:Name="WordsDataGrid"
                       Grid.Row="1"
                       Margin="4,0,4,4"
-                      ItemsSource="{Binding Words}"
+                      ItemsSource="{Binding Words.View}"
+                      SelectedItem="{Binding Words.Selected}"
                       AutoGenerateColumns="False"
                       CanUserResizeRows="False"
                       CanUserDeleteRows="True"
@@ -116,6 +117,8 @@
                                   Click="CopyMenuItem_OnClick" />
                         <MenuItem Header="edit"
                                   Click="EditMenuItem_OnClick" />
+                        <MenuItem Header="create field"
+                                  Click="CreateMenuItem_OnClick"/>
                         <MenuItem Header="build"
                                   Click="BuildMenuItem_OnClick"
                                   ItemsSource="{Binding PlacementTarget.(FrameworkElement.DataContext).Builders, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
@@ -169,17 +172,22 @@
             <Grid Grid.Row="2"
                   Margin="4">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="{Binding FooterHeader}"
+                           Margin="0,0,4,0"
+                           VerticalAlignment="Center" />
 
-                <TextBox Grid.Column="0"
-                         Text="{Binding NewThing}"
+                <TextBox Grid.Column="1"
+                         Text="{Binding FooterContent, Mode=TwoWay}"
                          Margin="0">
                 </TextBox>
 
-                <Button Grid.Column="1"
-                        Content="new thing"
+                <Button Grid.Column="2"
+                        Content="accept"
                         Margin="4,0,0,0"
                         Click="CommitButton_OnClick" />
 
