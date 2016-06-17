@@ -43,10 +43,6 @@ namespace JryDictionary
         {
             base.OnStartup(e);
 
-            var catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new AssemblyCatalog(this.GetType().Assembly));
-            this.CompositionContainer = new CompositionContainer(catalog);
-
             if (string.IsNullOrWhiteSpace(Settings.Default.MongoDbConnectionSettingFile))
             {
                 WriteLog("mongodb connection setting empty.");
@@ -71,7 +67,11 @@ namespace JryDictionary
             this.ThingSetAccessor = new ThingSetAccessor(this.mongoDatabase);
             this.SettingSetAccessor = new SettingSetAccessor(this.mongoDatabase);
             this.ThingSetAccessor.Initialize();
+
+            this.ModuleManager.Initialize();
         }
+
+        public ModuleManager ModuleManager { get; } = new ModuleManager();
 
         #endregion
 

@@ -14,8 +14,15 @@ namespace JryDictionary
     public partial class MainWindow
     {
         public MainWindow()
+            : this(Singleton.Instance<ViewerMainViewModel>())
         {
-            this.DataContext = Singleton.Instance<MainViewModel>();
+        }
+
+        public MainViewModel ViewModel { get; }
+
+        public MainWindow(MainViewModel viewModel)
+        {
+            this.DataContext = this.ViewModel = viewModel;
             this.InitializeComponent();
         }
 
@@ -29,7 +36,7 @@ namespace JryDictionary
         {
             base.OnSourceInitialized(e);
 
-            var vm = Singleton.Instance<MainViewModel>();
+            var vm = this.ViewModel;
             await vm.InitializeAsync();
             await vm.LoadAsync();
         }
@@ -37,7 +44,7 @@ namespace JryDictionary
         #endregion
 
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
-            => await Singleton.Instance<MainViewModel>().CommitAddThingAsnyc();
+            => await this.ViewModel.CommitAddThingAsnyc();
 
         private void WordsDataGrid_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -54,29 +61,29 @@ namespace JryDictionary
 
         private async void SearchModeSelector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await Singleton.Instance<MainViewModel>().LoadAsync();
+            await this.ViewModel.LoadAsync();
         }
 
         private async void EditMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             var editor = new ThingEditorViewModel(word.Thing);
-            Singleton.Instance<MainViewModel>().Editing = editor;
+            this.ViewModel.Editing = editor;
             this.EditorFlyout.IsOpen = true;
             await editor.InitializeAsync();
         }
 
         private async void EditorCommitButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await Singleton.Instance<MainViewModel>().Editing.CommitAsync();
-            Singleton.Instance<MainViewModel>().Editing = null;
+            await this.ViewModel.Editing.CommitAsync();
+            this.ViewModel.Editing = null;
             this.EditorFlyout.IsOpen = false;
-            await Singleton.Instance<MainViewModel>().LoadAsync();
+            await this.ViewModel.LoadAsync();
         }
 
         private void EditorCancelButton_OnClick(object sender, RoutedEventArgs e)
         {
-            Singleton.Instance<MainViewModel>().Editing = null;
+            this.ViewModel.Editing = null;
             this.EditorFlyout.IsOpen = false;
         }
 
@@ -85,7 +92,7 @@ namespace JryDictionary
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             if (word.Thing.MajorWord != word)
             {
-                Singleton.Instance<MainViewModel>().Remove(word);
+                this.ViewModel.Remove(word);
             }
             else
             {
@@ -118,7 +125,7 @@ namespace JryDictionary
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             var builder = (IWordBuilder)((FrameworkElement)e.OriginalSource).DataContext;
-            Singleton.Instance<MainViewModel>().Build(word, builder);
+            this.ViewModel.Build(word, builder);
         }
     }
 }

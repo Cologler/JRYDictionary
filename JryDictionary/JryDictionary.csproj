@@ -113,10 +113,14 @@
     <Compile Include="DbAccessors\SettingSetAccessor.cs" />
     <Compile Include="DbAccessors\ThingSetAccessor.cs" />
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="MainViewModelType.cs" />
+    <Compile Include="ModuleManager.cs" />
     <Compile Include="SearchMode.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorViewModel.cs" />
+    <Compile Include="SelectorMainViewModel.cs" />
     <Compile Include="ThingViewModel.cs" />
     <Compile Include="Controls\ThingEditor\WordEditorViewModel.cs" />
+    <Compile Include="ViewerMainViewModel.cs" />
     <Compile Include="WordViewModel.cs" />
     <Page Include="Controls\ThingEditor\ThingEditorControl.xaml">
       <SubType>Designer</SubType>

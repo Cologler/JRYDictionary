@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -16,26 +15,25 @@ using MongoDB.Driver;
 
 namespace JryDictionary
 {
-    public class MainViewModel : JasilyViewModel
+    public abstract class MainViewModel : JasilyViewModel
     {
         private string searchText;
         private string newThing;
         private ThingEditorViewModel editing;
-        private bool searched;
-        private bool hasNext;
 
-#pragma warning disable 649
-        [ImportMany]
-        private IEnumerable<IWordBuilder> builders;
-#pragma warning restore 649
-
-        public MainViewModel()
+        protected MainViewModel()
         {
             this.SearchModes.Collection.AddRange(EnumCache<SearchMode>.Default.All()
                 .Select(z => new Boxing<NameValuePair<SearchMode>>(
                     new NameValuePair<SearchMode>(EnumCache<SearchMode>.Default.ToString(z), z))));
             this.SearchModes.Selected = this.SearchModes.Collection[0];
         }
+
+        public abstract MainViewModelType ViewModelType { get; }
+
+        protected bool Searched { get; private set; }
+
+        protected bool HasNext { get; private set; }
 
         public string SearchText
         {
@@ -57,11 +55,9 @@ namespace JryDictionary
             }
         }
 
-        public async Task InitializeAsync()
+        public virtual async Task InitializeAsync()
         {
-            App.Current.CompositionContainer.ComposeParts(this);
-            Debug.Assert(this.builders != null);
-            this.Builders.AddRange(this.builders.OrderBy(z => z.AsOrderable().GetOrderCode()));
+            this.Builders.AddRange(App.Current.ModuleManager.Builders);
 
             var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
             this.SearchCategorys.Collection.Reset(categorys);
@@ -76,13 +72,13 @@ namespace JryDictionary
             var value = this.searchText;
             if (string.IsNullOrWhiteSpace(value))
             {
-                this.searched = false;
+                this.Searched = false;
                 this.Things.Clear();
                 this.Words.Clear();
             }
             else
             {
-                this.searched = true;
+                this.Searched = true;
                 var builder = new FilterDefinitionBuilder<Thing>();
                 FilterDefinition<Thing> filter;
                 switch (this.SearchModes.Selected.Value.Value)
@@ -107,7 +103,7 @@ namespace JryDictionary
                     filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.SearchCategorys.Selected));
                 }
                 var queryResult = await App.Current.ThingSetAccessor.FindAsync(filter, 20);
-                this.hasNext = queryResult.HasNext;
+                this.HasNext = queryResult.HasNext;
                 this.Things.Reset(queryResult.Items
                     .Select(z => new ThingViewModel(z, category ?? string.Join(", ", z.Categorys ?? Empty<string>.Enumerable))));
                 this.Words.Reset(this.Things.SelectMany(z => z.Words));
@@ -180,6 +176,6 @@ namespace JryDictionary
         }
 
         [NotifyPropertyChanged]
-        public string WindowTitle => this.searched ? $"jry dictionary ({this.Things.Count}{(this.hasNext ? "+" : "")})" : "jry dictionary";
+        public abstract string WindowTitle { get; }
     }
 }

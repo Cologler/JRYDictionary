@@ -75,6 +75,14 @@ namespace JryDictionary.DbAccessors
             return items.Count == count + 1 ? new QueryResult<Thing>(true, items.Take(count)) : new QueryResult<Thing>(false, items);
         }
 
+        public async Task<Thing> FindOneAsync(string thingId)
+        {
+            Debug.Assert(thingId != null);
+
+            return (await (await this.Collection.FindAsync(new FilterDefinitionBuilder<Thing>().Eq(z => z.Id, thingId)))
+                .ToListAsync()).FirstOrDefault();
+        }
+
         public void Initialize()
         {
             var index = new IndexKeysDefinitionBuilder<Thing>().Ascending(

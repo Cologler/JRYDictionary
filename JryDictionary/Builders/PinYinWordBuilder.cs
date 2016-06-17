@@ -17,7 +17,7 @@ namespace JryDictionary.Builders
 
         public IEnumerable<Word> Build(Thing thing, Word word)
         {
-            if (this.pinYinManager == null) this.pinYinManager = PinYinManager.CreateInstance();
+            if (this.pinYinManager == null) this.pinYinManager = PinYinManager.Default;
 
             var containPinyin = false;
             var chars = word.Text.ToCharArray();
