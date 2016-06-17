@@ -19,22 +19,31 @@ namespace JryDictionary
         {
             get
             {
-                if (this.thingName == null)
-                {
-                    this.thingName = string.Empty; // empty to sure task was started.
-                    this.BeginLoadThingName();
-                }
+                this.BeginLoadThingName();
                 return this.displayValue;
             }
             private set { this.SetPropertyRef(ref this.displayValue, value); }
         }
 
+        public string ThingName
+        {
+            get
+            {
+                this.BeginLoadThingName();
+                return this.thingName;
+            }
+            private set { this.SetPropertyRef(ref this.thingName, value); }
+        }
+
         public async void BeginLoadThingName()
         {
+            if (this.thingName != null) return;
+            this.thingName = string.Empty;
             Debug.WriteLine($"load field for [{this.Source.TargetId}]");
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.Source.TargetId);
             if (thing != null)
             {
+                this.ThingName = thing.MajorWord().Text;
                 this.DisplayValue = $"{this.Source.Name} 「{thing.MajorWord().Text}」";
             }
         }

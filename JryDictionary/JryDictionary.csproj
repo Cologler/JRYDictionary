@@ -105,6 +105,10 @@
     <Compile Include="Builders\PinYinWordBuilder.cs" />
     <Compile Include="Builders\RomajiWordBuilder.cs" />
     <Compile Include="Builders\UpperWordBuilder.cs" />
+    <Compile Include="Controls\ThingViewer\ThingViewerControl.xaml.cs">
+      <DependentUpon>ThingViewerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ThingViewer\ThingViewerViewModel.cs" />
     <Compile Include="DbAccessors\QueryResult.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorControl.xaml.cs">
       <DependentUpon>ThingEditorControl.xaml</DependentUpon>
@@ -125,6 +129,10 @@
     <Compile Include="ViewerMainViewModel.cs" />
     <Compile Include="WordViewModel.cs" />
     <Page Include="Controls\ThingEditor\ThingEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ThingViewer\ThingViewerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -34,5 +34,9 @@ namespace JryDictionary
         public bool IsMajor => this.Thing.MajorWord == this;
 
         public bool CanRemove => !this.IsMajor;
+
+        [NotifyPropertyChanged]
+        public string WordWithLanguage
+            => this.Source.Language == null ? $"{this.Source.Text}" : $"{this.Source.Text} ({this.Source.Language})";
     }
 }

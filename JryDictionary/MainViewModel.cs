@@ -106,7 +106,7 @@ namespace JryDictionary
                 var queryResult = await App.Current.ThingSetAccessor.FindAsync(filter, 20);
                 this.HasNext = queryResult.HasNext;
                 this.Things.Reset(queryResult.Items
-                    .Select(z => new ThingViewModel(z, category ?? string.Join(", ", z.Categorys ?? Empty<string>.Enumerable))));
+                    .Select(z => new ThingViewModel(z, category)));
                 this.Words.Collection.Reset(this.Things.SelectMany(z => z.Words));
             }
             this.RefreshProperties();

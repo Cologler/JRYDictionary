@@ -139,12 +139,13 @@ namespace JryDictionary
             BeginCreateField(this, word.Thing.Source.Id);
         }
 
-        private void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private async void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
-
-
+            var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.Source.TargetId);
+            if (thing == null) return;
+            this.ViewThing(new ThingViewModel(thing));
         }
 
         private void RemoveFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -155,6 +156,14 @@ namespace JryDictionary
             this.ViewModel.RemoveField(word.Thing, field);
         }
 
+        private void ViewThing(ThingViewModel viewModel)
+        {
+            Debug.Assert(viewModel != null);
+            (this.ViewModel as ViewerMainViewModel)?.SetViewer(viewModel);
+            this.ThingViewerControl.ViewModel = viewModel;
+            this.ViewerFlyout.IsOpen = true;
+        }
+
         public static void BeginCreateField(MainWindow owner, string thingId)
         {
             var selector = new MainWindow(new SelectorMainViewModel(thingId))
@@ -162,6 +171,18 @@ namespace JryDictionary
                 Owner = owner
             };
             selector.ShowDialog();
+        }
+
+        private void ViewMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            this.ViewThing(word.Thing);
+        }
+
+        private void ViewerCloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            (this.ViewModel as ViewerMainViewModel)?.SetViewer(null);
+            this.ViewerFlyout.IsOpen = false;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Jasily.ComponentModel;
@@ -10,10 +11,10 @@ namespace JryDictionary
 {
     public class ThingViewModel : JasilyViewModel<Thing>
     {
-        public ThingViewModel(Thing source, string category)
+        public ThingViewModel(Thing source, string category = null)
             : base(source)
         {
-            this.Category = category;
+            this.Category = category ?? string.Join(", ", source.Categorys ?? Empty<string>.Enumerable);
             this.Words = source.Words.Select(z => new WordViewModel(this, z)).ToList();
             if (source.Fields != null)
             {
@@ -24,12 +25,18 @@ namespace JryDictionary
         [NotNull]
         public List<WordViewModel> Words { get; }
 
+        [NotNull]
         public WordViewModel MajorWord => this.Words[0];
 
         public async void Update() => await App.Current.ThingSetAccessor.UpdateAsync(this.Source);
 
+        [NotNull]
         public string Category { get; }
 
+        [NotNull]
         public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
+
+        [NotNull]
+        public List<WordViewModel> Alias => this.Words.Skip(1).ToList();
     }
 }

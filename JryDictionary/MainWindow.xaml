@@ -1,5 +1,7 @@
-﻿<mah:MetroWindow xmlns:ThingEditor="clr-namespace:JryDictionary.Controls.ThingEditor"  x:Class="JryDictionary.MainWindow"
+﻿<mah:MetroWindow x:Class="JryDictionary.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:ThingEditor="clr-namespace:JryDictionary.Controls.ThingEditor"
+                 xmlns:ThingViewer="clr-namespace:JryDictionary.Controls.ThingViewer"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -19,6 +21,37 @@
 
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
+            <mah:Flyout x:Name="ViewerFlyout"
+                        Position="Bottom"
+                        Theme="Adapt"
+                        Height="{Binding ElementName=RootPanel, Path=ActualHeight}"
+                        CloseButtonVisibility="Hidden"
+                        TitleVisibility="Hidden">
+                <mah:Flyout.HeaderTemplate>
+                    <!-- Empty header (no close button nor title) -->
+                    <DataTemplate />
+                </mah:Flyout.HeaderTemplate>
+                <Grid>
+                    <Border BorderBrush="{StaticResource AccentColorBrush}"
+                            BorderThickness="0,1,0,0">
+                        <Grid Margin="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ThingViewer:ThingViewerControl x:Name="ThingViewerControl" />
+
+                            <Button Content="close"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,8,0,0"
+                                    Grid.Row="1"
+                                    Click="ViewerCloseButton_OnClick"
+                                    Width="70" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </mah:Flyout>
             <mah:Flyout x:Name="EditorFlyout"
                         Position="Bottom"
                         Theme="Adapt"
@@ -38,9 +71,9 @@
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            
+
                             <Grid>
-                                <ThingEditor:ThingEditorControl />
+                                <ThingEditor:ThingEditorControl x:Name="ThingEditorControl" />
                             </Grid>
 
                             <Grid Grid.Row="1"
@@ -113,6 +146,8 @@
                 <DataGrid.ContextMenu>
                     <ContextMenu x:Name="WordsDataGridContextMenu"
                                  d:DataContext="{d:DesignInstance local:WordViewModel}">
+                        <MenuItem Header="view"
+                                  Click="ViewMenuItem_OnClick" />
                         <MenuItem Header="copy"
                                   Click="CopyMenuItem_OnClick" />
                         <MenuItem Header="edit"
