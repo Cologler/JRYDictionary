@@ -19,11 +19,17 @@
 
         <TextBlock Text="{Binding MajorWord.Text}"
                    FontSize="18"
-                   Margin="4,0,0,10" />
+                   Margin="4,2,0,10" />
 
         <ListView Grid.Row="1"
+                  Margin="0,4"
                   ItemsSource="{Binding Words}"
                   BorderThickness="0">
+            <ListView.Resources>
+                <!-- remove mouse over background color -->
+                <SolidColorBrush x:Key="AccentColorBrush3"
+                                 Color="Transparent" />
+            </ListView.Resources>
             <i:Interaction.Behaviors>
                 <behaviors:NonSelectBehavior />
             </i:Interaction.Behaviors>
@@ -88,15 +94,25 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
+        
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="fields"
+                       Margin="4,0"
+                       Visibility="{Binding Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
+                       VerticalAlignment="Center" />
 
-            <ListView ItemsSource="{Binding Categorys}"
+            <ListView ItemsSource="{Binding Fields}"
+                      Grid.Column="1"
+                      Visibility="{Binding Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                       BorderThickness="0">
                 <i:Interaction.Behaviors>
                     <behaviors:NonSelectBehavior />
@@ -114,41 +130,88 @@
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="remove"
-                                              Click="RemoveCategoryMenuItem_OnClick" />
+                                              Click="RemoveFieldMenuItem_OnClick" />
                                 </ContextMenu>
                             </Grid.ContextMenu>
-                            <TextBlock Text="{Binding}"
+                            <TextBlock Text="{Binding Name}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Center"
                                        Margin="6"
-                                       Foreground="White" />
+                                       Foreground="White">
+                            <Run></Run>
+                            </TextBlock>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-            <ComboBox Grid.Column="1"
-                      Text="{Binding CategoryInput, UpdateSourceTrigger=PropertyChanged}"
-                      ItemsSource="{Binding ExistsCategorys}"
-                      IsEditable="True"
-                      Margin="4,0,0,0"
-                      Height="28"
-                      FontFamily="Microsoft YaHei"
-                      VerticalAlignment="Top" />
+            <TextBlock Grid.Row="1"
+                       Text="categorys"
+                       Margin="4,0"
+                       VerticalAlignment="Center" />
 
-            <Button Grid.Column="2"
-                    Margin="4,0,0,0"
-                    Padding="0"
-                    Height="28"
-                    Width="28"
-                    VerticalAlignment="Top"
-                    Click="AddCategoryButton_OnClick">
-                <Grid>
-                    <TextBlock Text="&#x2795;"
-                               FontFamily="Segoe UI Symbol" />
-                </Grid>
-            </Button>
+            <Grid Grid.Row="1"
+                  Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
+                <ListView ItemsSource="{Binding Categorys}"
+                          BorderThickness="0">
+                    <i:Interaction.Behaviors>
+                        <behaviors:NonSelectBehavior />
+                    </i:Interaction.Behaviors>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid MinWidth="40"
+                                  Background="{StaticResource AccentColorBrush}"
+                                  Margin="2">
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="remove"
+                                                  Click="RemoveCategoryMenuItem_OnClick" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                <TextBlock Text="{Binding}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="6"
+                                           Foreground="White" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <ComboBox Grid.Column="1"
+                          Text="{Binding CategoryInput, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding ExistsCategorys}"
+                          IsEditable="True"
+                          Margin="4,0,0,0"
+                          Height="28"
+                          FontFamily="Microsoft YaHei"
+                          VerticalAlignment="Top" />
+
+                <Button Grid.Column="2"
+                        Margin="4,0,0,0"
+                        Padding="0"
+                        Height="28"
+                        Width="28"
+                        VerticalAlignment="Top"
+                        Click="AddCategoryButton_OnClick">
+                    <Grid>
+                        <TextBlock Text="&#x2795;"
+                                   FontFamily="Segoe UI Symbol" />
+                    </Grid>
+                </Button>
+
+            </Grid>
         </Grid>
 
     </Grid>

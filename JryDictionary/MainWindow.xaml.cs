@@ -133,10 +133,13 @@ namespace JryDictionary
             this.ViewModel.Build(word, builder);
         }
 
-        private void CreateFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private async void CreateFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
-            BeginCreateField(this, word.Thing.Source.Id);
+            if (BeginCreateField(this, word.Thing.Source.Id) == true)
+            {
+                await this.ViewModel.LoadAsync();
+            }
         }
 
         private async void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -164,13 +167,13 @@ namespace JryDictionary
             this.ViewerFlyout.IsOpen = true;
         }
 
-        public static void BeginCreateField(MainWindow owner, string thingId)
+        public static bool? BeginCreateField(MainWindow owner, string thingId)
         {
             var selector = new MainWindow(new SelectorMainViewModel(thingId))
             {
                 Owner = owner
             };
-            selector.ShowDialog();
+            return selector.ShowDialog();
         }
 
         private void ViewMenuItem_OnClick(object sender, RoutedEventArgs e)

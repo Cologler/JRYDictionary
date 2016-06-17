@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Jasily.ComponentModel.Editable;
+using Jasily.ComponentModel.Editable.Converters;
 using Jasily.Diagnostics;
 using JryDictionary.Models;
 
@@ -13,6 +14,7 @@ namespace JryDictionary.Controls.ThingEditor
     public sealed class ThingEditorViewModel : JasilyEditableViewModel<Thing>
     {
         private WordEditorViewModel majorWord;
+        private ObservableCollection<Field> fields;
 
         public ThingEditorViewModel(Thing source)
         {
@@ -27,8 +29,6 @@ namespace JryDictionary.Controls.ThingEditor
             get { return this.majorWord; }
             private set { this.SetPropertyRef(ref this.majorWord, value); }
         }
-
-        #region Overrides of JasilyEditableViewModel<Thing>
 
         public override void ReadFromObject(Thing obj)
         {
@@ -103,8 +103,6 @@ namespace JryDictionary.Controls.ThingEditor
             obj.Categorys = this.Categorys.Count > 0 ? this.Categorys.ToList() : null;
         }
 
-        #endregion
-
         public Task CommitAsync()
         {
             this.WriteToObject(this.ReadCached);
@@ -149,6 +147,13 @@ namespace JryDictionary.Controls.ThingEditor
             category = category.Trim();
             if (this.Categorys.Contains(category)) return;
             this.Categorys.Add(category);
+        }
+
+        [EditableField(Converter = typeof(EmptyToNullCollectionConverter<List<Field>, ObservableCollection<Field>, Field>))]
+        public ObservableCollection<Field> Fields
+        {
+            get { return this.fields; }
+            private set { this.SetPropertyRef(ref this.fields, value); }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using JryDictionary.Models;
 
 namespace JryDictionary.Controls.ThingEditor
 {
@@ -52,6 +53,12 @@ namespace JryDictionary.Controls.ThingEditor
         {
             var vm = this.CurrentViewModel;
             vm.AddCategory(vm.CategoryInput);
+        }
+
+        private void RemoveFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = this.CurrentViewModel;
+            vm.Fields.Remove(((FrameworkElement)sender).DataContext as Field);
         }
     }
 }
