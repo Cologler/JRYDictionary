@@ -117,8 +117,15 @@
                                   Click="CopyMenuItem_OnClick" />
                         <MenuItem Header="edit"
                                   Click="EditMenuItem_OnClick" />
-                        <MenuItem Header="create field"
-                                  Click="CreateMenuItem_OnClick"/>
+                        <MenuItem Header="fields">
+                            <MenuItem Header="create"
+                                      Click="CreateFieldMenuItem_OnClick" />
+                            <MenuItem Header="view"
+                                      Visibility="{Binding Thing.Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
+                                      Click="ViewFieldMenuItem_OnClick"
+                                      ItemsSource="{Binding Thing.Fields}"
+                                      DisplayMemberPath="DisplayValue"/>
+                        </MenuItem>
                         <MenuItem Header="build"
                                   Click="BuildMenuItem_OnClick"
                                   ItemsSource="{Binding PlacementTarget.(FrameworkElement.DataContext).Builders, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"

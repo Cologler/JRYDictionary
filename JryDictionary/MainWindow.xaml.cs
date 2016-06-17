@@ -128,7 +128,7 @@ namespace JryDictionary
             this.ViewModel.Build(word, builder);
         }
 
-        private void CreateMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void CreateFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             var selector = new MainWindow(new SelectorMainViewModel(word.Thing.Source.Id))
@@ -136,6 +136,14 @@ namespace JryDictionary
                 Owner = this
             };
             selector.ShowDialog();
+        }
+
+        private void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
+
+            
         }
     }
 }

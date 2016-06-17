@@ -112,6 +112,7 @@
     <Compile Include="DbAccessors\SettingContainer.cs" />
     <Compile Include="DbAccessors\SettingSetAccessor.cs" />
     <Compile Include="DbAccessors\ThingSetAccessor.cs" />
+    <Compile Include="FieldViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainViewModelType.cs" />
     <Compile Include="Models\Field.cs" />

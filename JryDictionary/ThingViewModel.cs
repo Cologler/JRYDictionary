@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Jasily.ComponentModel;
 using JetBrains.Annotations;
@@ -14,6 +15,10 @@ namespace JryDictionary
         {
             this.Category = category;
             this.Words = source.Words.Select(z => new WordViewModel(this, z)).ToList();
+            if (source.Fields != null)
+            {
+                this.Fields.AddRange(source.Fields.Select(z => new FieldViewModel(z)));
+            }
         }
 
         [NotNull]
@@ -24,5 +29,7 @@ namespace JryDictionary
         public async void Update() => await App.Current.ThingSetAccessor.UpdateAsync(this.Source);
 
         public string Category { get; }
+
+        public ObservableCollection<FieldViewModel> Fields { get; } = new ObservableCollection<FieldViewModel>();
     }
 }
