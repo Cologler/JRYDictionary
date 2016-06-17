@@ -125,6 +125,11 @@
                                       Click="ViewFieldMenuItem_OnClick"
                                       ItemsSource="{Binding Thing.Fields}"
                                       DisplayMemberPath="DisplayValue"/>
+                            <MenuItem Header="remove"
+                                      Visibility="{Binding Thing.Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
+                                      Click="RemoveFieldMenuItem_OnClick"
+                                      ItemsSource="{Binding Thing.Fields}"
+                                      DisplayMemberPath="DisplayValue" />
                         </MenuItem>
                         <MenuItem Header="build"
                                   Click="BuildMenuItem_OnClick"

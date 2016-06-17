@@ -170,6 +170,24 @@ namespace JryDictionary
             word.Thing.Update();
         }
 
+        public void RemoveField(ThingViewModel thing, FieldViewModel field)
+        {
+            Debug.Assert(thing.Fields.Contains(field));
+
+            if (!thing.Fields.Remove(field))
+            {
+                Debug.Assert(false);
+            }
+
+            if (thing.Source.Fields != null)
+            {
+                thing.Source.Fields.Remove(field.Source);
+                if (thing.Source.Fields.Count == 0) thing.Source.Fields = null;
+            }
+
+            thing.Update();
+        }
+
         #region header
 
         [NotifyPropertyChanged]
@@ -191,7 +209,11 @@ namespace JryDictionary
             set { this.SetPropertyRef(ref this.footerContent, value); }
         }
 
-        public abstract Task CommitFooterInputAsnyc();
+        /// <summary>
+        /// return true if need close current window.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Task<bool> CommitFooterInputAsnyc();
 
         #endregion
     }

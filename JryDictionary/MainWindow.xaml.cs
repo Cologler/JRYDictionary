@@ -44,7 +44,12 @@ namespace JryDictionary
         #endregion
 
         private async void CommitButton_OnClick(object sender, RoutedEventArgs e)
-            => await this.ViewModel.CommitFooterInputAsnyc();
+        {
+            if (await this.ViewModel.CommitFooterInputAsnyc())
+            {
+                this.DialogResult = true;
+            }
+        }
 
         private void WordsDataGrid_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -131,11 +136,7 @@ namespace JryDictionary
         private void CreateFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
-            var selector = new MainWindow(new SelectorMainViewModel(word.Thing.Source.Id))
-            {
-                Owner = this
-            };
-            selector.ShowDialog();
+            BeginCreateField(this, word.Thing.Source.Id);
         }
 
         private void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -143,7 +144,24 @@ namespace JryDictionary
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
 
-            
+
+        }
+
+        private void RemoveFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
+
+            this.ViewModel.RemoveField(word.Thing, field);
+        }
+
+        public static void BeginCreateField(MainWindow owner, string thingId)
+        {
+            var selector = new MainWindow(new SelectorMainViewModel(thingId))
+            {
+                Owner = owner
+            };
+            selector.ShowDialog();
         }
     }
 }

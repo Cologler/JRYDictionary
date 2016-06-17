@@ -1,4 +1,5 @@
-﻿using Jasily.ComponentModel;
+﻿using System.Diagnostics;
+using Jasily.ComponentModel;
 using JryDictionary.Models;
 
 namespace JryDictionary
@@ -30,6 +31,7 @@ namespace JryDictionary
 
         public async void BeginLoadThingName()
         {
+            Debug.WriteLine($"load field for [{this.Source.TargetId}]");
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.Source.TargetId);
             if (thing != null)
             {

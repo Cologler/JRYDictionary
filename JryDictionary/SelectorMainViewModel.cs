@@ -40,17 +40,17 @@ namespace JryDictionary
             ? $"select field for ¡¸{this.TargetThing.Words[0].Text}¡¹"
             : "missing select target";
 
-        public override async Task CommitFooterInputAsnyc()
+        public override async Task<bool> CommitFooterInputAsnyc()
         {
             var value = this.FooterContent;
             this.FooterContent = string.Empty;
-            if (string.IsNullOrWhiteSpace(value)) return;
+            if (string.IsNullOrWhiteSpace(value)) return false;
 
             var selected = this.Words.Selected?.Thing.Source;
-            if (selected == null) return;
+            if (selected == null) return false;
 
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.targetThingId);
-            if (thing == null) return;
+            if (thing == null) return false;
 
             if (thing.Fields == null) thing.Fields = new List<Field>();
             var field = new Field
@@ -60,6 +60,7 @@ namespace JryDictionary
             };
             thing.Fields.Add(field);
             await App.Current.ThingSetAccessor.UpdateAsync(thing);
+            return true;
         }
     }
 }

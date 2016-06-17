@@ -15,11 +15,11 @@ namespace JryDictionary
 
         public override string WindowTitle => this.Searched ? $"jry dictionary ({this.Things.Count}{(this.HasNext ? "+" : "")})" : "jry dictionary";
 
-        public override async Task CommitFooterInputAsnyc()
+        public override async Task<bool> CommitFooterInputAsnyc()
         {
             var value = this.FooterContent;
             this.FooterContent = string.Empty;
-            if (string.IsNullOrWhiteSpace(value)) return;
+            if (string.IsNullOrWhiteSpace(value)) return false;
             value = value.Trim();
             var thing = new Thing();
             thing.Id = Guid.NewGuid().ToString().ToUpper();
@@ -29,6 +29,7 @@ namespace JryDictionary
             });
             await App.Current.ThingSetAccessor.UpdateAsync(thing);
             await this.LoadAsync();
+            return false;
         }
     }
 }
