@@ -11,14 +11,15 @@ namespace JryDictionary.Builders
     [Export(typeof(IWordBuilder))]
     public sealed class RomajiWordBuilder : IWordBuilder, IOrderable
     {
-        private Dictionary<string, string> dict;
+        private static readonly Dictionary<string, string> Cached;
 
-        public RomajiWordBuilder()
+        static RomajiWordBuilder()
         {
             // http://h84473111.myweb.hinet.net/TACR/jp.htm
-            this.dict = new Dictionary<string, string>
+            Cached = new Dictionary<string, string>
             {
                 // Æ½ ¼Ù Ãû - Çå Òô
+                ["¤¢"] = "a",
                 ["¤«"] = "ka",
                 ["¤µ"] = "sa",
                 ["¤¿"] = "ta",
@@ -237,7 +238,7 @@ namespace JryDictionary.Builders
                 ["¥ß¥ç"] = "myo",
                 ["¥ê¥ç"] = "ryo",
             };
-            Debug.Assert(this.dict.Keys.Select(z => z.Length).Max() == 2);
+            Debug.Assert(Cached.Keys.Select(z => z.Length).Max() == 2);
         }
 
         #region Implementation of IWordBuilder
@@ -252,7 +253,7 @@ namespace JryDictionary.Builders
             {
                 if (i + 1 < text.Length)
                 {
-                    var val = this.dict.GetValueOrDefault(text.Substring(i, 2));
+                    var val = Cached.GetValueOrDefault(text.Substring(i, 2));
                     if (val != null)
                     {
                         sb.Append(val);
@@ -261,7 +262,7 @@ namespace JryDictionary.Builders
                     }
                 }
 
-                var val2 = this.dict.GetValueOrDefault(text.Substring(i, 1));
+                var val2 = Cached.GetValueOrDefault(text.Substring(i, 1));
                 if (val2 != null)
                 {
                     sb.Append(val2);
