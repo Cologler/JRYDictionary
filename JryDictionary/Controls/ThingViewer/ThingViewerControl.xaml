@@ -22,6 +22,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock"
@@ -170,6 +171,14 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                
+                <!-- detail -->
+
+                <TextBlock Grid.Row="4">
+                    <i:Interaction.Behaviors>
+                        <local:DocumentBehavior />
+                    </i:Interaction.Behaviors>
+                </TextBlock>
             </Grid>
         </ScrollViewer>
     </Grid>

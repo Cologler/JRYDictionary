@@ -28,5 +28,9 @@ namespace JryDictionary.Models
         public List<Field> Fields { get; set; }
 
         public Word MajorWord() => this.Words[0];
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public string Document { get; set; }
     }
 }
