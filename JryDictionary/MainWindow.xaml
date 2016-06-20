@@ -26,6 +26,7 @@
                         Theme="Adapt"
                         Height="{Binding ElementName=RootPanel, Path=ActualHeight}"
                         CloseButtonVisibility="Hidden"
+                        DataContext="{x:Null}"
                         TitleVisibility="Hidden">
                 <mah:Flyout.HeaderTemplate>
                     <!-- Empty header (no close button nor title) -->
