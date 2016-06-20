@@ -24,6 +24,21 @@ namespace JryDictionary
         {
             this.DataContext = this.ViewModel = viewModel;
             this.InitializeComponent();
+            if (viewModel.ViewModelType == MainViewModelType.Selector)
+            {
+                this.SetReadOnly();
+            }
+        }
+
+        private void SetReadOnly()
+        {
+            this.WordsColumn.IsReadOnly = true;
+            this.LanguagesColumn.IsReadOnly = true;
+            this.EditMenuItem.IsEnabled = false;
+            this.CreateFieldMenuItem.IsEnabled = false;
+            this.RemoveFieldMenuItem.IsEnabled = false;
+            this.BuildMenuItem.IsEnabled = false;
+            this.RemoveMenuItem.IsEnabled = false;
         }
 
         #region Overrides of Window

@@ -152,10 +152,12 @@
                         <MenuItem Header="copy"
                                   Click="CopyMenuItem_OnClick" />
                         <MenuItem Header="edit"
-                                  Click="EditMenuItem_OnClick" />
+                                  Click="EditMenuItem_OnClick"
+                                  x:Name="EditMenuItem" />
                         <MenuItem Header="fields">
                             <MenuItem Header="create"
-                                      Click="CreateFieldMenuItem_OnClick" />
+                                      Click="CreateFieldMenuItem_OnClick"
+                                      x:Name="CreateFieldMenuItem" />
                             <MenuItem Header="view"
                                       Visibility="{Binding Thing.Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                                       Click="ViewFieldMenuItem_OnClick"
@@ -165,16 +167,18 @@
                                       Visibility="{Binding Thing.Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                                       Click="RemoveFieldMenuItem_OnClick"
                                       ItemsSource="{Binding Thing.Fields}"
-                                      DisplayMemberPath="DisplayValue" />
+                                      DisplayMemberPath="DisplayValue"
+                                      x:Name="RemoveFieldMenuItem" />
                         </MenuItem>
                         <MenuItem Header="build"
                                   Click="BuildMenuItem_OnClick"
                                   ItemsSource="{Binding PlacementTarget.(FrameworkElement.DataContext).Builders, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                  DisplayMemberPath="Name">
-                        </MenuItem>
+                                  DisplayMemberPath="Name"
+                                  x:Name="BuildMenuItem" />
                         <MenuItem Header="remove"
                                   Visibility="{Binding CanRemove, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=02}"
-                                  Click="RemoveMenuItem_OnClick" />
+                                  Click="RemoveMenuItem_OnClick"
+                                  x:Name="RemoveMenuItem" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
@@ -187,7 +191,8 @@
                                         Width="150"
                                         FontFamily="Microsoft YaHei"
                                         IsReadOnly="True" />
-                    <DataGridTemplateColumn Header="word"
+                    <DataGridTemplateColumn x:Name="WordsColumn"
+                                            Header="word"
                                             Width="220">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
@@ -209,7 +214,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="language"
+                    <DataGridTemplateColumn x:Name="LanguagesColumn"
+                                            Header="language"
                                             Width="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
