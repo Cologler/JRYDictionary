@@ -18,16 +18,23 @@ namespace JryDictionary
             get { return this.Source.Text; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-
-                }
-                else
+                if (!string.IsNullOrWhiteSpace(value))
                 {
                     this.Source.Text = value.Trim();
                     this.Thing.Update();
                 }
                 this.NotifyPropertyChanged(nameof(this.Word));
+            }
+        }
+
+        public string Language
+        {
+            get { return this.Source.Language; }
+            set
+            {
+                this.Source.Language = value;
+                this.Thing.Update();
+                this.NotifyPropertyChanged(nameof(this.Language));
             }
         }
 

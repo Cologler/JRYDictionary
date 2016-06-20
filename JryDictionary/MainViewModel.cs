@@ -61,12 +61,14 @@ namespace JryDictionary
             this.Builders.AddRange(App.Current.ModuleManager.Builders);
 
             var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
-            this.SearchCategorys.Collection.Reset(categorys);
-            if (this.SearchCategorys.Selected == null) this.SearchCategorys.Selected = string.Empty;
+            this.ExistsCategorys.Collection.Reset(categorys);
+            if (this.ExistsCategorys.Selected == null) this.ExistsCategorys.Selected = string.Empty;
             App.Current.ThingSetAccessor.SavedNewCategory += this.ThingSetAccessor_SavedNewCategory;
+
+            this.ExistsLanguages.AddRange(await App.Current.ThingSetAccessor.GroupLanguagesAsync());
         }
 
-        private void ThingSetAccessor_SavedNewCategory(object sender, string e) => this.SearchCategorys.Collection.Add(e);
+        private void ThingSetAccessor_SavedNewCategory(object sender, string e) => this.ExistsCategorys.Collection.Add(e);
 
         public async Task LoadAsync()
         {
@@ -98,10 +100,10 @@ namespace JryDictionary
                         throw new ArgumentOutOfRangeException();
                 }
                 string category = null;
-                if (this.SearchCategorys.Selected != string.Empty)
+                if (this.ExistsCategorys.Selected != string.Empty)
                 {
-                    category = this.SearchCategorys.Selected;
-                    filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.SearchCategorys.Selected));
+                    category = this.ExistsCategorys.Selected;
+                    filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.ExistsCategorys.Selected));
                 }
                 var queryResult = await App.Current.ThingSetAccessor.FindAsync(filter, 20);
                 this.HasNext = queryResult.HasNext;
@@ -119,7 +121,7 @@ namespace JryDictionary
         public JasilyCollectionView<Boxing<NameValuePair<SearchMode>>> SearchModes { get; }
             = new JasilyCollectionView<Boxing<NameValuePair<SearchMode>>>();
 
-        public JasilyCollectionView<string> SearchCategorys { get; } = new JasilyCollectionView<string>();
+        public JasilyCollectionView<string> ExistsCategorys { get; } = new JasilyCollectionView<string>();
 
         // ReSharper disable once CollectionNeverQueried.Global
         public ObservableCollection<IWordBuilder> Builders { get; } = new ObservableCollection<IWordBuilder>();
@@ -187,6 +189,8 @@ namespace JryDictionary
 
             thing.Update();
         }
+
+        public ObservableCollection<string> ExistsLanguages { get; } = new ObservableCollection<string>();
 
         #region header
 

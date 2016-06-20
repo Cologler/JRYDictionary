@@ -15,6 +15,7 @@ namespace JryDictionary.DbAccessors
         private HashSet<string> languages;
         private HashSet<string> categorys;
         public event EventHandler<string> SavedNewCategory;
+        public event EventHandler<string> SavedNewLanguage;
 
         public ThingSetAccessor(IMongoDatabase db)
         {
@@ -25,6 +26,7 @@ namespace JryDictionary.DbAccessors
 
         private async Task PreCommitAsync(Thing thing)
         {
+            // this func should work on UI thread.
             Debug.Assert(thing.Id != null);
 
             thing.Words = thing.Words.Skip(1)
@@ -35,9 +37,14 @@ namespace JryDictionary.DbAccessors
             // category
             if (thing.Categorys != null)
             {
-                foreach (var category in thing.Categorys)
+                if (this.categorys == null)
                 {
-                    if (this.categorys.Add(category)) this.SavedNewCategory?.Invoke(this, category);
+                    await this.GroupCategorysAsync();
+                }
+                Debug.Assert(this.categorys != null);
+                foreach (var category in thing.Categorys.Where(z => this.categorys.Add(z)))
+                {
+                    this.SavedNewCategory?.Invoke(this, category);
                 }
             }
 
@@ -50,7 +57,10 @@ namespace JryDictionary.DbAccessors
                     await this.GroupLanguagesAsync();
                 }
                 Debug.Assert(this.languages != null);
-                this.languages.AddRange(languages);
+                foreach (var language in languages.Where(z => this.languages.Add(z)))
+                {
+                    this.SavedNewLanguage?.Invoke(this, language);
+                }
             }
         }
 

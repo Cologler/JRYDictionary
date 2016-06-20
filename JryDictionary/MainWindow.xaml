@@ -127,8 +127,8 @@
                           FontFamily="Microsoft YaHei" />
 
                 <ComboBox Grid.Column="2"
-                          ItemsSource="{Binding SearchCategorys.View}"
-                          SelectedItem="{Binding SearchCategorys.Selected}"
+                          ItemsSource="{Binding ExistsCategorys.View}"
+                          SelectedItem="{Binding ExistsCategorys.Selected}"
                           SelectionChanged="SearchModeSelector_OnSelectionChanged"
                           Margin="4,0,0,0"
                           FontFamily="Microsoft YaHei" />
@@ -208,11 +208,29 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="language"
-                                        Binding="{Binding Source.Language}"
-                                        Width="120"
-                                        FontFamily="Microsoft YaHei"
-                                        IsReadOnly="True" />
+                    <DataGridTemplateColumn Header="language"
+                                            Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="local:WordViewModel">
+                                <Grid>
+                                    <TextBlock Text="{Binding Language}"
+                                               Height="24"
+                                               Padding="6,4,6,0"
+                                               FontFamily="Microsoft YaHei"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate DataType="local:WordViewModel">
+                                <ComboBox Text="{Binding Language}"
+                                          FontFamily="Microsoft YaHei"
+                                          ItemsSource="{Binding ElementName=RootPanel, Path=DataContext.ExistsLanguages}"
+                                          MinHeight="0"
+                                          Height="24"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 
