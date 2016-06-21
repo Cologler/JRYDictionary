@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using Jasily.Collections.Generic;
 using Jasily.ComponentModel;
 using JryDictionary.Models;
+using JryDictionary.Modules.Copyer;
 
 namespace JryDictionary.Controls.ThingViewer
 {
@@ -25,6 +26,8 @@ namespace JryDictionary.Controls.ThingViewer
             this.existsFields.AddRange(this.ThingViewModel.Fields.Select(z => z.Source.TargetId));
             //this.Document = "[[12]]..[[2\\]]...[[4325]].";
             this.BeginGetFieldsReverse();
+
+            this.Copyers.AddRange(App.Current.ModuleManager.Copyers);
         }
 
         public ObservableCollection<GroupedList<string, FieldViewModel>> GroupedFields { get; }
@@ -121,5 +124,7 @@ namespace JryDictionary.Controls.ThingViewer
                 this.NotifyPropertyChanged(nameof(this.GroupedFields));
             }
         }
+
+        public ObservableCollection<IWordCopyer> Copyers { get; } = new ObservableCollection<IWordCopyer>();
     }
 }

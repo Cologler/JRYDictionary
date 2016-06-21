@@ -108,7 +108,16 @@
                         <DataTemplate>
                             <Grid MinWidth="40"
                                   Background="{StaticResource AccentColorBrush}"
-                                  Margin="2">
+                                  Margin="2"
+                                  Tag="{Binding DataContext, ElementName=Root}">
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="copy"
+                                                  Click="CopyMenuItem_OnClick"
+                                                  ItemsSource="{Binding PlacementTarget.(FrameworkElement.Tag).Copyers, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  DisplayMemberPath="Name" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
                                 <TextBlock Text="{Binding WordWithLanguage}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Center"

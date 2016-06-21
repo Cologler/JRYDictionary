@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using JryDictionary.Modules.Copyer;
 
 namespace JryDictionary.Controls.ThingViewer
 {
@@ -30,6 +31,13 @@ namespace JryDictionary.Controls.ThingViewer
             var field = (FieldViewModel)((FrameworkElement)sender).DataContext;
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.TargetId);
             this.ViewModel = new ThingViewerViewModel(new ThingViewModel(thing));
+        }
+
+        private void CopyMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)((FrameworkElement) sender).DataContext;
+            var copyer = (IWordCopyer)((FrameworkElement)e.OriginalSource).DataContext;
+            copyer.Copy(word.Thing.Source, word.Source);
         }
     }
 }
