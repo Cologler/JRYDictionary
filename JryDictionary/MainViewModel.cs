@@ -11,6 +11,7 @@ using Jasily.Windows.Data;
 using JryDictionary.Controls.ThingEditor;
 using JryDictionary.Models;
 using JryDictionary.Modules.Builders;
+using JryDictionary.Modules.Copyer;
 using MongoDB.Driver;
 
 namespace JryDictionary
@@ -59,6 +60,7 @@ namespace JryDictionary
         public virtual async Task InitializeAsync()
         {
             this.Builders.AddRange(App.Current.ModuleManager.Builders);
+            this.Copyers.AddRange(App.Current.ModuleManager.Copyers);
 
             var categorys = (await App.Current.ThingSetAccessor.GroupCategorysAsync()).Insert(0, string.Empty).ToArray();
             this.ExistsCategorys.Collection.Reset(categorys);
@@ -125,6 +127,8 @@ namespace JryDictionary
 
         // ReSharper disable once CollectionNeverQueried.Global
         public ObservableCollection<IWordBuilder> Builders { get; } = new ObservableCollection<IWordBuilder>();
+
+        public ObservableCollection<IWordCopyer> Copyers { get; } = new ObservableCollection<IWordCopyer>();
 
         public async Task CommitAddThingAsnyc()
         {

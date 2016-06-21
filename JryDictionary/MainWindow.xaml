@@ -150,7 +150,9 @@
                         <MenuItem Header="view"
                                   Click="ViewMenuItem_OnClick" />
                         <MenuItem Header="copy"
-                                  Click="CopyMenuItem_OnClick" />
+                                  Click="CopyMenuItem_OnClick"
+                                  ItemsSource="{Binding PlacementTarget.(FrameworkElement.DataContext).Copyers, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                  DisplayMemberPath="Name"/>
                         <MenuItem Header="edit"
                                   Click="EditMenuItem_OnClick"
                                   x:Name="EditMenuItem" />

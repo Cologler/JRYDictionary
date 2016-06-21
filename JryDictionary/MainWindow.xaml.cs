@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using JryDictionary.Controls.ThingEditor;
 using JryDictionary.Modules.Builders;
+using JryDictionary.Modules.Copyer;
 
 namespace JryDictionary
 {
@@ -120,25 +121,11 @@ namespace JryDictionary
             }
         }
 
-        private async void CopyMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void CopyMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
-            var time = 0;
-            while (time < 5)
-            {
-                try
-                {
-                    Clipboard.SetText(word.Word);
-                    return;
-                }
-                catch
-                {
-                    // ignored
-                }
-                time++;
-                await Task.Delay(50);
-            }
-            Debug.WriteLine("copy failed.");
+            var copyer = (IWordCopyer)((FrameworkElement)e.OriginalSource).DataContext;
+            copyer.Copy(word.Thing.Source, word.Source);
         }
 
         private void BuildMenuItem_OnClick(object sender, RoutedEventArgs e)

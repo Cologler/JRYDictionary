@@ -117,11 +117,15 @@
     <Compile Include="DbAccessors\SettingContainer.cs" />
     <Compile Include="DbAccessors\SettingSetAccessor.cs" />
     <Compile Include="DbAccessors\ThingSetAccessor.cs" />
-    <Compile Include="DocumentViewModel.cs" />
     <Compile Include="FieldViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainViewModelType.cs" />
     <Compile Include="Models\Field.cs" />
+    <Compile Include="Modules\Copyer\IWordCopyer.cs" />
+    <Compile Include="Modules\Copyer\LowerWordCopyer.cs" />
+    <Compile Include="Modules\Copyer\UpperWordCopyer.cs" />
+    <Compile Include="Modules\Copyer\ClipboardWordCopyer.cs" />
+    <Compile Include="Modules\Copyer\WordCopyer.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
     <Compile Include="SearchMode.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorViewModel.cs" />

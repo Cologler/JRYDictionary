@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using Jasily;
 using JryDictionary.Modules.Builders;
+using JryDictionary.Modules.Copyer;
 
 namespace JryDictionary.Modules
 {
@@ -14,6 +15,9 @@ namespace JryDictionary.Modules
 #pragma warning disable 649
         [ImportMany]
         private IEnumerable<IWordBuilder> builders;
+
+        [ImportMany]
+        private IEnumerable<IWordCopyer> copyers;
 #pragma warning restore 649
 
         public void Initialize()
@@ -24,8 +28,11 @@ namespace JryDictionary.Modules
             this.compositionContainer.ComposeParts(this);
             Debug.Assert(this.builders != null);
             this.Builders.AddRange(this.builders.OrderBy(z => z.AsOrderable().GetOrderCode()));
+            this.Copyers.AddRange(this.copyers.OrderBy(z => z.AsOrderable().GetOrderCode()));
         }
 
         public List<IWordBuilder> Builders { get; } = new List<IWordBuilder>();
+
+        public List<IWordCopyer> Copyers { get; } = new List<IWordCopyer>();
     }
 }
