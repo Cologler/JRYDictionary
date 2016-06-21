@@ -15,6 +15,7 @@ namespace JryDictionary.Controls.ThingViewer
     public class ThingViewerViewModel : JasilyViewModel
     {
         private readonly HashSet<string> existsFields = new HashSet<string>();
+        private string background;
 
         public ThingViewModel ThingViewModel { get; }
 
@@ -34,72 +35,21 @@ namespace JryDictionary.Controls.ThingViewer
 
         public string Description => this.ThingViewModel.Source.Description;
 
+        [NotifyPropertyChanged]
+        public string Background { get; private set; }
+
+        [NotifyPropertyChanged]
+        public string Cover { get; private set; }
+
         public IEnumerable<Inline> BuildDescriptionInlines()
         {
-            if (string.IsNullOrEmpty(this.Description)) yield break;
+            if (string.IsNullOrEmpty(this.Description)) return Empty<Inline>.Array;
 
-            using (var reader = new StringReader(this.Description))
-            {
-                foreach (var line in reader.EnumerateLines())
-                {
-                    yield return new Run(line);
-                    yield return new LineBreak();
-                }
-            }
-            yield break;
-
-            var ptr = 0;
-            var index = 0;
-            while ((index = this.Description.IndexOf("[[", index, StringComparison.Ordinal)) >= 0)
-            {
-                if (index + 4 >= this.Description.Length) // ..[[]]$
-                {
-                    break;
-                }
-
-                if (index > 0 && this.Description[index - 1] == '\\')
-                {
-                    index++;
-                    continue;
-                }
-
-                var endIndex = index + 3; // [[]] must contain > 0 char
-                while ((endIndex = this.Description.IndexOf("]]", endIndex, StringComparison.Ordinal)) >= 0)
-                {
-                    if (this.Description[endIndex - 1] == '\\')
-                    {
-                        endIndex++;
-                        continue;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                if (endIndex < 0) break;
-
-                if (index > ptr)
-                {
-                    yield return new Run(this.Description.Substring(ptr, index - ptr));
-                    ptr = index;
-                }
-
-                var name = this.Description.Substring(ptr + 2, endIndex - ptr - 2);
-                var hl = new Hyperlink(new Run(name))
-                {
-                    NavigateUri = new Uri($@"internal:\\?name={name.UrlEncode()}")
-                };
-                ptr = endIndex + 2;
-                yield return hl;
-
-                index = endIndex + 2;
-                if (index > this.Description.Length - 2) break;
-            }
-
-            if (ptr < this.Description.Length - 1)
-            {
-                yield return new Run(this.Description.Substring(ptr));
-            }
+            var desc = new Description(this.Description);
+            this.Background = desc.Background;
+            this.Cover = desc.Cover;
+            this.RefreshProperties();
+            return desc.Inlines;
         }
 
         public async void BeginGetFieldsReverse()
@@ -111,7 +61,7 @@ namespace JryDictionary.Controls.ThingViewer
                     .Where(z => !this.existsFields.Contains(z.Id))
                     .Select(z => new FieldReverseViewModel(z, new Field
                     {
-                        Name = z.Fields.First(x => x.TargetId == thisId).Name + " OF",
+                        Name = z.Fields?.First(x => x.TargetId == thisId).Name + " OF",
                         TargetId = thisId
                     }) as FieldViewModel)
                     .GroupBy(z => z.Source.Name)

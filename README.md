@@ -61,3 +61,23 @@ you can download release binary files in:
 
 * [github release](https://github.com/Cologler/JRYDictionary/releases)
 * [Amazon Cloud Drive](http://amzn.to/1s3GeGb)
+
+## description
+
+before first `-` will load as meta.
+
+here are current available metadata:
+
+* `CV` - cover
+* `BG` - background
+
+try use `BG:http://...` and `CV:http://...` to set background as web image:
+
+![](https://i.imgur.com/f9pOtI9.png)
+
+and write desc after `-`:
+
+![](https://i.imgur.com/SdHbhUk.png)
+
+also you can use local file like `BG:file:///C:\img.jpg`.
+

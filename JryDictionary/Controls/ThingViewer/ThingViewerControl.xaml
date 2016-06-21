@@ -10,7 +10,18 @@
              d:DesignHeight="300"
              d:DesignWidth="300">
     <Grid x:Name="Root"
-          d:DataContext="{d:DesignInstance local:ThingViewerViewModel}">
+          d:DataContext="{d:DesignInstance local:ThingViewerViewModel}"
+          Background="Transparent">
+        
+        <Image Source="{Binding Background}"
+               IsHitTestVisible="False"
+               Opacity="0.2"
+               Margin="-4,-4,-4,-39"
+               Grid.ColumnSpan="2"
+               Stretch="UniformToFill"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
+
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -57,6 +68,7 @@
                           ItemsSource="{Binding ThingViewModel.Source.Categorys}"
                           Visibility="{Binding ThingViewModel.Source.Categorys, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                           BorderThickness="0"
+                          Background="Transparent"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <i:Interaction.Behaviors>
@@ -94,6 +106,7 @@
                           ItemsSource="{Binding ThingViewModel.Alias}"
                           Visibility="{Binding ThingViewModel.Alias, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                           BorderThickness="0"
+                          Background="Transparent"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <i:Interaction.Behaviors>
@@ -140,6 +153,7 @@
                           Grid.Column="1"
                           Visibility="{Binding GroupedFields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                           ItemsSource="{Binding GroupedFields}"
+                          Background="Transparent"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <i:Interaction.Behaviors>
@@ -160,6 +174,7 @@
                                 <ListView Grid.Column="1"
                                           ItemsSource="{Binding}"
                                           BorderThickness="0"
+                                          Background="Transparent"
                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                           ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <i:Interaction.Behaviors>
@@ -199,13 +214,30 @@
                 
                 <!-- detail -->
 
-                <TextBlock Grid.Row="4"
-                           Grid.ColumnSpan="2"
-                           Margin="4,8,4,4">
-                    <i:Interaction.Behaviors>
-                        <local:DocumentBehavior />
-                    </i:Interaction.Behaviors>
-                </TextBlock>
+                <Grid Grid.Row="4"
+                      Grid.ColumnSpan="2"
+                      Margin="4,8,4,4"
+                      x:Name="DescriptionGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="{Binding Cover}"
+                           Visibility="{Binding Cover, Converter={StaticResource EmptyCollapsedValueConverter}}"
+                           Width="180"
+                           VerticalAlignment="Top"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           RenderOptions.EdgeMode="Aliased"
+                           Margin="0,0,8,0"/>
+
+                    <TextBlock Grid.Column="1">
+                        <i:Interaction.Behaviors>
+                            <local:DocumentBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+
+                </Grid>
             </Grid>
         </ScrollViewer>
     </Grid>

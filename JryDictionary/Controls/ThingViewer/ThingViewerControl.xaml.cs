@@ -27,24 +27,29 @@ namespace JryDictionary.Controls.ThingViewer
             }
         }
 
-        private async void ViewFieldMenuItem_OnClick(object sender, System.Windows.RoutedEventArgs e)
+        private void ViewFieldMenuItem_OnClick(object sender, System.Windows.RoutedEventArgs e)
         {
             var field = (FieldViewModel)((FrameworkElement)sender).DataContext;
-            var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.TargetId);
-            this.ViewModel = new ThingViewerViewModel(new ThingViewModel(thing));
+            this.ViewThing(field.TargetId);
         }
 
         private void CopyMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var word = (WordViewModel)((FrameworkElement) sender).DataContext;
+            var word = (WordViewModel)((FrameworkElement)sender).DataContext;
             var copyer = (IWordCopyer)((FrameworkElement)e.OriginalSource).DataContext;
             copyer.Copy(word.Thing.Source, word.Source);
         }
 
-        private async void FieldUIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void FieldUIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var field = (FieldViewModel)((FrameworkElement)sender).DataContext;
-            var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.TargetId);
+            this.ViewThing(field.TargetId);
+        }
+
+        public async void ViewThing(string thingId)
+        {
+            var thing = await App.Current.ThingSetAccessor.FindOneAsync(thingId);
+            if (thing == null) return;
             this.ViewModel = new ThingViewerViewModel(new ThingViewModel(thing));
         }
     }

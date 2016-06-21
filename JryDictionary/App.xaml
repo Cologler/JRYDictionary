@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:JryDictionary"
              xmlns:valueConverters="clr-namespace:Jasily.Windows.Data.ValueConverters;assembly=Jasily.Desktop"
+             xmlns:data="clr-namespace:System.Windows.Data;assembly=Jasily.Core.Desktop"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -16,6 +17,8 @@
                 <ResourceDictionary>
                     <valueConverters:BooleanToVisibilityConverter2 x:Key="BooleanToVisibilityConverter" />
                     <valueConverters:ItemsEmptyToCollapsedConverter x:Key="ItemsEmptyToCollapsedConverter" />
+                    <data:EmptyCollapsedValueConverter x:Key="EmptyCollapsedValueConverter" />
+                    <valueConverters:ScaleConverter x:Key="ScaleConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

@@ -164,7 +164,7 @@ namespace JryDictionary
         private void ViewThing(ThingViewModel viewModel)
         {
             Debug.Assert(viewModel != null);
-            this.ThingViewerControl.ViewModel = new ThingViewerViewModel(viewModel);
+            this.ThingViewerControl.ViewThing(viewModel.Source.Id);
             this.ViewerFlyout.IsOpen = true;
         }
 
