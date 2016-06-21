@@ -9,10 +9,11 @@ namespace JryDictionary
         private string displayValue;
         private string thingName;
 
-        public FieldViewModel(Field source)
+        public FieldViewModel(Field source, string thingName = null)
             : base(source)
         {
             this.displayValue = source.Name;
+            this.thingName = thingName;
         }
 
         public string DisplayValue

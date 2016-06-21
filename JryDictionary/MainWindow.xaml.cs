@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using JryDictionary.Controls.ThingEditor;
+using JryDictionary.Controls.ThingViewer;
 using JryDictionary.Modules.Builders;
 using JryDictionary.Modules.Copyer;
 
@@ -165,7 +165,8 @@ namespace JryDictionary
         {
             Debug.Assert(viewModel != null);
             (this.ViewModel as ViewerMainViewModel)?.SetViewer(viewModel);
-            this.ThingViewerControl.ViewModel = viewModel;
+            this.ThingViewerControl.ViewModel = new ThingViewerViewModel(viewModel);
+            this.ThingViewerControl.ViewModel.BeginGetFieldsReverse();
             this.ViewerFlyout.IsOpen = true;
         }
 

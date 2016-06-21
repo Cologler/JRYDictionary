@@ -56,7 +56,9 @@
                           Grid.Row="1"
                           ItemsSource="{Binding ThingViewModel.Source.Categorys}"
                           Visibility="{Binding ThingViewModel.Source.Categorys, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
-                          BorderThickness="0">
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <i:Interaction.Behaviors>
                         <behaviors:NonSelectBehavior />
                     </i:Interaction.Behaviors>
@@ -91,7 +93,9 @@
                           Grid.Row="2"
                           ItemsSource="{Binding ThingViewModel.Alias}"
                           Visibility="{Binding ThingViewModel.Alias, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
-                          BorderThickness="0">
+                          BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <i:Interaction.Behaviors>
                         <behaviors:NonSelectBehavior />
                     </i:Interaction.Behaviors>
@@ -126,7 +130,9 @@
                           Grid.Row="3"
                           Grid.Column="1"
                           Visibility="{Binding GroupedFields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
-                          ItemsSource="{Binding GroupedFields}">
+                          ItemsSource="{Binding GroupedFields}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <i:Interaction.Behaviors>
                         <behaviors:NonSelectBehavior />
                     </i:Interaction.Behaviors>
@@ -134,7 +140,8 @@
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition MinWidth="60"
+                                                      Width="Auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
 
@@ -143,7 +150,9 @@
                                 
                                 <ListView Grid.Column="1"
                                           ItemsSource="{Binding}"
-                                          BorderThickness="0">
+                                          BorderThickness="0"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                          ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <i:Interaction.Behaviors>
                                         <behaviors:NonSelectBehavior />
                                     </i:Interaction.Behaviors>

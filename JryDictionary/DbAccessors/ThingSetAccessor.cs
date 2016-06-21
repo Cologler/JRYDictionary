@@ -12,6 +12,8 @@ namespace JryDictionary.DbAccessors
 {
     public class ThingSetAccessor
     {
+        private static readonly string FindFieldReverseKey =
+            PropertySelector<Thing>.Start().SelectMany(z => z.Fields).Select(z => z.TargetId);
         private HashSet<string> languages;
         private HashSet<string> categorys;
         public event EventHandler<string> SavedNewCategory;
@@ -154,6 +156,13 @@ namespace JryDictionary.DbAccessors
         private class GroupResult
         {
             public string Id { get; set; }
+        }
+
+        public async Task<IEnumerable<Thing>> FindFieldReverseAsync(Thing thing)
+        {
+            return await (await this.Collection.FindAsync(
+                new FilterDefinitionBuilder<Thing>().Eq(FindFieldReverseKey, thing.Id))
+            ).ToListAsync();
         }
     }
 }

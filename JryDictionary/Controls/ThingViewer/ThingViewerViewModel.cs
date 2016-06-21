@@ -1,28 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Documents;
 using Jasily.Collections.Generic;
+using Jasily.ComponentModel;
+using JryDictionary.Models;
 
 namespace JryDictionary.Controls.ThingViewer
 {
-    public class ThingViewerViewModel
+    public class ThingViewerViewModel : JasilyViewModel
     {
+        private HashSet<string> existsFields = new HashSet<string>();
         public ThingViewModel ThingViewModel { get; }
 
         public ThingViewerViewModel(ThingViewModel thingViewModel)
         {
             this.ThingViewModel = thingViewModel;
-            this.GroupedFields = this.ThingViewModel.Fields.GroupBy(z => z.Source.Name).Select(z => z.ToList()).ToList();
-
+            this.GroupedFields = new ObservableCollection<GroupedList<string, FieldViewModel>>(
+                this.ThingViewModel.Fields.GroupBy(z => z.Source.Name).Select(z => z.ToList()));
+            this.existsFields.AddRange(this.ThingViewModel.Fields.Select(z => z.Source.TargetId));
             //this.Document = "[[12]]..[[2\\]]...[[4325]].";
         }
 
-        public List<GroupedList<string, FieldViewModel>> GroupedFields { get; }
-
-        public static implicit operator ThingViewerViewModel(ThingViewModel thingViewModel)
-            => new ThingViewerViewModel(thingViewModel);
+        public ObservableCollection<GroupedList<string, FieldViewModel>> GroupedFields { get; }
 
         public string Description => this.ThingViewModel.Source.Description;
 
@@ -91,6 +94,29 @@ namespace JryDictionary.Controls.ThingViewer
             if (ptr < this.Description.Length - 1)
             {
                 yield return new Run(this.Description.Substring(ptr));
+            }
+        }
+
+        public async void BeginGetFieldsReverse()
+        {
+            var thisId = this.ThingViewModel.Source.Id;
+            var items = await Task.Run(async () =>
+            {
+                return (await App.Current.ThingSetAccessor.FindFieldReverseAsync(this.ThingViewModel.Source))
+                    .Where(z => !this.existsFields.Contains(z.Id))
+                    .Select(z => new FieldViewModel(new Field
+                    {
+                        Name = z.Fields.First(x => x.TargetId == thisId).Name + " OF",
+                        TargetId = thisId
+                    }, z.MajorWord().Text))
+                    .GroupBy(z => z.Source.Name)
+                    .Select(z => z.ToList())
+                    .ToArray();
+            });
+            this.GroupedFields.AddRange(items);
+            if (items.Length > 0 && this.GroupedFields.Count == items.Length)
+            {
+                this.NotifyPropertyChanged(nameof(this.GroupedFields));
             }
         }
     }
