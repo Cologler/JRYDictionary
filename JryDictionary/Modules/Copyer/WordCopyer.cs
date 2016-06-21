@@ -9,10 +9,7 @@ namespace JryDictionary.Modules.Copyer
     {
         public abstract string Name { get; }
 
-        public virtual void Copy(Thing thing, Word word)
-        {
-            CopyToClipboard(word.Text);
-        }
+        public abstract void Copy(Thing thing, Word word);
 
         protected static async void CopyToClipboard(string text)
         {
