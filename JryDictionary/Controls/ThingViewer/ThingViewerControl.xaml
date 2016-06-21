@@ -174,7 +174,9 @@
                 
                 <!-- detail -->
 
-                <TextBlock Grid.Row="4">
+                <TextBlock Grid.Row="4"
+                           Grid.ColumnSpan="2"
+                           Margin="4,8,4,4">
                     <i:Interaction.Behaviors>
                         <local:DocumentBehavior />
                     </i:Interaction.Behaviors>

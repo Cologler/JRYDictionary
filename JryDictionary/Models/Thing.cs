@@ -31,6 +31,6 @@ namespace JryDictionary.Models
 
         [CanBeNull]
         [BsonIgnoreIfDefault]
-        public string Document { get; set; }
+        public string Description { get; set; }
     }
 }

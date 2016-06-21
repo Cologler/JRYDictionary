@@ -15,6 +15,7 @@ namespace JryDictionary.Controls.ThingEditor
     {
         private WordEditorViewModel majorWord;
         private ObservableCollection<Field> fields;
+        private string description;
 
         public ThingEditorViewModel(Thing source)
         {
@@ -154,6 +155,13 @@ namespace JryDictionary.Controls.ThingEditor
         {
             get { return this.fields; }
             private set { this.SetPropertyRef(ref this.fields, value); }
+        }
+        
+        [EditableField(Converter = typeof(WhiteSpaceToNullOrTrimStringConverter))]
+        public string Description
+        {
+            get { return this.description; }
+            set { this.SetPropertyRef(ref this.description, value); }
         }
     }
 }

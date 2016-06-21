@@ -24,11 +24,11 @@ namespace JryDictionary.Controls.ThingViewer
         private void RebuildInlines()
         {
             if (this.AssociatedObject == null) return;
-            var document = this.AssociatedObject.DataContext as ThingViewerViewModel;
+            var vm = this.AssociatedObject.DataContext as ThingViewerViewModel;
             this.AssociatedObject.Inlines.Clear();
-            if (document?.Document != null)
+            if (vm?.Description != null)
             {
-                var inlines = document.BuildInlines().ToArray();
+                var inlines = vm.BuildDescriptionInlines().ToArray();
                 this.AssociatedObject.Inlines.AddRange(inlines);
                 foreach (var link in inlines.OfType<Hyperlink>())
                 {
