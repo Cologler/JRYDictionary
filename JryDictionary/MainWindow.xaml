@@ -41,7 +41,8 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <ThingViewer:ThingViewerControl x:Name="ThingViewerControl" />
+                            <ThingViewer:ThingViewerControl x:Name="ThingViewerControl"
+                                                            DataContextChanged="ThingViewerControl_OnDataContextChanged"/>
 
                             <Button Content="close"
                                     HorizontalAlignment="Right"

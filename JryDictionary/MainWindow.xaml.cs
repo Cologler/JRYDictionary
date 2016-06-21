@@ -164,9 +164,7 @@ namespace JryDictionary
         private void ViewThing(ThingViewModel viewModel)
         {
             Debug.Assert(viewModel != null);
-            (this.ViewModel as ViewerMainViewModel)?.SetViewer(viewModel);
             this.ThingViewerControl.ViewModel = new ThingViewerViewModel(viewModel);
-            this.ThingViewerControl.ViewModel.BeginGetFieldsReverse();
             this.ViewerFlyout.IsOpen = true;
         }
 
@@ -187,8 +185,14 @@ namespace JryDictionary
 
         private void ViewerCloseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            (this.ViewModel as ViewerMainViewModel)?.SetViewer(null);
+            this.ThingViewerControl.ViewModel = null;
             this.ViewerFlyout.IsOpen = false;
+        }
+
+        private void ThingViewerControl_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            (this.ViewModel as ViewerMainViewModel)?.SetViewer(
+                (this.ThingViewerControl.DataContext as ThingViewerViewModel)?.ThingViewModel);
         }
     }
 }

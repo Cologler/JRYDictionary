@@ -4,16 +4,15 @@ using JryDictionary.Models;
 
 namespace JryDictionary
 {
-    public sealed class FieldViewModel : JasilyViewModel<Field>
+    public class FieldViewModel : JasilyViewModel<Field>
     {
         private string displayValue;
         private string thingName;
 
-        public FieldViewModel(Field source, string thingName = null)
+        public FieldViewModel(Field source)
             : base(source)
         {
             this.displayValue = source.Name;
-            this.thingName = thingName;
         }
 
         public string DisplayValue
@@ -33,7 +32,7 @@ namespace JryDictionary
                 this.BeginLoadThingName();
                 return this.thingName;
             }
-            private set { this.SetPropertyRef(ref this.thingName, value); }
+            protected set { this.SetPropertyRef(ref this.thingName, value); }
         }
 
         public async void BeginLoadThingName()
@@ -48,5 +47,7 @@ namespace JryDictionary
                 this.DisplayValue = $"{this.Source.Name} 「{thing.MajorWord().Text}」";
             }
         }
+
+        public virtual string TargetId => this.Source.TargetId;
     }
 }

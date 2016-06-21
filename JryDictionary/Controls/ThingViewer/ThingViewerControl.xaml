@@ -166,6 +166,12 @@
                                             <Grid MinWidth="40"
                                                   Background="{StaticResource AccentColorBrush}"
                                                   Margin="2">
+                                                <Grid.ContextMenu>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="view"
+                                                                  Click="ViewFieldMenuItem_OnClick" />
+                                                    </ContextMenu>
+                                                </Grid.ContextMenu>
                                                 <TextBlock Text="{Binding ThingName}"
                                                            VerticalAlignment="Center"
                                                            HorizontalAlignment="Center"

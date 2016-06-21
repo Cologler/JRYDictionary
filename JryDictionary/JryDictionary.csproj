@@ -99,6 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ThingViewer\FieldReverseViewModel.cs" />
     <Compile Include="Modules\Builders\AbbreviationWordBuilder.cs" />
     <Compile Include="Modules\Builders\IWordBuilder.cs" />
     <Compile Include="Modules\Builders\LowerWordBuilder.cs" />

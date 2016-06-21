@@ -13,7 +13,8 @@ namespace JryDictionary.Controls.ThingViewer
 {
     public class ThingViewerViewModel : JasilyViewModel
     {
-        private HashSet<string> existsFields = new HashSet<string>();
+        private readonly HashSet<string> existsFields = new HashSet<string>();
+
         public ThingViewModel ThingViewModel { get; }
 
         public ThingViewerViewModel(ThingViewModel thingViewModel)
@@ -23,6 +24,7 @@ namespace JryDictionary.Controls.ThingViewer
                 this.ThingViewModel.Fields.GroupBy(z => z.Source.Name).Select(z => z.ToList()));
             this.existsFields.AddRange(this.ThingViewModel.Fields.Select(z => z.Source.TargetId));
             //this.Document = "[[12]]..[[2\\]]...[[4325]].";
+            this.BeginGetFieldsReverse();
         }
 
         public ObservableCollection<GroupedList<string, FieldViewModel>> GroupedFields { get; }
@@ -104,11 +106,11 @@ namespace JryDictionary.Controls.ThingViewer
             {
                 return (await App.Current.ThingSetAccessor.FindFieldReverseAsync(this.ThingViewModel.Source))
                     .Where(z => !this.existsFields.Contains(z.Id))
-                    .Select(z => new FieldViewModel(new Field
+                    .Select(z => new FieldReverseViewModel(z, new Field
                     {
                         Name = z.Fields.First(x => x.TargetId == thisId).Name + " OF",
                         TargetId = thisId
-                    }, z.MajorWord().Text))
+                    }) as FieldViewModel)
                     .GroupBy(z => z.Source.Name)
                     .Select(z => z.ToList())
                     .ToArray();

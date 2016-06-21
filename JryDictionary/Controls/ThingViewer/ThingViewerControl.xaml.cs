@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace JryDictionary.Controls.ThingViewer
 {
@@ -17,7 +18,18 @@ namespace JryDictionary.Controls.ThingViewer
         public ThingViewerViewModel ViewModel
         {
             get { return this.viewModel; }
-            set { this.DataContext = this.viewModel = value; }
+            set
+            {
+                if (this.viewModel == value) return;
+                this.DataContext = this.viewModel = value;
+            }
+        }
+
+        private async void ViewFieldMenuItem_OnClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var field = (FieldViewModel)((FrameworkElement)sender).DataContext;
+            var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.TargetId);
+            this.ViewModel = new ThingViewerViewModel(new ThingViewModel(thing));
         }
     }
 }
