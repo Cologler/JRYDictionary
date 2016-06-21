@@ -174,7 +174,8 @@
                                         <DataTemplate>
                                             <Grid MinWidth="40"
                                                   Background="{StaticResource AccentColorBrush}"
-                                                  Margin="2">
+                                                  Margin="2"
+                                                  MouseLeftButtonUp="FieldUIElement_OnMouseLeftButtonUp">
                                                 <Grid.ContextMenu>
                                                     <ContextMenu>
                                                         <MenuItem Header="view"
