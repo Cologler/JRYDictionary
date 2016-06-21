@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Jasily;
 using Jasily.ComponentModel;
 using Jasily.Windows.Data;
-using JryDictionary.Builders;
 using JryDictionary.Controls.ThingEditor;
 using JryDictionary.Models;
+using JryDictionary.Modules.Builders;
 using MongoDB.Driver;
 
 namespace JryDictionary

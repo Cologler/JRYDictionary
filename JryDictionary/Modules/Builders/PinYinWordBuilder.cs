@@ -4,7 +4,7 @@ using Jasily;
 using Jasily.Chinese.PinYin;
 using JryDictionary.Models;
 
-namespace JryDictionary.Builders
+namespace JryDictionary.Modules.Builders
 {
     [Export(typeof(IWordBuilder))]
     public sealed class PinYinWordBuilder : IWordBuilder, IOrderable

@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Json;
 using System.Windows;
 using Jasily.Data.Db.MongoDb;
 using JryDictionary.DbAccessors;
+using JryDictionary.Modules;
 using JryDictionary.Properties;
 using MongoDB.Driver;
 

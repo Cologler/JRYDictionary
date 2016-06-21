@@ -99,12 +99,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Builders\AbbreviationWordBuilder.cs" />
-    <Compile Include="Builders\IWordBuilder.cs" />
-    <Compile Include="Builders\LowerWordBuilder.cs" />
-    <Compile Include="Builders\PinYinWordBuilder.cs" />
-    <Compile Include="Builders\RomajiWordBuilder.cs" />
-    <Compile Include="Builders\UpperWordBuilder.cs" />
+    <Compile Include="Modules\Builders\AbbreviationWordBuilder.cs" />
+    <Compile Include="Modules\Builders\IWordBuilder.cs" />
+    <Compile Include="Modules\Builders\LowerWordBuilder.cs" />
+    <Compile Include="Modules\Builders\PinYinWordBuilder.cs" />
+    <Compile Include="Modules\Builders\RomajiWordBuilder.cs" />
+    <Compile Include="Modules\Builders\UpperWordBuilder.cs" />
     <Compile Include="Controls\ThingViewer\DocumentBehavior.cs" />
     <Compile Include="Controls\ThingViewer\ThingViewerControl.xaml.cs">
       <DependentUpon>ThingViewerControl.xaml</DependentUpon>
@@ -122,7 +122,7 @@
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainViewModelType.cs" />
     <Compile Include="Models\Field.cs" />
-    <Compile Include="ModuleManager.cs" />
+    <Compile Include="Modules\ModuleManager.cs" />
     <Compile Include="SearchMode.cs" />
     <Compile Include="Controls\ThingEditor\ThingEditorViewModel.cs" />
     <Compile Include="SelectorMainViewModel.cs" />

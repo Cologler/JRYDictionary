@@ -6,7 +6,7 @@ using System.Text;
 using Jasily;
 using JryDictionary.Models;
 
-namespace JryDictionary.Builders
+namespace JryDictionary.Modules.Builders
 {
     [Export(typeof(IWordBuilder))]
     public sealed class RomajiWordBuilder : IWordBuilder, IOrderable

@@ -3,14 +3,14 @@ using System.ComponentModel.Composition;
 using Jasily;
 using JryDictionary.Models;
 
-namespace JryDictionary.Builders
+namespace JryDictionary.Modules.Builders
 {
     [Export(typeof(IWordBuilder))]
-    public sealed class UpperWordBuilder : IWordBuilder, IOrderable
+    public sealed class LowerWordBuilder : IWordBuilder, IOrderable
     {
         #region Implementation of IWordBuilder
 
-        public string Name => "Upper";
+        public string Name => "Lower";
 
         /// <summary>
         /// return null if build failed.
@@ -20,7 +20,7 @@ namespace JryDictionary.Builders
         /// <returns></returns>
         public IEnumerable<Word> Build(Thing thing, Word word)
         {
-            var ret = word.Text.ToUpper();
+            var ret = word.Text.ToLower();
             if (ret != word.Text)
             {
                 yield return new Word
@@ -35,7 +35,7 @@ namespace JryDictionary.Builders
 
         #region Implementation of IOrderable
 
-        public int GetOrderCode() => 3;
+        public int GetOrderCode() => 2;
 
         #endregion
     }

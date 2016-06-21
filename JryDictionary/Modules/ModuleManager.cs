@@ -4,9 +4,9 @@ using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.Linq;
 using Jasily;
-using JryDictionary.Builders;
+using JryDictionary.Modules.Builders;
 
-namespace JryDictionary
+namespace JryDictionary.Modules
 {
     public class ModuleManager
     {

@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using JryDictionary.Builders;
 using JryDictionary.Controls.ThingEditor;
+using JryDictionary.Modules.Builders;
 
 namespace JryDictionary
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JryDictionary.Models;
 
-namespace JryDictionary.Builders
+namespace JryDictionary.Modules.Builders
 {
     public interface IWordBuilder
     {

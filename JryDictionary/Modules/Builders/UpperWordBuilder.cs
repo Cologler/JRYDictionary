@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using Jasily;
 using JryDictionary.Models;
 
-namespace JryDictionary.Builders
+namespace JryDictionary.Modules.Builders
 {
     [Export(typeof(IWordBuilder))]
-    public sealed class AbbreviationWordBuilder : IWordBuilder, IOrderable
+    public sealed class UpperWordBuilder : IWordBuilder, IOrderable
     {
         #region Implementation of IWordBuilder
 
-        public string Name => "Abbr";
+        public string Name => "Upper";
 
         /// <summary>
         /// return null if build failed.
@@ -22,8 +20,8 @@ namespace JryDictionary.Builders
         /// <returns></returns>
         public IEnumerable<Word> Build(Thing thing, Word word)
         {
-            var ret = word.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries).Select(z => z[0]).GetString();
-            if (ret.Length > 1)
+            var ret = word.Text.ToUpper();
+            if (ret != word.Text)
             {
                 yield return new Word
                 {
@@ -37,7 +35,7 @@ namespace JryDictionary.Builders
 
         #region Implementation of IOrderable
 
-        public int GetOrderCode() => 1;
+        public int GetOrderCode() => 3;
 
         #endregion
     }
