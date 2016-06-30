@@ -171,7 +171,7 @@ namespace JryDictionary.Controls.ThingViewer
                     {
                         var count = trim.TakeWhile(z => z == '#').Count();
                         count = Math.Min(6, count);
-                        this.inlines.Add(this.Header(count, trim.SubRange(count).ToString()));
+                        this.AddHeader(count, trim.SubRange(count).ToString());
                     }
                     else
                     {
@@ -183,22 +183,36 @@ namespace JryDictionary.Controls.ThingViewer
 
         public Inline[] Inlines => this.inlines.ToArray();
 
-        private Inline Header(int level, string text)
+        private void AddHeader(int level, string text)
         {
-            var fontSize = 32 - 2 * level;
+            var fontSize = 32 - 3 * level;
 
-            return new Run(text)
+            this.inlines.Add(new Run(text)
             {
                 FontSize = fontSize
-            };
+            });
+
+            switch (level)
+            {
+                case 1:
+                    this.inlines.Add(this.Line());
+                    break;
+
+                case 2:
+                    this.inlines.Add(this.Line(Brushes.LightGray));
+                    break;
+            }
         }
 
-        private Inline Line() => new InlineUIContainer(new Line
+        private Inline Line(Brush brush = null) => new InlineUIContainer(new Border
         {
-            X2 = 10000,
+            Width = 10000,
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            Margin = new Thickness(2),
-            Stroke = Brushes.Black,
+            Margin = new Thickness(3),
+            BorderBrush = brush ?? Brushes.Black,
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            SnapsToDevicePixels = true,
+            UseLayoutRounding = true,
         });
 
         private Inline Height(double height) => new InlineUIContainer(new Grid { Height = height });
