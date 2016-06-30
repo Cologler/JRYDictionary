@@ -42,7 +42,8 @@ namespace JryDictionary.Controls.ThingViewer
 
         private void FieldUIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            var field = (FieldViewModel)((FrameworkElement)sender).DataContext;
+            var field = ((FrameworkElement)sender).DataContext as FieldViewModel;
+            if (field == null) return;
             this.ViewThing(field.TargetId);
         }
 

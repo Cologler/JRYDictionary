@@ -15,7 +15,6 @@ namespace JryDictionary.Controls.ThingViewer
     public class ThingViewerViewModel : JasilyViewModel
     {
         private readonly HashSet<string> existsFields = new HashSet<string>();
-        private string background;
 
         public ThingViewModel ThingViewModel { get; }
 
@@ -25,7 +24,7 @@ namespace JryDictionary.Controls.ThingViewer
             this.GroupedFields = new ObservableCollection<GroupedList<string, FieldViewModel>>(
                 this.ThingViewModel.Fields.GroupBy(z => z.Source.Name).Select(z => z.ToList()));
             this.existsFields.AddRange(this.ThingViewModel.Fields.Select(z => z.Source.TargetId));
-            //this.Document = "[[12]]..[[2\\]]...[[4325]].";
+
             this.BeginGetFieldsReverse();
 
             this.Copyers.AddRange(App.Current.ModuleManager.Copyers);
