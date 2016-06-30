@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Documents;
+using JryDictionary.Common;
 
 // ReSharper disable InconsistentNaming
 
@@ -111,7 +112,14 @@ namespace JryDictionary.Controls.ThingViewer
             }
             if (line.ToLower().StartsWith("file:///"))
             {
-                return line.Substring(8);
+                var ret = line.Substring(8);
+                // onedrive
+                if (ret.Contains("%onedrive%", StringComparison.OrdinalIgnoreCase))
+                {
+                    ret = ret.Replace("%onedrive%", FolderHelper.GetOneDriveLocation(),
+                        StringComparison.OrdinalIgnoreCase);
+                }
+                return ret;
             }
             return null;
         }
