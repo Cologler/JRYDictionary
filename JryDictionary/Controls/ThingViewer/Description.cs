@@ -2,7 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using Jasily;
 using JryDictionary.Common;
 
 // ReSharper disable InconsistentNaming
@@ -141,21 +146,61 @@ namespace JryDictionary.Controls.ThingViewer
         private void BuildForMarkdown()
         {
             this.inlines.Clear();
-            for (var i = this.contentStartIndex; i < this.lines.Length; i++)
+            var index = this.contentStartIndex;
+            while (index < this.lines.Length && string.IsNullOrWhiteSpace(this.lines[index]))
             {
-                var line = this.lines[i].TrimStart();
-
+                index++;
+            }
+            for (var i = index; i < this.lines.Length; i++)
+            {
+                var line = this.lines[i];
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     this.inlines.Add(new LineBreak());
+                    this.inlines.Add(this.Height(20));
                 }
                 else
                 {
-                    this.inlines.Add(new Run(line + " ")); this.inlines.Add(new Run(line + " "));
+                    var range = line.AsRange();
+                    var trim = range.Trim();
+                    if (trim == "---")
+                    {
+                        this.inlines.Add(this.Line());
+                    }
+                    else if (trim.StartsWith('#'))
+                    {
+                        var count = trim.TakeWhile(z => z == '#').Count();
+                        count = Math.Min(6, count);
+                        this.inlines.Add(this.Header(count, trim.SubRange(count).ToString()));
+                    }
+                    else
+                    {
+                        this.inlines.Add(new Run(trim.InsertToEnd(' ').GetString()));
+                    }
                 }
             }
         }
 
         public Inline[] Inlines => this.inlines.ToArray();
+
+        private Inline Header(int level, string text)
+        {
+            var fontSize = 32 - 2 * level;
+
+            return new Run(text)
+            {
+                FontSize = fontSize
+            };
+        }
+
+        private Inline Line() => new InlineUIContainer(new Line
+        {
+            X2 = 10000,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Margin = new Thickness(2),
+            Stroke = Brushes.Black,
+        });
+
+        private Inline Height(double height) => new InlineUIContainer(new Grid { Height = height });
     }
 }

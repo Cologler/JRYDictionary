@@ -231,7 +231,8 @@
                            RenderOptions.EdgeMode="Aliased"
                            Margin="0,0,8,0"/>
 
-                    <TextBlock Grid.Column="1">
+                    <TextBlock Grid.Column="1"
+                               TextWrapping="WrapWithOverflow">
                         <i:Interaction.Behaviors>
                             <local:DocumentBehavior />
                         </i:Interaction.Behaviors>
