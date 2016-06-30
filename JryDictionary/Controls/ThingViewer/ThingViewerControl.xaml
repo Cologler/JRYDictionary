@@ -15,7 +15,7 @@
         
         <Image Source="{Binding Background}"
                IsHitTestVisible="False"
-               Opacity="0.2"
+               Opacity="0.3"
                Margin="-4,-4,-4,-39"
                Grid.ColumnSpan="2"
                Stretch="UniformToFill"

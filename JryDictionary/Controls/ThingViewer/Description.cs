@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Documents;
 using JryDictionary.Common;
@@ -142,7 +143,7 @@ namespace JryDictionary.Controls.ThingViewer
             this.inlines.Clear();
             for (var i = this.contentStartIndex; i < this.lines.Length; i++)
             {
-                var line = this.lines[i];
+                var line = this.lines[i].TrimStart();
 
                 if (string.IsNullOrWhiteSpace(line))
                 {
@@ -150,7 +151,7 @@ namespace JryDictionary.Controls.ThingViewer
                 }
                 else
                 {
-                    this.inlines.Add(new Run(line + " "));
+                    this.inlines.Add(new Run(line + " ")); this.inlines.Add(new Run(line + " "));
                 }
             }
         }
