@@ -1,12 +1,12 @@
 # JRY Dictionary
 
-this is a dictionary tools for help me search name of thing in other language.
+this is a dict/wiki tools for help me easy to query name of thing in different language.
 
-however, it need input record by your self.
+however, it need add record by your self.
 
 maybe some day support share the library? :)
 
-**import: this tools use mongodb as db (I want it can be easy to extend).**
+**importance: this tools use mongodb as db (I hope it more easy to extend).**
 
 ## how look like
 
