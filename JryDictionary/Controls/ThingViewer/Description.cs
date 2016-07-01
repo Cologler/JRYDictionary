@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 using Jasily;
 using JryDictionary.Common;
 
@@ -24,6 +27,7 @@ namespace JryDictionary.Controls.ThingViewer
         private readonly int contentStartIndex;
         private readonly List<Inline> inlines = new List<Inline>();
         private FormatType format;
+        private readonly List<string> galleries = new List<string>();
 
         public Description(string text)
         {
@@ -65,6 +69,13 @@ namespace JryDictionary.Controls.ThingViewer
                                     this.FM(line);
                                 }
                                 break;
+
+                            case 'G':
+                                if (line.StartsWith("GL:"))
+                                {
+                                    this.GL(line);
+                                }
+                                break;
                         }
                     }
                 }
@@ -82,6 +93,64 @@ namespace JryDictionary.Controls.ThingViewer
 
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            if (this.galleries.Count > 0)
+            {
+                this.AddHeader(2, "Galleries");
+
+                var columnCount = this.Cover == null ? 4 : 3;
+                var rowCount = this.galleries.Count / columnCount + (this.galleries.Count % columnCount != 0 ? 1 : 0);
+
+                var grid = new Grid();
+                grid.ColumnDefinitions.AddRange(Generater.Create<ColumnDefinition>(columnCount));
+                grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
+
+                foreach (var gallery in this.galleries.EnumerateIndexValuePair())
+                {
+                    var image = new Image
+                    {
+                        Source = BitmapFromUri(new Uri(gallery.Value)),
+                        Margin = new Thickness(2),
+                        Tag = gallery.Value
+                    };
+                    image.MouseLeftButtonDown += Gallery_MouseLeftButtonDown;
+                    RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
+                    RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
+                    var col = gallery.Index % columnCount;
+                    var row = gallery.Index / columnCount;
+                    Grid.SetColumn(image, col);
+                    Grid.SetRow(image, row);
+                    grid.Children.Add(image);
+                }
+
+                this.inlines.Add(new InlineUIContainer(grid));
+            }
+        }
+
+        private static void Gallery_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                var image = (Image)sender;
+                var path = image.Tag as string;
+                if (path != null)
+                {
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            if (File.Exists(path))
+                            {
+                                using (Process.Start(path)) { }
+                            }
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                    });
+                }
             }
         }
 
@@ -107,6 +176,13 @@ namespace JryDictionary.Controls.ThingViewer
         public string Background { get; private set; }
 
         private void CV(string line) => this.Cover = this.GetUri(line.Substring(3)) ?? this.Cover;
+
+        private void GL(string line)
+        {
+            var uri = this.GetUri(line.Substring(3));
+            if (uri == null) return;
+            this.galleries.Add(uri);
+        }
 
         private string GetUri(string line)
         {
@@ -216,5 +292,15 @@ namespace JryDictionary.Controls.ThingViewer
         });
 
         private Inline Height(double height) => new InlineUIContainer(new Grid { Height = height });
+
+        private static ImageSource BitmapFromUri(Uri source)
+        {
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = source;
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.EndInit();
+            return bitmap;
+        }
     }
 }

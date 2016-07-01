@@ -20,6 +20,8 @@
                Grid.ColumnSpan="2"
                Stretch="UniformToFill"
                HorizontalAlignment="Center"
+               RenderOptions.BitmapScalingMode="Fant"
+               RenderOptions.EdgeMode="Aliased"
                VerticalAlignment="Center" />
 
         <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -232,7 +234,9 @@
                            Margin="0,0,8,0"/>
 
                     <TextBlock Grid.Column="1"
-                               TextWrapping="WrapWithOverflow">
+                               TextWrapping="WrapWithOverflow"
+                               MaxWidth="800"
+                               HorizontalAlignment="Left">
                         <i:Interaction.Behaviors>
                             <local:DocumentBehavior />
                         </i:Interaction.Behaviors>

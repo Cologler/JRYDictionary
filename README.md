@@ -68,16 +68,27 @@ before first `-` will load as meta.
 
 here are current available metadata:
 
-* `CV` - cover
-* `BG` - background
+* `FM` - try add `FM:MD` to use markdown description
+* `CV:{url}` - cover
+* `BG:{url}` - background
+* `GL:{url}` - galleries (allow mulit)
 
-try use `BG:http://...` and `CV:http://...` to set background as web image:
+use `BG` and `CV` to set background and cover:
 
 ![](https://i.imgur.com/f9pOtI9.png)
 
-and write desc after `-`:
+and use `GL` to add mulit gallery:
+
+![](https://i.imgur.com/v6vAgX8.png)
+
+then, write description text after `-`:
 
 ![](https://i.imgur.com/SdHbhUk.png)
 
-also you can use local file like `BG:file:///C:\img.jpg`.
+### url
 
+all url supported `http://` or `https://` or `file:///`.
+try use local file like `BG: file:///C:\img.jpg`.
+
+you can use `%OneDrive%` to use OneDrive relative directory like
+`BG: file:///%OneDrive%\img.jpg`
