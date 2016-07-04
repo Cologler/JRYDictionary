@@ -12,7 +12,7 @@ maybe some day support share the library? :)
 
 here is main windos:
 
-![](https://i.imgur.com/7uQKkG9.png)
+![](https://i.imgur.com/HEQ9w5V.png)
 
 easy to create pin yin/romaji/abbr and more.
 
@@ -72,12 +72,17 @@ here are current available metadata:
 * `CV:{url}` - cover
 * `BG:{url}` - background
 * `GL:{url}` - galleries (allow mulit)
+* `LG:{url}` - logo
 
-use `BG` and `CV` to set background and cover:
+set background and cover:
 
 ![](https://i.imgur.com/f9pOtI9.png)
 
-and use `GL` to add mulit gallery:
+set logo (see left top):
+
+![](https://i.imgur.com/l2T9TZ1.png)
+
+add mulit gallery:
 
 ![](https://i.imgur.com/v6vAgX8.png)
 
