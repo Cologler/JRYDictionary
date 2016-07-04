@@ -49,14 +49,28 @@
                     <SolidColorBrush x:Key="AccentColorBrush3"
                                      Color="Transparent" />
                 </Grid.Resources>
-                
-                <TextBlock Style="{StaticResource HeaderTextBlockStyle}"
-                           Text="Name" />
 
-                <TextBlock Grid.Column="1"
-                           Text="{Binding ThingViewModel.MajorWord.Word}"
-                           FontSize="18"
-                           Margin="4" />
+                <Grid Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="{Binding ThingViewModel.Logo}"
+                           Visibility="{Binding ThingViewModel.Logo, Converter={StaticResource EmptyCollapsedValueConverter}}"
+                           IsHitTestVisible="False"
+                           Stretch="UniformToFill"
+                           Height="42"
+                           Width="42"
+                           Margin="6,0"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           RenderOptions.EdgeMode="Aliased" />
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding ThingViewModel.MajorWord.Word}"
+                               FontSize="18"
+                               Margin="4" />
+                </Grid>
 
                 <!-- categorys -->
 
@@ -101,7 +115,7 @@
                 <TextBlock Style="{StaticResource HeaderTextBlockStyle}"
                            Grid.Row="2"
                            Text="Alias"
-                           Visibility="{Binding ThingViewModel.Alias, Converter={StaticResource ItemsEmptyToCollapsedConverter}}" />
+                           Visibility="{Binding ThingViewModel.Words, Converter={StaticResource ItemsEmptyToCollapsedConverter}}" />
 
                 <ListView Grid.Column="1"
                           Grid.Row="2"
@@ -226,12 +240,14 @@
                     </Grid.ColumnDefinitions>
 
                     <Image Source="{Binding Cover}"
+                           Tag="{Binding Cover}"
                            Visibility="{Binding Cover, Converter={StaticResource EmptyCollapsedValueConverter}}"
                            Width="180"
                            VerticalAlignment="Top"
                            RenderOptions.BitmapScalingMode="Fant"
                            RenderOptions.EdgeMode="Aliased"
-                           Margin="0,0,8,0"/>
+                           Margin="0,0,8,0"
+                           MouseLeftButtonDown="Image_OnMouseLeftButtonDown"/>
 
                     <TextBlock Grid.Column="1"
                                TextWrapping="WrapWithOverflow"

@@ -15,9 +15,9 @@ using JryDictionary.Common;
 
 // ReSharper disable InconsistentNaming
 
-namespace JryDictionary.Controls.ThingViewer
+namespace JryDictionary.Models
 {
-    public class Description
+    public class DescriptionParser
     {
         private static readonly Regex WebUriRegex = new Regex("^(https?://[^ ]+)", RegexOptions.IgnoreCase);
 
@@ -28,17 +28,17 @@ namespace JryDictionary.Controls.ThingViewer
         private readonly List<Inline> inlines = new List<Inline>();
         private FormatType format;
         private readonly List<string> galleries = new List<string>();
+        private bool isMetaParsed;
 
-        public Description(string text)
+        public DescriptionParser(string text)
         {
             this.text = text;
             this.lines = text.AsLines();
             this.metaSpliterIndex = this.lines.FindIndex(z => z == "-");
             this.contentStartIndex = this.metaSpliterIndex + 1;
-            this.Parse();
         }
 
-        private void Parse()
+        public DescriptionParser ParseMetaData()
         {
             if (this.metaSpliterIndex >= 0)
             {
@@ -52,14 +52,14 @@ namespace JryDictionary.Controls.ThingViewer
                             case 'B':
                                 if (line.StartsWith("BG:"))
                                 {
-                                    this.BG(line);
+                                    this.MapBackground(line);
                                 }
                                 break;
 
                             case 'C':
                                 if (line.StartsWith("CV:"))
                                 {
-                                    this.CV(line);
+                                    this.MapCover(line);
                                 }
                                 break;
 
@@ -73,13 +73,28 @@ namespace JryDictionary.Controls.ThingViewer
                             case 'G':
                                 if (line.StartsWith("GL:"))
                                 {
-                                    this.GL(line);
+                                    this.MapGalleries(line);
+                                }
+                                break;
+
+                            case 'L':
+                                if (line.StartsWith("LG:"))
+                                {
+                                    this.MapLogo(line);
                                 }
                                 break;
                         }
                     }
                 }
             }
+
+            this.isMetaParsed = true;
+            return this;
+        }
+
+        public DescriptionParser ParseBody()
+        {
+            Debug.Assert(this.isMetaParsed);
 
             switch (this.format)
             {
@@ -114,7 +129,7 @@ namespace JryDictionary.Controls.ThingViewer
                         Margin = new Thickness(2),
                         Tag = gallery.Value
                     };
-                    image.MouseLeftButtonDown += Gallery_MouseLeftButtonDown;
+                    image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
                     RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
                     RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
                     var col = gallery.Index % columnCount;
@@ -126,13 +141,16 @@ namespace JryDictionary.Controls.ThingViewer
 
                 this.inlines.Add(new InlineUIContainer(grid));
             }
+
+            return this;
         }
 
-        private static void Gallery_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        public static void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
-                var image = (Image)sender;
+                var image = sender as Image;
+                if (image == null) return;
                 var path = image.Tag as string;
                 if (path != null)
                 {
@@ -171,30 +189,36 @@ namespace JryDictionary.Controls.ThingViewer
             Markdown
         }
 
-        private void BG(string line) => this.Background = this.GetUri(line.Substring(3)) ?? this.Background;
+        private void MapBackground(string line) => this.Background = this.GetUri(line.AsRange().SubRange(3)) ?? this.Background;
 
         public string Background { get; private set; }
 
-        private void CV(string line) => this.Cover = this.GetUri(line.Substring(3)) ?? this.Cover;
+        public string Cover { get; private set; }
 
-        private void GL(string line)
+        private void MapCover(string line) => this.Cover = this.GetUri(line.AsRange().SubRange(3)) ?? this.Cover;
+
+        private void MapGalleries(string line)
         {
-            var uri = this.GetUri(line.Substring(3));
+            var uri = this.GetUri(line.AsRange().SubRange(3));
             if (uri == null) return;
             this.galleries.Add(uri);
         }
 
-        private string GetUri(string line)
+        public string Logo { get; private set; }
+
+        private void MapLogo(string line) => this.Logo = this.GetUri(line.AsRange().SubRange(3)) ?? this.Logo;
+
+        private string GetUri(StringRange line)
         {
             line = line.Trim();
-            var match = WebUriRegex.Match(line.Trim());
+            var match = WebUriRegex.Match(line.Trim().ToString());
             if (match.Success)
             {
                 return match.Value;
             }
-            if (line.ToLower().StartsWith("file:///"))
+            if (line.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
             {
-                var ret = line.Substring(8);
+                var ret = line.SubRange(8).ToString();
                 // onedrive
                 if (ret.Contains("%onedrive%", StringComparison.OrdinalIgnoreCase))
                 {
@@ -205,8 +229,6 @@ namespace JryDictionary.Controls.ThingViewer
             }
             return null;
         }
-
-        public string Cover { get; private set; }
 
         private void BuildForPlainText()
         {

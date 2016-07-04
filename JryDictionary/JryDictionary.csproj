@@ -100,7 +100,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\FolderHelper.cs" />
-    <Compile Include="Controls\ThingViewer\Description.cs" />
+    <Compile Include="Models\DescriptionParser.cs" />
     <Compile Include="Controls\ThingViewer\FieldReverseViewModel.cs" />
     <Compile Include="Modules\Builders\AbbreviationWordBuilder.cs" />
     <Compile Include="Modules\Builders\IWordBuilder.cs" />

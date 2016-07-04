@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using JryDictionary.Models;
 using JryDictionary.Modules.Copyer;
 
 namespace JryDictionary.Controls.ThingViewer
@@ -52,6 +53,11 @@ namespace JryDictionary.Controls.ThingViewer
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(thingId);
             if (thing == null) return;
             this.ViewModel = new ThingViewerViewModel(new ThingViewModel(thing));
+        }
+
+        private void Image_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DescriptionParser.Image_MouseLeftButtonDown(sender, e);
         }
     }
 }

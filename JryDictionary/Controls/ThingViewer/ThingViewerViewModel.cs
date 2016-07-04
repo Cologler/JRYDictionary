@@ -44,7 +44,7 @@ namespace JryDictionary.Controls.ThingViewer
         {
             if (string.IsNullOrEmpty(this.Description)) return Empty<Inline>.Array;
 
-            var desc = new Description(this.Description);
+            var desc = new DescriptionParser(this.Description).ParseMetaData().ParseBody();
             this.Background = desc.Background;
             this.Cover = desc.Cover;
             this.RefreshProperties();

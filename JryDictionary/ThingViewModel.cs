@@ -20,6 +20,11 @@ namespace JryDictionary
             {
                 this.Fields.AddRange(source.Fields.Select(z => new FieldViewModel(z)));
             }
+            if (!string.IsNullOrEmpty(this.Source.Description))
+            {
+                var desc = new DescriptionParser(this.Source.Description).ParseMetaData();
+                this.Logo = desc.Logo;
+            }
         }
 
         [NotNull]
@@ -38,5 +43,7 @@ namespace JryDictionary
 
         [NotNull]
         public List<WordViewModel> Alias => this.Words.Skip(1).ToList();
+
+        public string Logo { get; }
     }
 }

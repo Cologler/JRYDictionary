@@ -185,15 +185,30 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="27"
+                                            IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate DataType="local:WordViewModel">
+                                <Grid>
+                                    <Image Source="{Binding Thing.Logo}"
+                                           RenderOptions.BitmapScalingMode="Fant"
+                                           RenderOptions.EdgeMode="Aliased" />
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
                     <DataGridTextColumn Header="category"
                                         Binding="{Binding Thing.Category}"
                                         FontFamily="Microsoft YaHei"
                                         IsReadOnly="True" />
+                    
                     <DataGridTextColumn Header="thing"
                                         Binding="{Binding Thing.MajorWord.Word}"
                                         Width="150"
                                         FontFamily="Microsoft YaHei"
                                         IsReadOnly="True" />
+                    
                     <DataGridTemplateColumn x:Name="WordsColumn"
                                             Header="word"
                                             Width="220">
@@ -217,6 +232,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellEditingTemplate>
                     </DataGridTemplateColumn>
+                    
                     <DataGridTemplateColumn x:Name="LanguagesColumn"
                                             Header="language"
                                             Width="120">
