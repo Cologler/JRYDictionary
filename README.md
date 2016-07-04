@@ -71,20 +71,28 @@ here are current available metadata:
 * `FM` - try add `FM:MD` to use markdown description
 * `CV:{url}` - cover
 * `BG:{url}` - background
-* `GL:{url}` - galleries (allow mulit)
 * `LG:{url}` - logo
+* `GL:{url}` - galleries (allow mulit)
 
-set background and cover:
+### background & cover
 
 ![](https://i.imgur.com/f9pOtI9.png)
 
-set logo (see left top):
+### logo
+
+see left top:
 
 ![](https://i.imgur.com/l2T9TZ1.png)
+![](https://i.imgur.com/HEQ9w5V.png)
+![](https://i.imgur.com/mIqx5Rx.png)
 
-add mulit gallery:
+### galleries
+
+mulit gallery:
 
 ![](https://i.imgur.com/v6vAgX8.png)
+
+### description
 
 then, write description text after `-`:
 
