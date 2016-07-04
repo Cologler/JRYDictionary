@@ -8,6 +8,7 @@ namespace JryDictionary
     {
         private string displayValue;
         private string thingName;
+        private string logo;
 
         public FieldViewModel(Field source)
             : base(source)
@@ -35,6 +36,12 @@ namespace JryDictionary
             protected set { this.SetPropertyRef(ref this.thingName, value); }
         }
 
+        public string Logo
+        {
+            get { return this.logo; }
+            private set { this.SetPropertyRef(ref this.logo, value); }
+        }
+
         public async void BeginLoadThingName()
         {
             if (this.thingName != null) return;
@@ -45,6 +52,11 @@ namespace JryDictionary
             {
                 this.ThingName = thing.MajorWord().Text;
                 this.DisplayValue = $"{this.Source.Name} 「{thing.MajorWord().Text}」";
+
+                if (!string.IsNullOrWhiteSpace(thing.Description))
+                {
+                    this.Logo = new DescriptionParser(thing.Description).ParseMetaData().Logo;
+                }
             }
         }
 

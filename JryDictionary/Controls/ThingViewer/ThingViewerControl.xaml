@@ -119,8 +119,8 @@
 
                 <ListView Grid.Column="1"
                           Grid.Row="2"
-                          ItemsSource="{Binding ThingViewModel.Alias}"
-                          Visibility="{Binding ThingViewModel.Alias, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
+                          ItemsSource="{Binding ThingViewModel.Words}"
+                          Visibility="{Binding ThingViewModel.Words, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                           BorderThickness="0"
                           Background="Transparent"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -207,13 +207,28 @@
                                                   Background="{StaticResource AccentColorBrush}"
                                                   Margin="2"
                                                   MouseLeftButtonUp="FieldUIElement_OnMouseLeftButtonUp">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
                                                 <Grid.ContextMenu>
                                                     <ContextMenu>
                                                         <MenuItem Header="view"
                                                                   Click="ViewFieldMenuItem_OnClick" />
                                                     </ContextMenu>
                                                 </Grid.ContextMenu>
-                                                <TextBlock Text="{Binding ThingName}"
+
+                                                <Image Source="{Binding Logo}"
+                                                       Visibility="{Binding Logo, Converter={StaticResource EmptyCollapsedValueConverter}}"
+                                                       IsHitTestVisible="False"
+                                                       Stretch="UniformToFill"
+                                                       Height="27"
+                                                       Width="27"
+                                                       RenderOptions.BitmapScalingMode="Fant"
+                                                       RenderOptions.EdgeMode="Aliased" />
+
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding ThingName}"
                                                            VerticalAlignment="Center"
                                                            HorizontalAlignment="Center"
                                                            Margin="6"
