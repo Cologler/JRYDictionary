@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Jasily.ComponentModel.Editable;
 using Jasily.ComponentModel.Editable.Converters;
-using Jasily.Diagnostics;
 using JryDictionary.Models;
 
 namespace JryDictionary.Controls.ThingEditor
@@ -46,7 +45,7 @@ namespace JryDictionary.Controls.ThingEditor
             this.AddNewViewModel();
         }
 
-        public void AddNewViewModel()
+        private void AddNewViewModel()
         {
             var next = new WordEditorViewModel();
             this.Words.Add(next);
@@ -55,9 +54,11 @@ namespace JryDictionary.Controls.ThingEditor
 
         private void NewWord_ContentChanged(WordEditorViewModel sender)
         {
-            sender.ContentChanged -= this.NewWord_ContentChanged;
-            sender.IsNew = false;
-            this.AddNewViewModel();
+            if (sender.Status != WordEditorStatus.New)
+            {
+                sender.ContentChanged -= this.NewWord_ContentChanged;
+                this.AddNewViewModel();
+            }
         }
 
         public override void WriteToObject(Thing obj)
@@ -66,8 +67,7 @@ namespace JryDictionary.Controls.ThingEditor
 
             // word
             // -- test
-            Debug.Assert(this.MajorWord.IsMajar = true);
-            JasilyDebug.AssertForEach(this.Words.Where(z => z != this.MajorWord), z => !z.IsMajar);
+            Debug.Assert(this.Words.Single(z => z.Status == WordEditorStatus.Major) == this.MajorWord);
             // -- write
             obj.Words.Clear();
             var dict = new Dictionary<string, Word>();
@@ -77,7 +77,7 @@ namespace JryDictionary.Controls.ThingEditor
             obj.Words.Add(major);
             dict.Add(major.Text, major);
             foreach (var line in this.Words
-                .Where(z => z != this.MajorWord && !z.IsNew && !string.IsNullOrWhiteSpace(z.Text))
+                .Where(z => z.Status == WordEditorStatus.Value)
                 .Select(z => new { S = z, V = z.Text.AsLines().Select(x => x.Trim()).Where(x => x.Length > 0).ToArray() }))
             {
                 foreach (var v in line.V)
@@ -122,10 +122,10 @@ namespace JryDictionary.Controls.ThingEditor
             if (string.IsNullOrWhiteSpace(word.Text) || word.Text.AsLines().Length > 1) return;
             if (this.MajorWord != null)
             {
-                this.MajorWord.IsMajar = false;
+                this.MajorWord.Status = WordEditorStatus.Value;
             }
             this.MajorWord = word;
-            this.MajorWord.IsMajar = true;
+            this.MajorWord.Status = WordEditorStatus.Major;
         }
 
         public async Task InitializeAsync()
@@ -156,7 +156,7 @@ namespace JryDictionary.Controls.ThingEditor
             get { return this.fields; }
             private set { this.SetPropertyRef(ref this.fields, value); }
         }
-        
+
         [EditableField(Converter = typeof(WhiteSpaceToNullOrTrimStringConverter))]
         public string Description
         {

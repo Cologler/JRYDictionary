@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Windows.Media;
 using Jasily.ComponentModel.Editable;
 using JryDictionary.Models;
 
@@ -7,21 +8,21 @@ namespace JryDictionary.Controls.ThingEditor
 {
     public sealed class WordEditorViewModel : JasilyEditableViewModel<Word>, IDisposable
     {
-        private bool isMajar;
-        private bool isNew;
         private string text;
         private string language;
+        private WordEditorStatus status;
         public event TypedEventHandler<WordEditorViewModel> ContentChanged;
 
         public WordEditorViewModel(Word source)
         {
             Debug.Assert(source != null);
+            this.status = WordEditorStatus.Value;
             this.ReadFromObject(source);
         }
 
         public WordEditorViewModel()
         {
-            this.isNew = true;
+            this.status = WordEditorStatus.New;
         }
 
         [EditableField]
@@ -47,10 +48,32 @@ namespace JryDictionary.Controls.ThingEditor
             get { return this.text; }
             set
             {
-                if (this.IsMajar)
+                var isWhiteSpace = string.IsNullOrWhiteSpace(value);
+
+                if (this.Status == WordEditorStatus.Major)
                 {
-                    if (string.IsNullOrWhiteSpace(value)) return;
+                    if (isWhiteSpace) return;
                     value = value.Trim(); // no mulit line.
+                }
+
+                switch (this.Status)
+                {
+                    case WordEditorStatus.Major:
+                        if (isWhiteSpace) return;
+                        value = value.Trim(); // no allowed mulit line.
+                        break;
+
+                    case WordEditorStatus.Value:
+                    case WordEditorStatus.Empty:
+                        this.Status = isWhiteSpace ? WordEditorStatus.Empty : WordEditorStatus.Value;
+                        break;
+
+                    case WordEditorStatus.New:
+                        if (!isWhiteSpace) this.Status = WordEditorStatus.Value;
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 if (this.SetPropertyRef(ref this.text, value))
@@ -80,32 +103,37 @@ namespace JryDictionary.Controls.ThingEditor
 
         #endregion
 
-        public bool IsMajar
+        public WordEditorStatus Status
         {
-            get { return this.isMajar; }
+            get { return this.status; }
             set
             {
-                if (this.isMajar == value) return;
-                this.isMajar = value;
+                if (this.status == value) return;
+                this.status = value;
+                this.NotifyPropertyChanged(nameof(this.StatusBrush));
                 this.NotifyPropertyChanged(nameof(this.CanBeMajor));
                 this.NotifyPropertyChanged(nameof(this.CanRemove));
             }
         }
 
-        public bool IsNew
+        public Brush StatusBrush
         {
-            get { return this.isNew; }
-            set
+            get
             {
-                if (this.isNew == value) return;
-                this.isNew = value;
-                this.NotifyPropertyChanged(nameof(this.CanBeMajor));
-                this.NotifyPropertyChanged(nameof(this.CanRemove));
+                switch (this.Status)
+                {
+                    case WordEditorStatus.Major: return Brushes.Red;
+                    case WordEditorStatus.Value: return Brushes.BlueViolet;
+                    case WordEditorStatus.Empty: return Brushes.DodgerBlue;
+                    case WordEditorStatus.New: return Brushes.LimeGreen;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
-        public bool CanBeMajor => !this.IsMajar && !this.IsNew;
+        public bool CanBeMajor => this.Status == WordEditorStatus.Value;
 
-        public bool CanRemove => !this.IsMajar && !this.IsNew;
+        public bool CanRemove => this.Status != WordEditorStatus.Major && this.Status != WordEditorStatus.New;
     }
 }
