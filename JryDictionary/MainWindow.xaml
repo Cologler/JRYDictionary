@@ -16,6 +16,7 @@
                  WindowStartupLocation="CenterScreen"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:behaviors="clr-namespace:Jasily.Windows.Interactivity.Behaviors;assembly=Jasily.Desktop"
                  d:DataContext="{d:DesignInstance local:MainViewModel}">
 
     <mah:MetroWindow.Flyouts>
@@ -214,11 +215,16 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
                                 <Grid>
-                                    <TextBlock Text="{Binding Word}"
-                                               Height="24"
+                                    <TextBlock Height="24"
                                                Padding="6,4,6,0"
                                                FontFamily="Microsoft YaHei"
-                                               VerticalAlignment="Center" />
+                                               VerticalAlignment="Center">
+                                        <i:Interaction.Behaviors>
+                                            <behaviors:TextBlockHighLightBehavior HighLightContent="{Binding ElementName=RootPanel, Path=DataContext.SearchText}"
+                                                                                  PlainText="{Binding Word}"
+                                                                                  StringComparison="OrdinalIgnoreCase"/>
+                                        </i:Interaction.Behaviors>
+                                    </TextBlock>
                                 </Grid>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
