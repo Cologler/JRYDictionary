@@ -222,8 +222,7 @@
                                                        Visibility="{Binding Logo, Converter={StaticResource EmptyCollapsedValueConverter}}"
                                                        IsHitTestVisible="False"
                                                        Stretch="UniformToFill"
-                                                       Height="27"
-                                                       Width="27"
+                                                       Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
                                                        RenderOptions.BitmapScalingMode="Fant"
                                                        RenderOptions.EdgeMode="Aliased" />
 
