@@ -211,7 +211,7 @@
                     
                     <DataGridTemplateColumn x:Name="WordsColumn"
                                             Header="word"
-                                            Width="220">
+                                            Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
                                 <Grid>

@@ -71,18 +71,14 @@ namespace JryDictionary
         private void WordsDataGrid_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             var element = (e.OriginalSource as Run)?.Parent as FrameworkElement ?? e.OriginalSource as FrameworkElement;
-
-            if (element != null)
+            var word = element?.DataContext as WordViewModel;
+            if (word != null)
             {
-                var word = element.DataContext as WordViewModel;
-                if (word == null)
-                {
-                    e.Handled = true;
-                }
-                else
-                {
-                    this.WordsDataGridContextMenu.DataContext = word;
-                }
+                this.WordsDataGridContextMenu.DataContext = word;
+            }
+            else
+            {
+                e.Handled = true;
             }
         }
 
@@ -152,7 +148,6 @@ namespace JryDictionary
 
         private async void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
             var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.Source.TargetId);
             if (thing == null) return;
