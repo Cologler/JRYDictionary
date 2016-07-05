@@ -16,7 +16,6 @@
                  WindowStartupLocation="CenterScreen"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                 xmlns:behaviors="clr-namespace:Jasily.Desktop.Windows.Interactivity.Behaviors;assembly=Jasily.Desktop"
                  d:DataContext="{d:DesignInstance local:MainViewModel}">
 
     <mah:MetroWindow.Flyouts>
