@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using JryDictionary.Controls.ThingEditor;
 using JryDictionary.Controls.ThingViewer;
 using JryDictionary.Modules.Builders;
@@ -69,14 +70,19 @@ namespace JryDictionary
 
         private void WordsDataGrid_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            var word = ((FrameworkElement)e.OriginalSource).DataContext as WordViewModel;
-            if (word == null)
+            var element = (e.OriginalSource as Run)?.Parent as FrameworkElement ?? e.OriginalSource as FrameworkElement;
+
+            if (element != null)
             {
-                e.Handled = true;
-            }
-            else
-            {
-                this.WordsDataGridContextMenu.DataContext = word;
+                var word = element.DataContext as WordViewModel;
+                if (word == null)
+                {
+                    e.Handled = true;
+                }
+                else
+                {
+                    this.WordsDataGridContextMenu.DataContext = word;
+                }
             }
         }
 
