@@ -125,9 +125,12 @@
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainViewModelType.cs" />
     <Compile Include="Models\Field.cs" />
+    <Compile Include="Modules\Copyer\CamelWordCopyer.cs" />
     <Compile Include="Modules\Copyer\IdWordCopyer.cs" />
     <Compile Include="Modules\Copyer\IWordCopyer.cs" />
     <Compile Include="Modules\Copyer\LowerWordCopyer.cs" />
+    <Compile Include="Modules\Copyer\PascalWordCopyer.cs" />
+    <Compile Include="Modules\Copyer\SentenceWordCopyer.cs" />
     <Compile Include="Modules\Copyer\UpperWordCopyer.cs" />
     <Compile Include="Modules\Copyer\OriginalWordCopyer.cs" />
     <Compile Include="Modules\Copyer\WordCopyer.cs" />
