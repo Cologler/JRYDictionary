@@ -10,9 +10,9 @@ maybe some day support share the library? :)
 
 ## how look like
 
-here is main windos:
+here is main windos (search & highlight):
 
-![](https://i.imgur.com/HEQ9w5V.png)
+![](https://i.imgur.com/ZkT9liY.png)
 
 easy to create pin yin/romaji/abbr and more.
 
