@@ -123,9 +123,15 @@ namespace JryDictionary.Models
 
                 foreach (var gallery in this.galleries.EnumerateIndexValuePair())
                 {
+                    var uri = new Uri(gallery.Value);
+                    if (uri.Scheme == Uri.UriSchemeFile)
+                    {
+                        if (!File.Exists(gallery.Value)) continue;
+                    }
+
                     var image = new Image
                     {
-                        Source = BitmapFromUri(new Uri(gallery.Value)),
+                        Source = BitmapFromUri(uri),
                         Margin = new Thickness(2),
                         Tag = gallery.Value
                     };
