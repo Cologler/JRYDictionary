@@ -68,7 +68,6 @@ before first `-` will load as meta.
 
 here are current available metadata:
 
-* `FM` - try add `FM:MD` to use markdown description
 * `CV:{url}` - cover
 * `BG:{url}` - background
 * `LG:{url}` - logo
@@ -94,7 +93,7 @@ mulit gallery:
 
 or just use:
 
-```
+``` text
 {{gallery:col=4}}
 ...
 {{}}
@@ -105,16 +104,3 @@ or just use:
 then, write description text after `-`:
 
 ![](https://i.imgur.com/SdHbhUk.png)
-
-### url
-
-all url supported `http://` or `https://` or `file:///`.
-try use local file like `BG: file:///C:\img.jpg`.
-
-you can use `%OneDrive%` to use OneDrive relative directory like
-`BG: file:///%OneDrive%\img.jpg`
-
-## TODO
-
-1. search by id
-1. gallery viewer
