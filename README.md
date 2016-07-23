@@ -6,7 +6,7 @@ however, it need add record by your self.
 
 maybe some day support share the library? :)
 
-**importance: this tools use mongodb as db (I hope it more easy to extend).**
+**importance: this tools use mongodb as db.**
 
 ## how look like
 
@@ -91,6 +91,14 @@ see left top:
 mulit gallery:
 
 ![](https://i.imgur.com/v6vAgX8.png)
+
+or just use:
+
+```
+{{gallery:col=4}}
+...
+{{}}
+```
 
 ### description
 

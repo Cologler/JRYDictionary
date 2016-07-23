@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Jasily;
 using JryDictionary.Common;
+using JryDictionary.Models.DocPlugins;
 
 // ReSharper disable InconsistentNaming
 
@@ -26,7 +27,6 @@ namespace JryDictionary.Models
         private readonly int metaSpliterIndex;
         private readonly int contentStartIndex;
         private readonly List<Inline> inlines = new List<Inline>();
-        private FormatType format;
         private readonly List<string> galleries = new List<string>();
         private bool isMetaParsed;
 
@@ -63,13 +63,6 @@ namespace JryDictionary.Models
                                 }
                                 break;
 
-                            case 'F':
-                                if (line.StartsWith("FM:"))
-                                {
-                                    this.FM(line);
-                                }
-                                break;
-
                             case 'G':
                                 if (line.StartsWith("GL:"))
                                 {
@@ -96,59 +89,102 @@ namespace JryDictionary.Models
         {
             Debug.Assert(this.isMetaParsed);
 
-            switch (this.format)
+            this.inlines.Clear();
+            var index = this.contentStartIndex;
+            while (index < this.lines.Length && string.IsNullOrWhiteSpace(this.lines[index]))
             {
-                case FormatType.PlainText:
-                    this.BuildForPlainText();
-                    break;
-
-                case FormatType.Markdown:
-                    this.BuildForMarkdown();
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
+                index++;
+            }
+            for (var i = index; i < this.lines.Length; i++)
+            {
+                var line = this.lines[i];
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    this.inlines.Add(new LineBreak());
+                    this.inlines.Add(this.Height(20));
+                }
+                else
+                {
+                    var range = line.AsRange();
+                    var trim = range.Trim();
+                    if (trim == "---")
+                    {
+                        this.inlines.Add(this.Line());
+                    }
+                    else if (trim.StartsWith('#'))
+                    {
+                        var count = trim.TakeWhile(z => z == '#').Count();
+                        count = Math.Min(6, count);
+                        this.AddHeader(count, trim.SubRange(count).ToString());
+                    }
+                    else if (trim.StartsWith("{{") && trim.EndsWith("}}"))
+                    {
+                        IDocPlugin plugin = null;
+                        var header = trim.SubRange(2, trim.Length - 4);
+                        if (header.StartsWith("gallery:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            plugin = new GalleryPlugin(header.ToString());
+                        }
+                        if (plugin != null)
+                        {
+                            var end = i + 1;
+                            for (; end < this.lines.Length; end++)
+                            {
+                                if (this.lines[end].AsRange().Trim() == "{{}}") break;
+                            }
+                            this.inlines.AddRange(plugin.ParseLine(this.lines.Skip(i + 1).Take(end - i - 1).ToArray()));
+                            i = end;
+                        }
+                    }
+                    else
+                    {
+                        this.inlines.Add(new Run(trim.InsertToEnd(' ').GetString()));
+                    }
+                }
             }
 
             if (this.galleries.Count > 0)
             {
                 this.AddHeader(2, "Galleries");
-
-                var columnCount = this.Cover == null ? 4 : 3;
-                var rowCount = this.galleries.Count / columnCount + (this.galleries.Count % columnCount != 0 ? 1 : 0);
-
-                var grid = new Grid();
-                grid.ColumnDefinitions.AddRange(Generater.Create<ColumnDefinition>(columnCount));
-                grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
-
-                foreach (var gallery in this.galleries.EnumerateIndexValuePair())
-                {
-                    var uri = new Uri(gallery.Value);
-                    if (uri.Scheme == Uri.UriSchemeFile)
-                    {
-                        if (!File.Exists(gallery.Value)) continue;
-                    }
-
-                    var image = new Image
-                    {
-                        Source = BitmapFromUri(uri),
-                        Margin = new Thickness(2),
-                        Tag = gallery.Value
-                    };
-                    image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
-                    RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                    RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
-                    var col = gallery.Index % columnCount;
-                    var row = gallery.Index / columnCount;
-                    Grid.SetColumn(image, col);
-                    Grid.SetRow(image, row);
-                    grid.Children.Add(image);
-                }
-
-                this.inlines.Add(new InlineUIContainer(grid));
+                this.CreateGallery(this.galleries, this.Cover == null ? 4 : 3);
             }
 
             return this;
+        }
+
+        private void CreateGallery(List<string> urls, int columnCount)
+        {
+            var rowCount = urls.Count / columnCount + (urls.Count % columnCount != 0 ? 1 : 0);
+
+            var grid = new Grid();
+            grid.ColumnDefinitions.AddRange(Generater.Create<ColumnDefinition>(columnCount));
+            grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
+
+            foreach (var gallery in urls.EnumerateIndexValuePair())
+            {
+                var uri = new Uri(gallery.Value);
+                if (uri.Scheme == Uri.UriSchemeFile)
+                {
+                    if (!File.Exists(gallery.Value)) continue;
+                }
+
+                var image = new Image
+                {
+                    Source = BitmapFromUri(uri),
+                    Margin = new Thickness(2),
+                    Tag = gallery.Value
+                };
+                image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
+                RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
+                RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
+                var col = gallery.Index % columnCount;
+                var row = gallery.Index / columnCount;
+                Grid.SetColumn(image, col);
+                Grid.SetRow(image, row);
+                grid.Children.Add(image);
+            }
+
+            this.inlines.Add(new InlineUIContainer(grid));
         }
 
         public static void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -178,43 +214,26 @@ namespace JryDictionary.Models
             }
         }
 
-        private void FM(string line)
-        {
-            switch (line.Replace(" ", string.Empty))
-            {
-                case "FM:MD":
-                    this.format = FormatType.Markdown;
-                    break;
-            }
-        }
-
-        private enum FormatType
-        {
-            PlainText,
-
-            Markdown
-        }
-
-        private void MapBackground(string line) => this.Background = this.GetUri(line.AsRange().SubRange(3)) ?? this.Background;
+        private void MapBackground(string line) => this.Background = GetUri(line.AsRange().SubRange(3)) ?? this.Background;
 
         public string Background { get; private set; }
 
         public string Cover { get; private set; }
 
-        private void MapCover(string line) => this.Cover = this.GetUri(line.AsRange().SubRange(3)) ?? this.Cover;
+        private void MapCover(string line) => this.Cover = GetUri(line.AsRange().SubRange(3)) ?? this.Cover;
 
         private void MapGalleries(string line)
         {
-            var uri = this.GetUri(line.AsRange().SubRange(3));
+            var uri = GetUri(line.AsRange().SubRange(3));
             if (uri == null) return;
             this.galleries.Add(uri);
         }
 
         public string Logo { get; private set; }
 
-        private void MapLogo(string line) => this.Logo = this.GetUri(line.AsRange().SubRange(3)) ?? this.Logo;
+        private void MapLogo(string line) => this.Logo = GetUri(line.AsRange().SubRange(3)) ?? this.Logo;
 
-        private string GetUri(StringRange line)
+        public static string GetUri(StringRange line)
         {
             line = line.Trim();
             var match = WebUriRegex.Match(line.Trim().ToString());
@@ -234,55 +253,6 @@ namespace JryDictionary.Models
                 return ret;
             }
             return null;
-        }
-
-        private void BuildForPlainText()
-        {
-            this.inlines.Clear();
-            for (var i = this.contentStartIndex; i < this.lines.Length; i++)
-            {
-                var line = this.lines[i];
-                this.inlines.Add(new Run(line));
-                this.inlines.Add(new LineBreak());
-            }
-        }
-
-        private void BuildForMarkdown()
-        {
-            this.inlines.Clear();
-            var index = this.contentStartIndex;
-            while (index < this.lines.Length && string.IsNullOrWhiteSpace(this.lines[index]))
-            {
-                index++;
-            }
-            for (var i = index; i < this.lines.Length; i++)
-            {
-                var line = this.lines[i];
-                if (string.IsNullOrWhiteSpace(line))
-                {
-                    this.inlines.Add(new LineBreak());
-                    this.inlines.Add(this.Height(20));
-                }
-                else
-                {
-                    var range = line.AsRange();
-                    var trim = range.Trim();
-                    if (trim == "---")
-                    {
-                        this.inlines.Add(this.Line());
-                    }
-                    else if (trim.StartsWith('#'))
-                    {
-                        var count = trim.TakeWhile(z => z == '#').Count();
-                        count = Math.Min(6, count);
-                        this.AddHeader(count, trim.SubRange(count).ToString());
-                    }
-                    else
-                    {
-                        this.inlines.Add(new Run(trim.InsertToEnd(' ').GetString()));
-                    }
-                }
-            }
         }
 
         public Inline[] Inlines => this.inlines.ToArray();
@@ -331,4 +301,6 @@ namespace JryDictionary.Models
             return bitmap;
         }
     }
+
+
 }

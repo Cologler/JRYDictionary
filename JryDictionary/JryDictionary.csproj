@@ -103,6 +103,9 @@
     <Compile Include="Controls\ThingEditor\WordEditorStatus.cs" />
     <Compile Include="Models\DescriptionParser.cs" />
     <Compile Include="Controls\ThingViewer\FieldReverseViewModel.cs" />
+    <Compile Include="Models\DocPlugins\GalleryPlugin.cs" />
+    <Compile Include="Models\DocPlugins\IDocPlugin.cs" />
+    <Compile Include="Models\DocPlugins\ImagePlugin.cs" />
     <Compile Include="Modules\Builders\AbbreviationWordBuilder.cs" />
     <Compile Include="Modules\Builders\IWordBuilder.cs" />
     <Compile Include="Modules\Builders\LowerWordBuilder.cs" />
