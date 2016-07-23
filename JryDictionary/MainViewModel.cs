@@ -105,8 +105,9 @@ namespace JryDictionary
                 if (this.ExistsCategorys.Selected != string.Empty)
                 {
                     category = this.ExistsCategorys.Selected;
-                    filter = builder.And(filter, builder.AnyEq(z => z.Categorys, this.ExistsCategorys.Selected));
+                    filter = filter & builder.AnyEq(z => z.Categorys, this.ExistsCategorys.Selected);
                 }
+                filter = builder.Eq(z => z.Id, value) | filter;
                 var queryResult = await App.Current.ThingSetAccessor.FindAsync(filter, 20);
                 this.HasNext = queryResult.HasNext;
                 this.Things.Reset(queryResult.Items
