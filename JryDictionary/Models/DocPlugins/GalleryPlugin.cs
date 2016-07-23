@@ -1,26 +1,27 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Jasily;
+using JryDictionary.Controls.ImagesViewer;
 
 namespace JryDictionary.Models.DocPlugins
 {
-    public sealed class GalleryPlugin : IDocPlugin
+    public sealed class GalleryPlugin : IDocPlugin, IEnumerable<Uri>
     {
         private static readonly Regex Pattern = new Regex(
             "^gallery(?::(?:col=(\\d))?)?$",
             RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
         private readonly int columnCount = 3;
+        private readonly List<Uri> images = new List<Uri>();
 
         public GalleryPlugin(string header)
         {
@@ -40,21 +41,17 @@ namespace JryDictionary.Models.DocPlugins
 
             foreach (var gallery in line.EnumerateIndexValuePair())
             {
-                var url = DescriptionParser.GetUri(gallery.Value.AsRange());
-                if (url == null) continue;
-                var uri = new Uri(url);
-                if (uri.Scheme == Uri.UriSchemeFile)
-                {
-                    if (!File.Exists(url)) continue;
-                }
-
+                var uri = DescriptionParser.GetUrl(gallery.Value.AsRange());
+                if (uri == null) continue;
+                if (uri.Scheme == Uri.UriSchemeFile && !File.Exists(uri.LocalPath)) continue;
+                this.images.Add(uri);
                 var image = new Image
                 {
                     Source = BitmapFromUri(uri),
                     Margin = new Thickness(2),
-                    Tag = url
+                    Tag = uri
                 };
-                image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
+                image.MouseLeftButtonDown += this.Image_MouseLeftButtonDown;
                 RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
                 RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
                 var col = gallery.Index % this.columnCount;
@@ -67,29 +64,24 @@ namespace JryDictionary.Models.DocPlugins
             yield return new InlineUIContainer(grid);
         }
 
-        private static void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
                 var image = sender as Image;
                 if (image == null) return;
-                var path = image.Tag as string;
-                if (path != null)
+                var uri = image.Tag as Uri;
+                if (uri != null)
                 {
-                    Task.Run(() =>
+                    var owner = App.Current.Windows.OfType<Window>().FirstOrDefault(z => z.IsActive);
+                    var win = new ImagesViewerWindow
                     {
-                        try
-                        {
-                            if (File.Exists(path))
-                            {
-                                using (Process.Start(path)) { }
-                            }
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-                    });
+                        DataContext = this,
+                        Owner = owner
+                    };
+                    var index = this.images.IndexOf(uri);
+                    win.Show();
+                    win.SelectedIndex = index;
                 }
             }
         }
@@ -108,5 +100,9 @@ namespace JryDictionary.Models.DocPlugins
         {
 
         }
+
+        public IEnumerator<Uri> GetEnumerator() => this.images.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

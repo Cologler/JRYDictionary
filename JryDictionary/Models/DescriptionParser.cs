@@ -210,26 +210,26 @@ namespace JryDictionary.Models
             }
         }
 
-        private void MapBackground(string line) => this.Background = GetUri(line.AsRange().SubRange(3)) ?? this.Background;
+        private void MapBackground(string line) => this.Background = GetUrl(line.AsRange().SubRange(3))?.OriginalString ?? this.Background;
 
         public string Background { get; private set; }
 
         public string Cover { get; private set; }
 
-        private void MapCover(string line) => this.Cover = GetUri(line.AsRange().SubRange(3)) ?? this.Cover;
+        private void MapCover(string line) => this.Cover = GetUrl(line.AsRange().SubRange(3))?.OriginalString ?? this.Cover;
 
         private void MapGalleries(string line)
         {
-            var uri = GetUri(line.AsRange().SubRange(3));
+            var uri = GetUrl(line.AsRange().SubRange(3));
             if (uri == null) return;
-            this.galleries.Add(uri);
+            this.galleries.Add(uri.OriginalString);
         }
 
         public string Logo { get; private set; }
 
-        private void MapLogo(string line) => this.Logo = GetUri(line.AsRange().SubRange(3)) ?? this.Logo;
+        private void MapLogo(string line) => this.Logo = GetUrl(line.AsRange().SubRange(3))?.OriginalString ?? this.Logo;
 
-        public static string GetUri(StringRange line)
+        public static Uri GetUrl(StringRange line)
         {
             line = line.Trim();
             if (line.Contains("%"))
@@ -245,8 +245,7 @@ namespace JryDictionary.Models
                     line = text.AsRange();
                 }
             }
-            var url = line.ToString();
-            return Can.CreateUri(url, UriKind.Absolute) ? url : null;
+            return CreateOrNull.CreateUri(line.ToString(), UriKind.Absolute);
         }
 
         public Inline[] Inlines => this.inlines.ToArray();
