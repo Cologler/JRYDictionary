@@ -7,8 +7,8 @@ using System.Windows;
 using Jasily.Data.Db.MongoDb;
 using JryDictionary.DbAccessors;
 using JryDictionary.Modules;
-using JryDictionary.Properties;
 using MongoDB.Driver;
+using Settings = JryDictionary.Properties.Settings;
 
 namespace JryDictionary
 {
@@ -70,7 +70,17 @@ namespace JryDictionary
             this.ThingSetAccessor.Initialize();
 
             this.ModuleManager.Initialize();
+
+            if (File.Exists("Settings.json"))
+            {
+                using (var stream = File.OpenRead("Settings.json"))
+                {
+                    this.JsonSettings = stream.ToArray().TryJsonToObject<Common.Settings>();
+                }
+            }
         }
+
+        public Common.Settings JsonSettings { get; private set; }
 
         public ModuleManager ModuleManager { get; } = new ModuleManager();
 

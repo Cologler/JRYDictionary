@@ -99,7 +99,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Common\FolderHelper.cs" />
+    <Compile Include="Common\Settings.cs" />
     <Compile Include="Controls\ThingEditor\WordEditorStatus.cs" />
     <Compile Include="Models\DescriptionParser.cs" />
     <Compile Include="Controls\ThingViewer\FieldReverseViewModel.cs" />

@@ -113,3 +113,8 @@ try use local file like `BG: file:///C:\img.jpg`.
 
 you can use `%OneDrive%` to use OneDrive relative directory like
 `BG: file:///%OneDrive%\img.jpg`
+
+## TODO
+
+1. search by id
+1. gallery viewer

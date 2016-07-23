@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,7 +10,6 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Jasily;
-using JryDictionary.Common;
 using JryDictionary.Models.DocPlugins;
 
 // ReSharper disable InconsistentNaming
@@ -20,8 +18,6 @@ namespace JryDictionary.Models
 {
     public class DescriptionParser
     {
-        private static readonly Regex WebUriRegex = new Regex("^(https?://[^ ]+)", RegexOptions.IgnoreCase);
-
         private readonly string text;
         private readonly string[] lines;
         private readonly int metaSpliterIndex;
@@ -236,23 +232,21 @@ namespace JryDictionary.Models
         public static string GetUri(StringRange line)
         {
             line = line.Trim();
-            var match = WebUriRegex.Match(line.Trim().ToString());
-            if (match.Success)
+            if (line.Contains("%"))
             {
-                return match.Value;
-            }
-            if (line.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
-            {
-                var ret = line.SubRange(8).ToString();
-                // onedrive
-                if (ret.Contains("%onedrive%", StringComparison.OrdinalIgnoreCase))
+                var endpoints = App.Current.JsonSettings?.EndPoints;
+                if (endpoints != null)
                 {
-                    ret = ret.Replace("%onedrive%", FolderHelper.GetOneDriveLocation(),
-                        StringComparison.OrdinalIgnoreCase);
+                    var text = line.ToString();
+                    text = endpoints
+                        .Where(z => !string.IsNullOrEmpty(z.Name) && z.Value != null)
+                        .Aggregate(text, (current, endpoint) =>
+                            current.Replace("%" + endpoint.Name + "%", endpoint.Value, StringComparison.OrdinalIgnoreCase));
+                    line = text.AsRange();
                 }
-                return ret;
             }
-            return null;
+            var url = line.ToString();
+            return Can.CreateUri(url, UriKind.Absolute) ? url : null;
         }
 
         public Inline[] Inlines => this.inlines.ToArray();
