@@ -39,10 +39,13 @@ namespace JryDictionary.Models.DocPlugins
             grid.ColumnDefinitions.AddRange(Generater.Create<ColumnDefinition>(this.columnCount));
             grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
 
-            foreach (var gallery in line.EnumerateIndexValuePair())
+            foreach (var item in line
+                .Select(z => DescriptionParser.GetUri(z.AsRange()))
+                .Where(z => z != null)
+                .EnumerateIndexValuePair())
             {
-                var uri = DescriptionParser.GetUrl(gallery.Value.AsRange());
-                if (uri == null) continue;
+                var uri = item.Value;
+
                 if (uri.Scheme == Uri.UriSchemeFile && !File.Exists(uri.LocalPath)) continue;
                 this.images.Add(uri);
                 var image = new Image
@@ -51,11 +54,12 @@ namespace JryDictionary.Models.DocPlugins
                     Margin = new Thickness(2),
                     Tag = uri
                 };
+                image.ToolTip = uri;
                 image.MouseLeftButtonDown += this.Image_MouseLeftButtonDown;
                 RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
                 RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
-                var col = gallery.Index % this.columnCount;
-                var row = gallery.Index / this.columnCount;
+                var col = item.Index % this.columnCount;
+                var row = item.Index / this.columnCount;
                 Grid.SetColumn(image, col);
                 Grid.SetRow(image, row);
                 grid.Children.Add(image);
