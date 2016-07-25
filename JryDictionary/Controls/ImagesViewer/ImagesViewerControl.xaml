@@ -14,7 +14,9 @@
             <mah:FlipView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Image Source="{Binding}" />
+                        <Image Source="{Binding}"
+                               RenderOptions.BitmapScalingMode="Fant"
+                               RenderOptions.EdgeMode="Aliased" />
                     </Grid>
                 </DataTemplate>
             </mah:FlipView.ItemTemplate>
