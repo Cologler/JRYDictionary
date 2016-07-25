@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Jasily;
 using JryDictionary.Controls.ImagesViewer;
 
@@ -50,7 +49,7 @@ namespace JryDictionary.Models.DocPlugins
                 this.images.Add(uri);
                 var image = new Image
                 {
-                    Source = BitmapFromUri(uri),
+                    Source = DescriptionParser.BitmapFromUri(uri),
                     Margin = new Thickness(2),
                     Tag = uri
                 };
@@ -88,16 +87,6 @@ namespace JryDictionary.Models.DocPlugins
                     win.SelectedIndex = index;
                 }
             }
-        }
-
-        private static ImageSource BitmapFromUri(Uri source)
-        {
-            var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = source;
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.EndInit();
-            return bitmap;
         }
 
         public void Dispose()

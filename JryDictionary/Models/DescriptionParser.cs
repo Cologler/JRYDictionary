@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Cache;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -284,12 +285,13 @@ namespace JryDictionary.Models
 
         private Inline Height(double height) => new InlineUIContainer(new Grid { Height = height });
 
-        private static ImageSource BitmapFromUri(Uri source)
+        public static ImageSource BitmapFromUri(Uri source)
         {
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.UriSource = source;
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.UriCachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.CacheIfAvailable);
             bitmap.EndInit();
             return bitmap;
         }
