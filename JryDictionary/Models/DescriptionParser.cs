@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Cache;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Jasily;
 using JryDictionary.Models.DocPlugins;
+using JryDictionary.Models.Parsers;
 
 // ReSharper disable InconsistentNaming
 
@@ -19,7 +18,6 @@ namespace JryDictionary.Models
 {
     public class DescriptionParser
     {
-        private readonly string text;
         private readonly string[] lines;
         private readonly int metaSpliterIndex;
         private readonly int contentStartIndex;
@@ -29,7 +27,6 @@ namespace JryDictionary.Models
 
         public DescriptionParser(string text)
         {
-            this.text = text;
             this.lines = text.AsLines();
             this.metaSpliterIndex = this.lines.FindIndex(z => z == "-");
             this.contentStartIndex = this.metaSpliterIndex + 1;
@@ -167,7 +164,7 @@ namespace JryDictionary.Models
 
                 var image = new Image
                 {
-                    Source = BitmapFromUri(uri),
+                    Source = UriInfo.BitmapFromUri(uri),
                     Margin = new Thickness(2),
                     Tag = gallery.Value
                 };
@@ -211,43 +208,33 @@ namespace JryDictionary.Models
             }
         }
 
-        private void MapBackground(string line) => this.Background = GetUri(line.AsRange().SubRange(3))?.OriginalString ?? this.Background;
+        private void MapBackground(string line)
+            => this.Background =
+            Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri.OriginalString
+            ?? this.Background;
 
         public string Background { get; private set; }
 
         public string Cover { get; private set; }
 
-        private void MapCover(string line) => this.Cover = GetUri(line.AsRange().SubRange(3))?.OriginalString ?? this.Cover;
+        private void MapCover(string line)
+            => this.Cover =
+            Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri.OriginalString
+            ?? this.Cover;
 
         private void MapGalleries(string line)
         {
-            var uri = GetUri(line.AsRange().SubRange(3));
+            var uri = Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri;
             if (uri == null) return;
             this.galleries.Add(uri.OriginalString);
         }
 
         public string Logo { get; private set; }
 
-        private void MapLogo(string line) => this.Logo = GetUri(line.AsRange().SubRange(3))?.OriginalString ?? this.Logo;
-
-        public static Uri GetUri(StringRange line)
-        {
-            line = line.Trim();
-            if (line.Contains("%"))
-            {
-                var endpoints = App.Current.JsonSettings?.EndPoints;
-                if (endpoints != null)
-                {
-                    var text = line.ToString();
-                    text = endpoints
-                        .Where(z => !string.IsNullOrEmpty(z.Name) && z.Value != null)
-                        .Aggregate(text, (current, endpoint) =>
-                            current.Replace("%" + endpoint.Name + "%", endpoint.Value, StringComparison.OrdinalIgnoreCase));
-                    line = text.AsRange();
-                }
-            }
-            return CreateOrNull.CreateUri(line.ToString(), UriKind.Absolute);
-        }
+        private void MapLogo(string line)
+            => this.Logo =
+            Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri.OriginalString
+            ?? this.Logo;
 
         public Inline[] Inlines => this.inlines.ToArray();
 
@@ -284,18 +271,5 @@ namespace JryDictionary.Models
         });
 
         private Inline Height(double height) => new InlineUIContainer(new Grid { Height = height });
-
-        public static ImageSource BitmapFromUri(Uri source)
-        {
-            var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = source;
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.UriCachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.CacheIfAvailable);
-            bitmap.EndInit();
-            return bitmap;
-        }
     }
-
-
 }

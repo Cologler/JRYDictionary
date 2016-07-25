@@ -103,6 +103,7 @@
     <Compile Include="Controls\ImagesViewer\ImagesViewerControl.xaml.cs">
       <DependentUpon>ImagesViewerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ImagesViewer\ImagesViewerItemViewModel.cs" />
     <Compile Include="Controls\ImagesViewer\ImagesViewerWindow.xaml.cs">
       <DependentUpon>ImagesViewerWindow.xaml</DependentUpon>
     </Compile>
@@ -112,6 +113,9 @@
     <Compile Include="Models\DocPlugins\GalleryPlugin.cs" />
     <Compile Include="Models\DocPlugins\IDocPlugin.cs" />
     <Compile Include="Models\DocPlugins\ImagePlugin.cs" />
+    <Compile Include="Models\Parsers\ImageUriParser.cs" />
+    <Compile Include="Models\Parsers\UriInfo.cs" />
+    <Compile Include="Models\Parsers\UriParser.cs" />
     <Compile Include="Modules\Builders\AbbreviationWordBuilder.cs" />
     <Compile Include="Modules\Builders\IWordBuilder.cs" />
     <Compile Include="Modules\Builders\LowerWordBuilder.cs" />

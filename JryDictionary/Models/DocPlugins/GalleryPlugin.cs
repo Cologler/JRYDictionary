@@ -8,19 +8,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using Jasily;
 using JryDictionary.Controls.ImagesViewer;
+using JryDictionary.Models.Parsers;
 
 namespace JryDictionary.Models.DocPlugins
 {
-    public sealed class GalleryPlugin : IDocPlugin, IEnumerable<Uri>
+    public sealed class GalleryPlugin : IDocPlugin, IEnumerable<ImagesViewerItemViewModel>
     {
         private static readonly Regex Pattern = new Regex(
             "^gallery(?::(?:col=(\\d))?)?$",
             RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
         private readonly int columnCount = 3;
-        private readonly List<Uri> images = new List<Uri>();
+        private readonly List<UriInfo> items = new List<UriInfo>();
 
         public GalleryPlugin(string header)
         {
@@ -38,22 +38,25 @@ namespace JryDictionary.Models.DocPlugins
             grid.ColumnDefinitions.AddRange(Generater.Create<ColumnDefinition>(this.columnCount));
             grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
 
+            var imageUriParser = Singleton.Instance<ImageUriParser>();
+
             foreach (var item in line
-                .Select(z => DescriptionParser.GetUri(z.AsRange()))
+                .Select(z => imageUriParser.TryParse(z))
                 .Where(z => z != null)
                 .EnumerateIndexValuePair())
             {
-                var uri = item.Value;
-
+                var uri = item.Value.Uri;
                 if (uri.Scheme == Uri.UriSchemeFile && !File.Exists(uri.LocalPath)) continue;
-                this.images.Add(uri);
+                this.items.Add(item.Value);
                 var image = new Image
                 {
-                    Source = DescriptionParser.BitmapFromUri(uri),
+                    Source = item.Value.CreateImageSource(),
                     Margin = new Thickness(2),
-                    Tag = uri
+                    Tag = item.Value
                 };
-                image.ToolTip = uri;
+                image.ToolTip = string.IsNullOrWhiteSpace(item.Value.Name)
+                    ? uri.ToString()
+                    : $"{item.Value.Name}\r\n{uri}";
                 image.MouseLeftButtonDown += this.Image_MouseLeftButtonDown;
                 RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
                 RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
@@ -73,7 +76,7 @@ namespace JryDictionary.Models.DocPlugins
             {
                 var image = sender as Image;
                 if (image == null) return;
-                var uri = image.Tag as Uri;
+                var uri = image.Tag as UriInfo;
                 if (uri != null)
                 {
                     var owner = App.Current.Windows.OfType<Window>().FirstOrDefault(z => z.IsActive);
@@ -82,7 +85,7 @@ namespace JryDictionary.Models.DocPlugins
                         DataContext = this,
                         Owner = owner
                     };
-                    var index = this.images.IndexOf(uri);
+                    var index = this.items.IndexOf(uri);
                     win.Show();
                     win.SelectedIndex = index;
                 }
@@ -94,7 +97,8 @@ namespace JryDictionary.Models.DocPlugins
 
         }
 
-        public IEnumerator<Uri> GetEnumerator() => this.images.GetEnumerator();
+        public IEnumerator<ImagesViewerItemViewModel> GetEnumerator()
+            => this.items.Select(z => new ImagesViewerItemViewModel(z.Uri) { Name = z.Name }).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }

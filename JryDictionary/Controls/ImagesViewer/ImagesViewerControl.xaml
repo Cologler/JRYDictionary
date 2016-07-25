@@ -6,15 +6,17 @@
              xmlns:local="clr-namespace:JryDictionary.Controls.ImagesViewer"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300"
+             d:DesignWidth="300">
     <Grid>
         <mah:FlipView x:Name="FlipView"
                       ItemsSource="{Binding}"
-                      IsBannerEnabled="False">
+                      IsBannerEnabled="{Binding RelativeSource={RelativeSource Self}, Path=SelectedItem.IsNameNotEmpty}"
+                      BannerText="{Binding RelativeSource={RelativeSource Self}, Path=SelectedItem.Name}">
             <mah:FlipView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type local:ImagesViewerItemViewModel}">
                     <Grid>
-                        <Image Source="{Binding}"
+                        <Image Source="{Binding Uri}"
                                RenderOptions.BitmapScalingMode="Fant"
                                RenderOptions.EdgeMode="Aliased" />
                     </Grid>
