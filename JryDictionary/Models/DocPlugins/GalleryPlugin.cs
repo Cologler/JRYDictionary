@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +12,7 @@ using JryDictionary.Models.Parsers;
 
 namespace JryDictionary.Models.DocPlugins
 {
-    public sealed class GalleryPlugin : IDocPlugin, IEnumerable<ImagesViewerItemViewModel>
+    public sealed class GalleryPlugin : IDocPlugin
     {
         private static readonly Regex Pattern = new Regex(
             "^gallery(?::(?:col=(\\d))?)?$",
@@ -79,15 +78,8 @@ namespace JryDictionary.Models.DocPlugins
                 var uri = image.Tag as UriInfo;
                 if (uri != null)
                 {
-                    var owner = App.Current.Windows.OfType<Window>().FirstOrDefault(z => z.IsActive);
-                    var win = new ImagesViewerWindow
-                    {
-                        DataContext = this,
-                        Owner = owner
-                    };
-                    var index = this.items.IndexOf(uri);
-                    win.Show();
-                    win.SelectedIndex = index;
+                    var items = this.items.Select(z => new ImagesViewerItemViewModel(z.Uri) { Name = z.Name }).ToArray();
+                    ImagesViewerWindow.Show(items, items.FirstOrDefault(z => z.Uri == uri.Uri));
                 }
             }
         }
@@ -96,10 +88,5 @@ namespace JryDictionary.Models.DocPlugins
         {
 
         }
-
-        public IEnumerator<ImagesViewerItemViewModel> GetEnumerator()
-            => this.items.Select(z => new ImagesViewerItemViewModel(z.Uri) { Name = z.Name }).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }
