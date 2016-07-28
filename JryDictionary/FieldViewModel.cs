@@ -46,8 +46,8 @@ namespace JryDictionary
         {
             if (this.thingName != null) return;
             this.thingName = string.Empty;
-            Debug.WriteLine($"load field for [{this.Source.TargetId}]");
-            var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.Source.TargetId);
+            Debug.WriteLine($"load field for [{this.TargetId}]");
+            var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.TargetId);
             if (thing != null)
             {
                 this.ThingName = thing.MajorWord().Text;

@@ -10,7 +10,6 @@ namespace JryDictionary.Controls.ThingViewer
             : base(field)
         {
             this.Thing = thing;
-            this.ThingName = thing.MajorWord().Text;
         }
 
         public override string TargetId => this.Thing.Id;

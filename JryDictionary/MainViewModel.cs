@@ -25,9 +25,9 @@ namespace JryDictionary
 
         protected MainViewModel()
         {
-            this.SearchModes.Collection.AddRange(EnumCache<SearchMode>.Default.All()
-                .Select(z => new Boxing<NameValuePair<SearchMode>>(
-                    new NameValuePair<SearchMode>(EnumCache<SearchMode>.Default.ToString(z), z))));
+            this.SearchModes.Collection.AddRange(EnumCache<SearchMode>.Default
+                .All()
+                .Select(z => new ValueReference<NameValuePair<SearchMode>>(new NameValuePair<SearchMode>(EnumCache<SearchMode>.Default.ToString(z), z))));
             this.SearchModes.Selected = this.SearchModes.Collection[0];
         }
 
@@ -121,8 +121,8 @@ namespace JryDictionary
 
         public JasilyCollectionView<WordViewModel> Words { get; } = new JasilyCollectionView<WordViewModel>();
 
-        public JasilyCollectionView<Boxing<NameValuePair<SearchMode>>> SearchModes { get; }
-            = new JasilyCollectionView<Boxing<NameValuePair<SearchMode>>>();
+        public JasilyCollectionView<ValueReference<NameValuePair<SearchMode>>> SearchModes { get; }
+            = new JasilyCollectionView<ValueReference<NameValuePair<SearchMode>>>();
 
         public JasilyCollectionView<string> ExistsCategorys { get; } = new JasilyCollectionView<string>();
 

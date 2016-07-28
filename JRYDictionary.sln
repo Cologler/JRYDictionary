@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JryDictionary", "JryDictionary\JryDictionary.csproj", "{9F374B39-CC5C-407F-A2A9-650246CE2A45}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.Core", "Jasily\Jasily.Core\Jasily.Core.csproj", "{8442E8E7-D515-4481-8A36-71711B1FBF79}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily.Core.Linq", "Jasily\Jasily.Core.Linq\Jasily.Core.Linq.csproj", "{801800EA-FE7C-40AD-838D-F2A887DE03DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jasily", "Jasily\Jasily\Jasily.csproj", "{6ADB6547-070B-4518-A2D1-E3BC349730BC}"
 EndProject
@@ -31,10 +29,6 @@ Global
 		{8442E8E7-D515-4481-8A36-71711B1FBF79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8442E8E7-D515-4481-8A36-71711B1FBF79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8442E8E7-D515-4481-8A36-71711B1FBF79}.Release|Any CPU.Build.0 = Release|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{801800EA-FE7C-40AD-838D-F2A887DE03DE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6ADB6547-070B-4518-A2D1-E3BC349730BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6ADB6547-070B-4518-A2D1-E3BC349730BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ADB6547-070B-4518-A2D1-E3BC349730BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
