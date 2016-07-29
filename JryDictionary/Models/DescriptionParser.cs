@@ -61,7 +61,7 @@ namespace JryDictionary.Models
                     {
                         IDocPlugin plugin = null;
                         var header = trim.SubRange(2, trim.Length - 4);
-                        if (header.StartsWith("gallery:", StringComparison.OrdinalIgnoreCase))
+                        if (header.StartsWith("gallery", StringComparison.OrdinalIgnoreCase))
                         {
                             plugin = new GalleryPlugin(header.ToString());
                         }
