@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
 using Jasily.ComponentModel;
+using JryDictionary.Controls.ThingPreview;
 using JryDictionary.Models;
 using JryDictionary.Models.Parsers;
 
 namespace JryDictionary
 {
-    public class FieldViewModel : JasilyViewModel<Field>
+    public class FieldViewModel : JasilyViewModel<Field>, IThingPreviewViewModel
     {
         private string displayValue;
         private string thingName;
         private Uri icon;
+        private Uri cover;
 
         public FieldViewModel(Field source)
             : base(source)
@@ -28,7 +30,7 @@ namespace JryDictionary
             private set { this.SetPropertyRef(ref this.displayValue, value); }
         }
 
-        public string ThingName
+        public string Name
         {
             get
             {
@@ -52,12 +54,20 @@ namespace JryDictionary
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.TargetId);
             if (thing != null)
             {
-                this.ThingName = thing.MajorWord().Text;
+                this.Name = thing.MajorWord().Text;
                 this.DisplayValue = $"{this.Source.Name} 「{thing.MajorWord().Text}」";
-                this.Icon = new ImageUriParser().TryParse(thing.Icon)?.Uri;
+                var uriParser = new ImageUriParser();
+                this.Icon = uriParser.TryParse(thing.Icon)?.Uri;
+                this.Cover = uriParser.TryParse(thing.Cover)?.Uri;
             }
         }
 
         public virtual string TargetId => this.Source.TargetId;
+
+        public Uri Cover
+        {
+            get { return this.cover; }
+            private set { this.SetPropertyRef(ref this.cover, value); }
+        }
     }
 }

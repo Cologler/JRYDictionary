@@ -4,13 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Jasily.ComponentModel;
 using JetBrains.Annotations;
+using JryDictionary.Controls.ThingPreview;
 using JryDictionary.Models;
 using JryDictionary.Models.Parsers;
 using MongoDB.Driver;
 
 namespace JryDictionary
 {
-    public class ThingViewModel : JasilyViewModel<Thing>
+    public class ThingViewModel : JasilyViewModel<Thing>, IThingPreviewViewModel
     {
         public ThingViewModel(Thing source, string category = null)
             : base(source)
@@ -41,5 +42,9 @@ namespace JryDictionary
         public List<WordViewModel> Alias => this.Words.Skip(1).ToList();
 
         public Uri Icon => new ImageUriParser().TryParse(this.Source.Icon)?.Uri;
+
+        public Uri Cover => new ImageUriParser().TryParse(this.Source.Cover)?.Uri;
+
+        public string Name => this.MajorWord.Word;
     }
 }

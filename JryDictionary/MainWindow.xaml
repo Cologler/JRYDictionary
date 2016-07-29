@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="JryDictionary.MainWindow"
+﻿<mah:MetroWindow xmlns:ThingPreview="clr-namespace:JryDictionary.Controls.ThingPreview"  x:Class="JryDictionary.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:ThingEditor="clr-namespace:JryDictionary.Controls.ThingEditor"
                  xmlns:ThingViewer="clr-namespace:JryDictionary.Controls.ThingViewer"
@@ -189,7 +189,10 @@
                                             IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
-                                <Grid>
+                                <Grid Background="Transparent">
+                                    <Grid.ToolTip>
+                                        <ThingPreview:ThingPreviewControl DataContext="{Binding Thing}" />
+                                    </Grid.ToolTip>
                                     <Image Source="{Binding Thing.Icon}"
                                            RenderOptions.BitmapScalingMode="Fant"
                                            RenderOptions.EdgeMode="Aliased" />
@@ -202,7 +205,7 @@
                                         Binding="{Binding Thing.Category}"
                                         FontFamily="Microsoft YaHei"
                                         IsReadOnly="True" />
-                    
+
                     <DataGridTextColumn Header="thing"
                                         Binding="{Binding Thing.MajorWord.Word}"
                                         Width="150"
@@ -215,6 +218,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
                                 <Grid>
+                                    <Grid.ToolTip>
+                                        <ThingPreview:ThingPreviewControl DataContext="{Binding Thing}" />
+                                    </Grid.ToolTip>
                                     <TextBlock Height="24"
                                                Padding="6,4,6,0"
                                                FontFamily="Microsoft YaHei"

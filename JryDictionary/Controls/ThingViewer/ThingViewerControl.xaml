@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:JryDictionary.Controls.ThingViewer"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:Jasily.Windows.Interactivity.Behaviors;assembly=Jasily.Desktop"
+             xmlns:thingPreview="clr-namespace:JryDictionary.Controls.ThingPreview"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300">
@@ -207,6 +208,9 @@
                                                   Background="{StaticResource AccentColorBrush}"
                                                   Margin="2"
                                                   MouseLeftButtonUp="FieldUIElement_OnMouseLeftButtonUp">
+                                                <Grid.ToolTip>
+                                                    <thingPreview:ThingPreviewControl />
+                                                </Grid.ToolTip>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition />
@@ -227,7 +231,7 @@
                                                        RenderOptions.EdgeMode="Aliased" />
 
                                                 <TextBlock Grid.Column="1"
-                                                           Text="{Binding ThingName}"
+                                                           Text="{Binding Name}"
                                                            VerticalAlignment="Center"
                                                            HorizontalAlignment="Center"
                                                            Margin="6"

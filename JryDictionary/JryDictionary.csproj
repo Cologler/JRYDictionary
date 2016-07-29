@@ -108,6 +108,10 @@
       <DependentUpon>ImagesViewerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ThingEditor\WordEditorStatus.cs" />
+    <Compile Include="Controls\ThingPreview\IThingPreviewViewModel.cs" />
+    <Compile Include="Controls\ThingPreview\ThingPreviewControl.xaml.cs">
+      <DependentUpon>ThingPreviewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\DescriptionParser.cs" />
     <Compile Include="Controls\ThingViewer\FieldReverseViewModel.cs" />
     <Compile Include="Models\DocPlugins\GalleryPlugin.cs" />
@@ -164,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ThingEditor\ThingEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ThingPreview\ThingPreviewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
