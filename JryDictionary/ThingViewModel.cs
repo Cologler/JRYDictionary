@@ -5,6 +5,7 @@ using System.Linq;
 using Jasily.ComponentModel;
 using JetBrains.Annotations;
 using JryDictionary.Models;
+using JryDictionary.Models.Parsers;
 using MongoDB.Driver;
 
 namespace JryDictionary
@@ -19,11 +20,6 @@ namespace JryDictionary
             if (source.Fields != null)
             {
                 this.Fields.AddRange(source.Fields.Select(z => new FieldViewModel(z)));
-            }
-            if (!string.IsNullOrEmpty(this.Source.Description))
-            {
-                var desc = new DescriptionParser(this.Source.Description).ParseMetaData();
-                this.Logo = desc.Logo;
             }
         }
 
@@ -44,6 +40,6 @@ namespace JryDictionary
         [NotNull]
         public List<WordViewModel> Alias => this.Words.Skip(1).ToList();
 
-        public string Logo { get; }
+        public Uri Icon => new ImageUriParser().TryParse(this.Source.Icon)?.Uri;
     }
 }

@@ -32,5 +32,17 @@ namespace JryDictionary.Models
         [CanBeNull]
         [BsonIgnoreIfDefault]
         public string Description { get; set; }
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public string Icon { get; set; }
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public string Cover { get; set; }
+
+        [CanBeNull]
+        [BsonIgnoreIfDefault]
+        public string Background { get; set; }
     }
 }

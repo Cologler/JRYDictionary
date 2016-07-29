@@ -19,72 +19,18 @@ namespace JryDictionary.Models
     public class DescriptionParser
     {
         private readonly string[] lines;
-        private readonly int metaSpliterIndex;
-        private readonly int contentStartIndex;
         private readonly List<Inline> inlines = new List<Inline>();
         private readonly List<string> galleries = new List<string>();
-        private bool isMetaParsed;
 
         public DescriptionParser(string text)
         {
             this.lines = text.AsLines();
-            this.metaSpliterIndex = this.lines.FindIndex(z => z == "-");
-            this.contentStartIndex = this.metaSpliterIndex + 1;
-        }
-
-        public DescriptionParser ParseMetaData()
-        {
-            if (this.metaSpliterIndex >= 0)
-            {
-                for (var i = 0; i < this.metaSpliterIndex; i++)
-                {
-                    var line = this.lines[i];
-                    if (line.Length > 0)
-                    {
-                        switch (line[0])
-                        {
-                            case 'B':
-                                if (line.StartsWith("BG:"))
-                                {
-                                    this.MapBackground(line);
-                                }
-                                break;
-
-                            case 'C':
-                                if (line.StartsWith("CV:"))
-                                {
-                                    this.MapCover(line);
-                                }
-                                break;
-
-                            case 'G':
-                                if (line.StartsWith("GL:"))
-                                {
-                                    this.MapGalleries(line);
-                                }
-                                break;
-
-                            case 'L':
-                                if (line.StartsWith("LG:"))
-                                {
-                                    this.MapLogo(line);
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-
-            this.isMetaParsed = true;
-            return this;
         }
 
         public DescriptionParser ParseBody()
         {
-            Debug.Assert(this.isMetaParsed);
-
             this.inlines.Clear();
-            var index = this.contentStartIndex;
+            var index = 0;
             while (index < this.lines.Length && string.IsNullOrWhiteSpace(this.lines[index]))
             {
                 index++;

@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using Jasily.Collections.Generic;
 using Jasily.ComponentModel;
 using JryDictionary.Models;
+using JryDictionary.Models.Parsers;
 using JryDictionary.Modules.Copyer;
 
 namespace JryDictionary.Controls.ThingViewer
@@ -20,7 +21,11 @@ namespace JryDictionary.Controls.ThingViewer
 
         public ThingViewerViewModel(ThingViewModel thingViewModel)
         {
+            var uriParser = new ImageUriParser();
             this.ThingViewModel = thingViewModel;
+            this.Background = uriParser.TryParse(thingViewModel.Source.Background)?.Uri;
+            this.Cover = uriParser.TryParse(thingViewModel.Source.Cover)?.Uri;
+
             this.GroupedFields = new ObservableCollection<GroupedList<string, FieldViewModel>>(
                 this.ThingViewModel.Fields.GroupBy(z => z.Source.Name).Select(z => z.ToList()));
             this.existsFields.AddRange(this.ThingViewModel.Fields.Select(z => z.Source.TargetId));
@@ -35,18 +40,19 @@ namespace JryDictionary.Controls.ThingViewer
         public string Description => this.ThingViewModel.Source.Description;
 
         [NotifyPropertyChanged]
-        public string Background { get; private set; }
+        public Uri Background { get; private set; }
 
         [NotifyPropertyChanged]
-        public string Cover { get; private set; }
+        public Uri Cover { get; private set; }
 
         public IEnumerable<Inline> BuildDescriptionInlines()
         {
             if (string.IsNullOrEmpty(this.Description)) return Empty<Inline>.Array;
 
-            var desc = new DescriptionParser(this.Description).ParseMetaData().ParseBody();
-            this.Background = desc.Background;
-            this.Cover = desc.Cover;
+            var desc = new DescriptionParser(this.Description).ParseBody();
+            var uriParser = new ImageUriParser();
+            this.Background = this.Background ?? uriParser.TryParse(desc.Background)?.Uri;
+            this.Cover = this.Cover ?? uriParser.TryParse(desc.Cover)?.Uri;
             this.RefreshProperties();
             return desc.Inlines;
         }

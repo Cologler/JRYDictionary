@@ -17,6 +17,7 @@ namespace JryDictionary.Models.Parsers
 
         public virtual UriInfo TryParse(string text)
         {
+            if (text == null) return null;
             text = text.Trim();
             var uri = GetUri(text);
             if (uri != null) return new UriInfo(uri);

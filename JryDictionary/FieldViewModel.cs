@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Jasily.ComponentModel;
 using JryDictionary.Models;
+using JryDictionary.Models.Parsers;
 
 namespace JryDictionary
 {
@@ -8,7 +10,7 @@ namespace JryDictionary
     {
         private string displayValue;
         private string thingName;
-        private string logo;
+        private Uri icon;
 
         public FieldViewModel(Field source)
             : base(source)
@@ -36,10 +38,10 @@ namespace JryDictionary
             protected set { this.SetPropertyRef(ref this.thingName, value); }
         }
 
-        public string Logo
+        public Uri Icon
         {
-            get { return this.logo; }
-            private set { this.SetPropertyRef(ref this.logo, value); }
+            get { return this.icon; }
+            private set { this.SetPropertyRef(ref this.icon, value); }
         }
 
         public async void BeginLoadThingName()
@@ -52,11 +54,7 @@ namespace JryDictionary
             {
                 this.ThingName = thing.MajorWord().Text;
                 this.DisplayValue = $"{this.Source.Name} 「{thing.MajorWord().Text}」";
-
-                if (!string.IsNullOrWhiteSpace(thing.Description))
-                {
-                    this.Logo = new DescriptionParser(thing.Description).ParseMetaData().Logo;
-                }
+                this.Icon = new ImageUriParser().TryParse(thing.Icon)?.Uri;
             }
         }
 

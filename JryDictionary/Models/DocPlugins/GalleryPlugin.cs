@@ -37,7 +37,7 @@ namespace JryDictionary.Models.DocPlugins
             grid.ColumnDefinitions.AddRange(Generater.Create<ColumnDefinition>(this.columnCount));
             grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
 
-            var imageUriParser = Singleton.Instance<ImageUriParser>();
+            var imageUriParser = new ImageUriParser();
 
             foreach (var item in line
                 .Select(z => imageUriParser.TryParse(z))

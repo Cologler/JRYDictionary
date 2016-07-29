@@ -190,7 +190,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
                                 <Grid>
-                                    <Image Source="{Binding Thing.Logo}"
+                                    <Image Source="{Binding Thing.Icon}"
                                            RenderOptions.BitmapScalingMode="Fant"
                                            RenderOptions.EdgeMode="Aliased" />
                                 </Grid>

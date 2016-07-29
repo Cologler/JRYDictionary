@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
                 <ResourceDictionary>
+                    <valueConverters:NullCollapsedValueConverter x:Key="NullCollapsedValueConverter" />
                     <valueConverters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
                     <valueConverters:ItemsEmptyToCollapsedConverter x:Key="ItemsEmptyToCollapsedConverter" />
                     <valueConverters:EmptyCollapsedValueConverter x:Key="EmptyCollapsedValueConverter" />

@@ -56,8 +56,8 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Image Source="{Binding ThingViewModel.Logo}"
-                           Visibility="{Binding ThingViewModel.Logo, Converter={StaticResource EmptyCollapsedValueConverter}}"
+                    <Image Source="{Binding ThingViewModel.Icon}"
+                           Visibility="{Binding ThingViewModel.Icon, Converter={StaticResource NullCollapsedValueConverter}}"
                            IsHitTestVisible="False"
                            Stretch="UniformToFill"
                            Height="42"
@@ -218,8 +218,8 @@
                                                     </ContextMenu>
                                                 </Grid.ContextMenu>
 
-                                                <Image Source="{Binding Logo}"
-                                                       Visibility="{Binding Logo, Converter={StaticResource EmptyCollapsedValueConverter}}"
+                                                <Image Source="{Binding Icon}"
+                                                       Visibility="{Binding Icon, Converter={StaticResource NullCollapsedValueConverter}}"
                                                        IsHitTestVisible="False"
                                                        Stretch="UniformToFill"
                                                        Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
@@ -255,7 +255,7 @@
 
                     <Image Source="{Binding Cover}"
                            Tag="{Binding Cover}"
-                           Visibility="{Binding Cover, Converter={StaticResource EmptyCollapsedValueConverter}}"
+                           Visibility="{Binding Cover, Converter={StaticResource NullCollapsedValueConverter}}"
                            Width="180"
                            VerticalAlignment="Top"
                            RenderOptions.BitmapScalingMode="Fant"
