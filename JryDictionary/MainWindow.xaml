@@ -189,9 +189,9 @@
                                             IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
-                                <Grid Background="Transparent">
+                                <Grid>
                                     <Grid.ToolTip>
-                                        <ThingPreview:ThingPreviewControl DataContext="{Binding Thing}" />
+                                        <ThingPreview:ThingPreviewControl ViewModel="{Binding Thing}"/>
                                     </Grid.ToolTip>
                                     <Image Source="{Binding Thing.Icon}"
                                            RenderOptions.BitmapScalingMode="Fant"
@@ -218,9 +218,6 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
                                 <Grid>
-                                    <Grid.ToolTip>
-                                        <ThingPreview:ThingPreviewControl DataContext="{Binding Thing}" />
-                                    </Grid.ToolTip>
                                     <TextBlock Height="24"
                                                Padding="6,4,6,0"
                                                FontFamily="Microsoft YaHei"
