@@ -59,12 +59,8 @@ namespace JryDictionary.Models
                     }
                     else if (trim.StartsWith("{{") && trim.EndsWith("}}"))
                     {
-                        IDocPlugin plugin = null;
-                        var header = trim.SubRange(2, trim.Length - 4);
-                        if (header.StartsWith("gallery", StringComparison.OrdinalIgnoreCase))
-                        {
-                            plugin = new GalleryPlugin(header.ToString());
-                        }
+                        var header = trim.SubRange(2, trim.Length - 4).ToString();
+                        var plugin = GalleryPlugin.TryCreate(header) ?? MediaPlugin.TryCreate(header);
                         if (plugin != null)
                         {
                             var end = i + 1;

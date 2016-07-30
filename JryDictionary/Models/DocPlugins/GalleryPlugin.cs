@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using JryDictionary.Controls.ImagesViewer;
+using JryDictionary.Controls.MediaPlayer;
 using JryDictionary.Models.Parsers;
 
 namespace JryDictionary.Models.DocPlugins
@@ -15,13 +16,13 @@ namespace JryDictionary.Models.DocPlugins
     public sealed class GalleryPlugin : IDocPlugin
     {
         private static readonly Regex Pattern = new Regex(
-            "^gallery(?::(?:col=(\\d))?)?$",
+            @"^gallery(?::(?:col=(\d))?)?$",
             RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
         private readonly int columnCount = 3;
         private readonly List<UriInfo> items = new List<UriInfo>();
 
-        public GalleryPlugin(string header)
+        private GalleryPlugin(string header)
         {
             var match = Pattern.Match(header.Replace(" ", ""));
             if (!match.Success) return;
@@ -88,5 +89,50 @@ namespace JryDictionary.Models.DocPlugins
         {
 
         }
+
+        public static IDocPlugin TryCreate(string header)
+            => header.StartsWith("gallery", StringComparison.OrdinalIgnoreCase) ? new GalleryPlugin(header) : null;
+    }
+
+    public sealed class MediaPlugin : IDocPlugin
+    {
+        private static readonly Regex Pattern = new Regex(
+            @"^media(?::(autoplay)?)?$",
+            RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
+        private readonly bool isAutoPlay;
+
+        public MediaPlugin(string header)
+        {
+            var match = Pattern.Match(header.Replace(" ", ""));
+            if (!match.Success) return;
+            this.isAutoPlay = match.Groups[1].Success;
+        }
+
+        public void Dispose()
+        {
+            
+        }
+
+        public IEnumerable<Inline> ParseLine(string[] lines)
+        {
+            var uriParser = new ImageUriParser();
+
+            foreach (var line in lines)
+            {
+                var uri = uriParser.TryParse(line);
+                if (uri == null) continue;
+
+                var player = new MediaPlayerControl
+                {
+                    IsAutoPlay = this.isAutoPlay
+                }.SetSource(uri.Uri, uri.Name);
+
+                yield return new InlineUIContainer(player);
+            }
+        }
+
+        public static IDocPlugin TryCreate(string header)
+            => header.StartsWith("media", StringComparison.OrdinalIgnoreCase) ? new MediaPlugin(header) : null;
     }
 }

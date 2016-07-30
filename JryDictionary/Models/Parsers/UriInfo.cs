@@ -2,6 +2,7 @@
 using System.Net.Cache;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using JetBrains.Annotations;
 
 namespace JryDictionary.Models.Parsers
 {
@@ -13,6 +14,7 @@ namespace JryDictionary.Models.Parsers
             this.Uri = uri;
         }
 
+        [NotNull]
         public string Name { get; }
 
         public Uri Uri { get; }

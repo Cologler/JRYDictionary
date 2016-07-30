@@ -107,6 +107,9 @@
     <Compile Include="Controls\ImagesViewer\ImagesViewerWindow.xaml.cs">
       <DependentUpon>ImagesViewerWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MediaPlayer\MediaPlayerControl.xaml.cs">
+      <DependentUpon>MediaPlayerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ThingEditor\WordEditorStatus.cs" />
     <Compile Include="Controls\ThingPreview\IThingPreviewViewModel.cs" />
     <Compile Include="Controls\ThingPreview\ThingPreviewControl.xaml.cs">
@@ -164,6 +167,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ImagesViewer\ImagesViewerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MediaPlayer\MediaPlayerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
