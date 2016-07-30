@@ -64,20 +64,11 @@ you can download release binary files in:
 
 ## description
 
-before first `-` will load as meta.
-
-here are current available metadata:
-
-* `CV:{url}` - cover
-* `BG:{url}` - background
-* `LG:{url}` - logo
-* `GL:{url}` - galleries (allow mulit)
-
 ### background & cover
 
 ![](https://i.imgur.com/f9pOtI9.png)
 
-### logo
+### icon
 
 see left top:
 
@@ -85,22 +76,30 @@ see left top:
 ![](https://i.imgur.com/HEQ9w5V.png)
 ![](https://i.imgur.com/mIqx5Rx.png)
 
-### galleries
+### gallery
 
 mulit gallery:
 
 ![](https://i.imgur.com/v6vAgX8.png)
 
-or just use:
+use:
 
 ``` text
 {{gallery:col=4}}
-...
+... urls ...
 {{}}
 ```
 
-### description
+### media
 
-then, write description text after `-`:
+use:
+
+``` text
+{{media:autoplay}}
+... urls ...
+{{}}
+```
+
+### text
 
 ![](https://i.imgur.com/SdHbhUk.png)
