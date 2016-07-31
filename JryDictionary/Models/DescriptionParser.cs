@@ -10,7 +10,6 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using Jasily;
 using JryDictionary.Models.DocPlugins;
-using JryDictionary.Models.Parsers;
 
 // ReSharper disable InconsistentNaming
 
@@ -20,7 +19,6 @@ namespace JryDictionary.Models
     {
         private readonly string[] lines;
         private readonly List<Inline> inlines = new List<Inline>();
-        private readonly List<string> galleries = new List<string>();
 
         public DescriptionParser(string text)
         {
@@ -79,48 +77,7 @@ namespace JryDictionary.Models
                 }
             }
 
-            if (this.galleries.Count > 0)
-            {
-                this.AddHeader(2, "Galleries");
-                this.CreateGallery(this.galleries, this.Cover == null ? 4 : 3);
-            }
-
             return this;
-        }
-
-        private void CreateGallery(List<string> urls, int columnCount)
-        {
-            var rowCount = urls.Count / columnCount + (urls.Count % columnCount != 0 ? 1 : 0);
-
-            var grid = new Grid();
-            grid.ColumnDefinitions.AddRange(Generater.Create<ColumnDefinition>(columnCount));
-            grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
-
-            foreach (var gallery in urls.EnumerateIndexValuePair())
-            {
-                var uri = new Uri(gallery.Value);
-                if (uri.Scheme == Uri.UriSchemeFile)
-                {
-                    if (!File.Exists(gallery.Value)) continue;
-                }
-
-                var image = new Image
-                {
-                    Source = UriInfo.BitmapFromUri(uri),
-                    Margin = new Thickness(2),
-                    Tag = gallery.Value
-                };
-                image.MouseLeftButtonDown += Image_MouseLeftButtonDown;
-                RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.Fant);
-                RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
-                var col = gallery.Index % columnCount;
-                var row = gallery.Index / columnCount;
-                Grid.SetColumn(image, col);
-                Grid.SetRow(image, row);
-                grid.Children.Add(image);
-            }
-
-            this.inlines.Add(new InlineUIContainer(grid));
         }
 
         public static void Image_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -149,34 +106,6 @@ namespace JryDictionary.Models
                 }
             }
         }
-
-        private void MapBackground(string line)
-            => this.Background =
-            Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri.OriginalString
-            ?? this.Background;
-
-        public string Background { get; private set; }
-
-        public string Cover { get; private set; }
-
-        private void MapCover(string line)
-            => this.Cover =
-            Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri.OriginalString
-            ?? this.Cover;
-
-        private void MapGalleries(string line)
-        {
-            var uri = Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri;
-            if (uri == null) return;
-            this.galleries.Add(uri.OriginalString);
-        }
-
-        public string Logo { get; private set; }
-
-        private void MapLogo(string line)
-            => this.Logo =
-            Singleton.Instance<Parsers.UriParser>().TryParse(line.Substring(3))?.Uri.OriginalString
-            ?? this.Logo;
 
         public Inline[] Inlines => this.inlines.ToArray();
 

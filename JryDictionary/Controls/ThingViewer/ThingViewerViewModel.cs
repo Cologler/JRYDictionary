@@ -50,9 +50,6 @@ namespace JryDictionary.Controls.ThingViewer
             if (string.IsNullOrEmpty(this.Description)) return Empty<Inline>.Array;
 
             var desc = new DescriptionParser(this.Description).ParseBody();
-            var uriParser = new ImageUriParser();
-            this.Background = this.Background ?? uriParser.TryParse(desc.Background)?.Uri;
-            this.Cover = this.Cover ?? uriParser.TryParse(desc.Cover)?.Uri;
             this.RefreshProperties();
             return desc.Inlines;
         }
