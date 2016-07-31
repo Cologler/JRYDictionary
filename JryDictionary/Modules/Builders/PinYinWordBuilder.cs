@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using Jasily;
 using Jasily.Chinese.PinYin;
 using JryDictionary.Models;
@@ -34,7 +35,9 @@ namespace JryDictionary.Modules.Builders
             {
                 yield return new Word
                 {
-                    Text = new string(chars),
+                    Text = new string(chars
+                        .Where(z => z != ' ')
+                        .ToArray()),
                     Language = this.Name
                 };
             }
