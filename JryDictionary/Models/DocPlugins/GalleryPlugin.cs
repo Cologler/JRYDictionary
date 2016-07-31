@@ -46,7 +46,7 @@ namespace JryDictionary.Models.DocPlugins
                 .EnumerateIndexValuePair())
             {
                 var uri = item.Value.Uri;
-                if (uri.Scheme == Uri.UriSchemeFile && !File.Exists(uri.LocalPath)) continue;
+                if (uri.IsFile && !File.Exists(uri.LocalPath)) continue;
                 this.items.Add(item.Value);
                 var image = new Image
                 {

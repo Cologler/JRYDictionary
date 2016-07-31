@@ -47,7 +47,17 @@ namespace JryDictionary
             if (string.IsNullOrWhiteSpace(value)) return false;
 
             var selected = this.Words.Selected?.Thing.Source;
-            if (selected == null) return false;
+            if (selected == null)
+            {
+                if (this.Words.Collection.Count == 1)
+                {
+                    selected = this.Words.Collection[0].Thing.Source;
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.targetThingId);
             if (thing == null) return false;

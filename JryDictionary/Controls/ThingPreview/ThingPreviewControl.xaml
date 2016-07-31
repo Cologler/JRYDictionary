@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:JryDictionary.Controls.ThingPreview"
              mc:Ignorable="d"
-             d:DesignHeight="300"
-             d:DesignWidth="300">
-    <Grid MaxWidth="300"
-          Margin="4"
-          x:Name="RootGrid" >
+             d:DesignHeight="100"
+             d:DesignWidth="100" >
+    <Grid Margin="4"
+          x:Name="RootGrid"
+          MaxWidth="300">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -17,7 +17,7 @@
         
         <Image Source="{Binding Cover}"
                RenderOptions.BitmapScalingMode="Fant"
-               RenderOptions.EdgeMode="Aliased"/>
+               RenderOptions.EdgeMode="Aliased" />
         
         <TextBlock Grid.Row="1"
                    HorizontalAlignment="Center"

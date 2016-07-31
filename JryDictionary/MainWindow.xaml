@@ -218,6 +218,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate DataType="local:WordViewModel">
                                 <Grid>
+                                    <Grid.ToolTip>
+                                        <ThingPreview:ThingPreviewControl ViewModel="{Binding Thing}" />
+                                    </Grid.ToolTip>
                                     <TextBlock Height="24"
                                                Padding="6,4,6,0"
                                                FontFamily="Microsoft YaHei"
