@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using Jasily;
 using JryDictionary.Models.DocPlugins;
+using JryDictionary.Models.Parsers;
 
 // ReSharper disable InconsistentNaming
 
@@ -33,6 +34,7 @@ namespace JryDictionary.Models
             {
                 index++;
             }
+            var uriParser = new Parsers.UriParser();
             for (var i = index; i < this.lines.Length; i++)
             {
                 var line = this.lines[i];
@@ -45,7 +47,7 @@ namespace JryDictionary.Models
                 {
                     var range = line.AsRange();
                     var trim = range.Trim();
-                    if (trim == "---")
+                    if (trim.All(z => z == '-'))
                     {
                         this.inlines.Add(this.Line());
                     }
@@ -72,7 +74,15 @@ namespace JryDictionary.Models
                     }
                     else
                     {
-                        this.inlines.Add(new Run(trim.InsertToEnd(' ').GetString()));
+                        var uri = uriParser.TryParse(trim.ToString());
+                        if (uri != null)
+                        {
+                            this.inlines.Add(this.Hyperlink(uri.Uri, uri.Name));
+                        }
+                        else
+                        {
+                            this.inlines.Add(new Run(trim.InsertToEnd(' ').GetString()));
+                        }
                     }
                 }
             }
@@ -142,5 +152,25 @@ namespace JryDictionary.Models
         });
 
         private Inline Height(double height) => new InlineUIContainer(new Grid { Height = height });
+
+        private Inline Hyperlink(Uri url, string name)
+        {
+            var link = new Hyperlink(new Run(name))
+            {
+                NavigateUri = url
+            };
+            link.RequestNavigate += (sender, e) =>
+            {
+                try
+                {
+                    Process.Start(e.Uri.ToString());
+                }
+                catch
+                {
+                    // ignored
+                }
+            };
+            return link;
+        }
     }
 }
