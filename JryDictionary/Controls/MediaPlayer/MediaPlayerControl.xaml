@@ -8,7 +8,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300">
-    <Grid>
+    <Grid d:DataContext="{d:DesignInstance local:MediaPlayerControl}">
         <MediaElement IsHitTestVisible="False"
                       x:Name="MediaElement"
                       UnloadedBehavior="Stop"
@@ -18,7 +18,7 @@
               Height="40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button Background="Transparent"
@@ -52,6 +52,24 @@
                     </Grid>
                 </Border>
             </Button>
+            
+            <Grid Grid.Column="1"
+                  VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                
+                <TextBlock Text="{Binding DisplayName}"
+                           FontSize="16"
+                           Margin="8,0"/>
+                
+                <Grid Grid.Row="1"
+                      x:Name="PlayStatue"
+                      Visibility="{Binding ElementHolder.IsPlaying, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    
+                </Grid>
+            </Grid>
 
         </Grid>
     </Grid>

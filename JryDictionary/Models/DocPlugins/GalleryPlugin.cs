@@ -125,9 +125,10 @@ namespace JryDictionary.Models.DocPlugins
 
                 var player = new MediaPlayerControl
                 {
-                    IsAutoPlay = this.isAutoPlay
-                }.SetSource(uri.Uri, uri.Name);
-
+                    IsAutoPlay = this.isAutoPlay,
+                    DisplayName = uri.Name ?? string.Empty
+                };
+                player.SetSource(uri.Uri);
                 yield return new InlineUIContainer(player);
             }
         }

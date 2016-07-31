@@ -1,23 +1,29 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using Jasily.Windows.Controls;
+using JetBrains.Annotations;
 
 namespace JryDictionary.Controls.MediaPlayer
 {
     /// <summary>
     /// MediaPlayerControl.xaml 的交互逻辑
     /// </summary>
-    public partial class MediaPlayerControl
+    public partial class MediaPlayerControl : INotifyPropertyChanged
     {
-        private readonly MediaElementHolder mediaElementHolder;
+        private string displayName;
 
         public MediaPlayerControl()
         {
             this.InitializeComponent();
-            this.mediaElementHolder = new MediaElementHolder(this.MediaElement);
-            this.mediaElementHolder.StatusChanged += this.StatusCached_StatusChanged;
+            this.ElementHolder = new MediaElementHolder(this.MediaElement);
+            this.ElementHolder.StatusChanged += this.StatusCached_StatusChanged;
+            this.DataContext = this;
         }
+
+        public MediaElementHolder ElementHolder { get; }
 
         private void StatusCached_StatusChanged(object sender, MediaState e)
         {
@@ -37,25 +43,43 @@ namespace JryDictionary.Controls.MediaPlayer
 
         private void PlayButton_OnClick(object sender, RoutedEventArgs e)
         {
-            switch (this.mediaElementHolder.CurrentStatus)
+            switch (this.ElementHolder.CurrentStatus)
             {
                 case MediaState.Play:
-                    this.mediaElementHolder.Stop();
+                    this.ElementHolder.Stop();
                     break;
 
                 default:
-                    this.mediaElementHolder.Play();
+                    this.ElementHolder.Play();
                     break;
             }
         }
 
         public bool IsAutoPlay { get; set; }
 
-        public MediaPlayerControl SetSource(Uri uri, string name)
+        public void SetSource(Uri uri)
         {
             this.MediaElement.Source = uri;
-            if (this.IsAutoPlay) this.mediaElementHolder.Play();
-            return this;
+            if (this.IsAutoPlay) this.ElementHolder.Play();
         }
+
+        public string DisplayName
+        {
+            get { return this.displayName; }
+            set
+            {
+                if (value == this.displayName) return;
+                this.displayName = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+
     }
 }
