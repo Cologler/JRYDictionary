@@ -110,8 +110,11 @@ namespace JryDictionary
                 filter = builder.Eq(z => z.Id, value) | filter;
                 var queryResult = await App.Current.ThingSetAccessor.FindAsync(filter, 20);
                 this.HasNext = queryResult.HasNext;
-                this.Things.Reset(queryResult.Items
-                    .Select(z => new ThingViewModel(z, category)));
+                var sortedItems = await queryResult.Items
+                    .OrderBy(z => z.Words.Any(x => x.Text == value) ? -1 : 1)
+                    .ThenBy(z => z.Words.Any(x => x.Text.Equals(value, StringComparison.OrdinalIgnoreCase)) ? -1 : 1)
+                    .ToArrayAsync();
+                this.Things.Reset(sortedItems.Select(z => new ThingViewModel(z, category)));
                 this.Words.Collection.Reset(this.Things.SelectMany(z => z.Words));
             }
             this.RefreshProperties();
