@@ -20,6 +20,7 @@ namespace JryDictionary.Models
     {
         private readonly string[] lines;
         private readonly List<Inline> inlines = new List<Inline>();
+        private bool isLastLineBreak;
 
         public DescriptionParser(string text)
         {
@@ -40,11 +41,11 @@ namespace JryDictionary.Models
                 var line = this.lines[i];
                 if (string.IsNullOrWhiteSpace(line))
                 {
-                    this.inlines.Add(new LineBreak());
-                    this.inlines.Add(this.Height(20));
+                    this.AddLineBreak();
                 }
                 else
                 {
+                    this.isLastLineBreak = false;
                     var range = line.AsRange();
                     var trim = range.Trim();
                     if (trim.All(z => z == '-'))
@@ -70,6 +71,7 @@ namespace JryDictionary.Models
                             }
                             this.inlines.AddRange(plugin.ParseLine(this.lines.Skip(i + 1).Take(end - i - 1).ToArray()));
                             i = end;
+                            this.AddLineBreak();
                         }
                     }
                     else
@@ -138,6 +140,14 @@ namespace JryDictionary.Models
                     this.inlines.Add(this.Line(Brushes.LightGray));
                     break;
             }
+        }
+
+        private void AddLineBreak()
+        {
+            if (this.isLastLineBreak) return;
+            this.isLastLineBreak = true;
+            this.inlines.Add(new LineBreak());
+            this.inlines.Add(this.Height(20));
         }
 
         private Inline Line(Brush brush = null) => new InlineUIContainer(new Border
