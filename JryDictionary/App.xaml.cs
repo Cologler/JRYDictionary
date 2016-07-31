@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Windows;
 using Jasily.Data.Db.MongoDb;
@@ -76,6 +77,19 @@ namespace JryDictionary
                 using (var stream = File.OpenRead("Settings.json"))
                 {
                     this.JsonSettings = stream.ToArray().TryJsonToObject<Common.Settings>();
+
+                    if (!string.IsNullOrWhiteSpace(this.JsonSettings?.Proxy))
+                    {
+                        try
+                        {
+                            WebRequest.DefaultWebProxy = new WebProxy(this.JsonSettings?.Proxy);
+                        }
+                        catch (Exception)
+                        {
+                            if (Debugger.IsAttached) Debugger.Break();
+                        }
+                        
+                    }
                 }
             }
         }
