@@ -146,22 +146,6 @@ namespace JryDictionary
             }
         }
 
-        private async void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
-            var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.Source.TargetId);
-            if (thing == null) return;
-            this.ViewThing(new ThingViewModel(thing));
-        }
-
-        private void RemoveFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
-            var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
-
-            this.ViewModel.RemoveField(word.Thing, field);
-        }
-
         private void ViewThing(ThingViewModel viewModel)
         {
             Debug.Assert(viewModel != null);
@@ -179,12 +163,6 @@ namespace JryDictionary
             return selector.ShowDialog();
         }
 
-        private void ViewMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
-            this.ViewThing(word.Thing);
-        }
-
         private void ViewerCloseButton_OnClick(object sender, RoutedEventArgs e)
         {
             this.ThingViewerControl.ViewModel = null;
@@ -196,5 +174,37 @@ namespace JryDictionary
             (this.ViewModel as ViewerMainViewModel)?.SetViewer(
                 (this.ThingViewerControl.DataContext as ThingViewerViewModel)?.ThingViewModel);
         }
+
+        private void ViewMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            this.ViewThing(word.Thing);
+        }
+
+        #region field
+
+        private async void ViewFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
+            var thing = await App.Current.ThingSetAccessor.FindOneAsync(field.TargetId);
+            if (thing == null) return;
+            this.ViewThing(new ThingViewModel(thing));
+        }
+
+        private void FindFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
+            this.ViewModel.SearchText = field.TargetId;
+        }
+
+        private void RemoveFieldMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var word = (WordViewModel)this.WordsDataGridContextMenu.DataContext;
+            var field = (FieldViewModel)((FrameworkElement)e.OriginalSource).DataContext;
+
+            this.ViewModel.RemoveField(word.Thing, field);
+        }
+
+        #endregion
     }
 }

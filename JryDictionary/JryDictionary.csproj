@@ -100,6 +100,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\Settings.cs" />
+    <Compile Include="Controls\ImagesViewer\ImagesCreator.cs" />
     <Compile Include="Controls\ImagesViewer\ImagesViewerControl.xaml.cs">
       <DependentUpon>ImagesViewerControl.xaml</DependentUpon>
     </Compile>
@@ -120,6 +121,7 @@
     <Compile Include="Models\DocPlugins\GalleryPlugin.cs" />
     <Compile Include="Models\DocPlugins\IDocPlugin.cs" />
     <Compile Include="Models\DocPlugins\ImagePlugin.cs" />
+    <Compile Include="Models\DocPlugins\MediaPlugin.cs" />
     <Compile Include="Models\Parsers\ImageUriParser.cs" />
     <Compile Include="Models\Parsers\UriInfo.cs" />
     <Compile Include="Models\Parsers\UriParser.cs" />

@@ -166,6 +166,11 @@
                                       Click="ViewFieldMenuItem_OnClick"
                                       ItemsSource="{Binding Thing.Fields}"
                                       DisplayMemberPath="DisplayValue"/>
+                            <MenuItem Header="find"
+                                      Visibility="{Binding Thing.Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
+                                      Click="FindFieldMenuItem_OnClick"
+                                      ItemsSource="{Binding Thing.Fields}"
+                                      DisplayMemberPath="DisplayValue" />
                             <MenuItem Header="remove"
                                       Visibility="{Binding Thing.Fields, Converter={StaticResource ItemsEmptyToCollapsedConverter}}"
                                       Click="RemoveFieldMenuItem_OnClick"
