@@ -43,21 +43,21 @@ namespace JryDictionary
         public override async Task<bool> CommitFooterInputAsnyc()
         {
             var value = this.FooterContent;
-            this.FooterContent = string.Empty;
             if (string.IsNullOrWhiteSpace(value)) return false;
 
             var selected = this.Words.Selected?.Thing.Source;
             if (selected == null)
             {
-                if (this.Words.Collection.Count == 1)
+                if (this.Things.Count == 1)
                 {
-                    selected = this.Words.Collection[0].Thing.Source;
+                    selected = this.Things[0].Source;
                 }
                 else
                 {
                     return false;
                 }
             }
+            this.FooterContent = string.Empty;
 
             var thing = await App.Current.ThingSetAccessor.FindOneAsync(this.targetThingId);
             if (thing == null) return false;

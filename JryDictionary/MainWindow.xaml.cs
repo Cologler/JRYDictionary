@@ -173,6 +173,7 @@ namespace JryDictionary
         {
             var selector = new MainWindow(new SelectorMainViewModel(thingId))
             {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = owner
             };
             return selector.ShowDialog();
