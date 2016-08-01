@@ -35,13 +35,13 @@ namespace JryDictionary.Models.DocPlugins
             grid.RowDefinitions.AddRange(Generater.Create<RowDefinition>(rowCount));
 
             var imageUriParser = new ImageUriParser();
+            var imageCreator = new ImagesCreator();
 
             foreach (var item in line
                 .Select(z => imageUriParser.TryParse(z))
                 .Where(z => z != null)
                 .EnumerateIndexValuePair())
             {
-                var imageCreator = new ImagesCreator();
                 var image = imageCreator.AddImage(item.Value);
                 if (image == null) continue;
                 var col = item.Index % this.columnCount;
